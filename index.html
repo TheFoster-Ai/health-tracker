@@ -116,6 +116,21 @@ input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;bo
 .sum .v small{font-size:15px;font-weight:600;color:var(--muted)}
 .sum .d{font-size:14px;color:var(--muted);margin-top:auto;padding-top:6px;overflow-wrap:anywhere}
 .sum .d.cta{color:var(--accent);font-weight:600}
+.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;width:100%}
+.macro{border-left:3px solid var(--mc);padding:2px 0 2px 10px}
+.macro .ml{display:block;font-size:13px;font-weight:600;color:var(--muted)}
+.macro .mv{display:block;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.macro .mv small{font-size:13px;font-weight:600;color:var(--muted)}
+.mbar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--accent-soft);margin-top:12px;width:100%}
+.mbar>i{display:block;height:100%}
+.mc-p{--mc:#0E5E5C}.mc-c{--mc:#5FA59B}.mc-f{--mc:#C99A4B}
+.mbar>.mc-p,.mbar>.mc-c,.mbar>.mc-f{background:var(--mc)}
+.day-total{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:8px;padding:12px;margin:0 0 12px;background:var(--accent-soft);border-radius:12px}
+.day-total div{min-width:0}
+.day-total .ml{display:block;font-size:12px;font-weight:650;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.03em}
+.day-total .mv{display:block;font-size:17px;font-weight:700;white-space:nowrap}
+.day-total .mv small{font-size:12px;font-weight:600;color:var(--muted)}
+.macro-label{display:block;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:6px}
 .bar{display:block;height:10px;background:var(--accent-soft);border-radius:999px;overflow:hidden;margin-top:10px;width:100%}
 .bar>i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
 
@@ -221,6 +236,21 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
           <input type="time" id="foodTime">
         </div>
       </div>
+      <span class="macro-label" id="macroLabel">Macros in grams <span class="opt">(optional)</span></span>
+      <div class="row" role="group" aria-labelledby="macroLabel">
+        <div class="field">
+          <label for="foodProtein">Protein</label>
+          <input type="number" id="foodProtein" inputmode="decimal" min="0" max="1000" step="any" placeholder="g">
+        </div>
+        <div class="field">
+          <label for="foodCarbs">Carbs</label>
+          <input type="number" id="foodCarbs" inputmode="decimal" min="0" max="1000" step="any" placeholder="g">
+        </div>
+        <div class="field">
+          <label for="foodFat">Fat</label>
+          <input type="number" id="foodFat" inputmode="decimal" min="0" max="1000" step="any" placeholder="g">
+        </div>
+      </div>
       <div class="field">
         <label for="foodNotes">Notes <span class="opt">(optional)</span></label>
         <textarea id="foodNotes" rows="2" autocapitalize="sentences"></textarea>
@@ -230,6 +260,7 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
     </form>
     <div class="card">
       <div class="list-head"><h2 id="foodListTitle">Today</h2><span class="muted small" id="foodTotals"></span></div>
+      <div class="day-total" id="foodDayTotal" aria-label="Day totals" hidden></div>
       <ul class="list" id="foodList"></ul>
     </div>
   </section>
@@ -532,6 +563,16 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   function numVal(id) { var v = $(id).value.trim(); if (v === '') return null; var n = Number(v); return isFinite(n) ? n : NaN; }
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
   function sumOf(items, field) { return items.reduce(function (s, e) { return s + (Number(e[field]) || 0); }, 0); }
+  function fmtG(n) { return (Math.round((Number(n) || 0) * 10) / 10).toLocaleString(undefined, { maximumFractionDigits: 1 }); }
+  function has(v) { return v !== null && v !== undefined && v !== '' && isFinite(Number(v)); }
+  var MACROS = [['protein', 'Protein', 'P', 'mc-p', 4], ['carbs', 'Carbs', 'C', 'mc-c', 4], ['fat', 'Fat', 'F', 'mc-f', 9]];
+  function nutritionTotals(items) {
+    return {
+      calories: sumOf(items, 'calories'), protein: sumOf(items, 'protein'), carbs: sumOf(items, 'carbs'), fat: sumOf(items, 'fat'),
+      anyCal: items.some(function (e) { return has(e.calories); }),
+      anyMacro: items.some(function (e) { return has(e.protein) || has(e.carbs) || has(e.fat); })
+    };
+  }
   function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
   function sleepMinutes(bed, wake) {
     if (!bed || !wake) return null;
@@ -657,6 +698,32 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
       '<span class="d' + (isCta ? ' cta' : '') + '">' + detail + '</span></button>';
   }
 
+  function nutritionCard(food) {
+    var n = nutritionTotals(food);
+    var calText = n.anyCal ? Math.round(n.calories).toLocaleString() + ' <small>cal</small>' : '-- <small>cal</small>';
+    var cols = MACROS.map(function (m) {
+      return '<span class="macro ' + m[3] + '"><span class="ml">' + m[1] + '</span><span class="mv">' +
+        (n.anyMacro ? fmtG(n[m[0]]) : '--') + ' <small>g</small></span></span>';
+    }).join('');
+    var macroCal = n.protein * 4 + n.carbs * 4 + n.fat * 9, bar = '';
+    if (macroCal > 0) {
+      bar = '<span class="mbar" aria-hidden="true">' + MACROS.map(function (m) {
+        return '<i class="' + m[3] + '" style="width:' + (n[m[0]] * m[4] / macroCal * 100).toFixed(1) + '%"></i>';
+      }).join('') + '</span>';
+    }
+    var detail, cta = false;
+    if (!food.length) { detail = 'Log food with calories and macros.'; cta = true; }
+    else if (!n.anyCal && !n.anyMacro) { detail = 'Add calories and macros to your food entries to see totals.'; cta = true; }
+    else if (!n.anyCal) detail = 'No calories entered yet today.';
+    else if (!n.anyMacro) detail = 'Add protein, carbs, and fat to see macros.';
+    else detail = 'Bar shows share of calories from each macro.';
+    return '<button type="button" class="sum wide" data-go="food" aria-label="Nutrition today: ' +
+      (n.anyCal ? Math.round(n.calories) + ' calories' : 'no calories') + (n.anyMacro ? ', protein ' + fmtG(n.protein) + ' grams, carbs ' + fmtG(n.carbs) + ' grams, fat ' + fmtG(n.fat) + ' grams' : '') + '. Open Food.">' +
+      '<span class="k">' + ICONS.food + 'Nutrition</span><span class="v">' + calText + '</span>' +
+      '<span class="macros">' + cols + '</span>' + bar +
+      '<span class="d' + (cta ? ' cta' : '') + '">' + detail + '</span></button>';
+  }
+
   function renderToday() {
     var t = todayKey(), h = new Date().getHours();
     $('greet').textContent = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ', Jacob';
@@ -673,31 +740,39 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
       oz === 0 ? 'No water yet. Tap to log a glass.' : oz >= goal ? 'Goal reached for today.' : fmtOz(goal - oz) + ' to go.',
       oz === 0, true, '<span class="bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span>'));
 
-    var cal = sumOf(food, 'calories');
-    cards.push(sumCard('food', 'Meals', String(food.length),
-      food.length ? (cal ? cal.toLocaleString() + ' cal logged' : 'Latest: ' + esc(food[0].name)) : 'Log what you eat.', !food.length));
+    cards.push(nutritionCard(food));
 
     var mins = sumOf(wo, 'minutes');
     cards.push(sumCard('workouts', 'Workouts', wo.length ? fmtDur(mins) : '0',
       wo.length ? plural(wo.length, 'session', 'sessions') : 'Log a walk, run, or lift.', !wo.length));
 
-    var lb = db.bp.slice().sort(byDateTimeDesc)[0];
-    cards.push(sumCard('bp', 'Blood pressure', lb ? lb.systolic + '/' + lb.diastolic : '--',
-      lb ? (lb.date === t ? 'Today, ' + fmtTime(lb.time) : 'Last: ' + relDate(lb.date)) : 'Add a reading.', !lb));
-
     cards.push(sumCard('sleep', 'Sleep', sleep ? fmtDur(sleep.minutes) : '--',
       sleep ? 'Last night' + (sleep.quality ? ', quality ' + sleep.quality + '/5' : '') : 'Log last night.', !sleep));
+
+    var lb = db.bp.slice().sort(byDateTimeDesc)[0];
+    cards.push(sumCard('bp', 'Blood pressure', lb ? lb.systolic + '/' + lb.diastolic + ' <small>mmHg</small>' : '--',
+      lb ? (lb.date === t ? 'Today, ' + fmtTime(lb.time) : 'Last: ' + relDate(lb.date)) : 'Add a reading.', !lb, true));
 
     $('summary').innerHTML = cards.join('');
   }
 
   function renderFood() {
-    var items = forDate('food', viewDate), cal = sumOf(items, 'calories');
+    var items = forDate('food', viewDate), n = nutritionTotals(items);
     $('foodListTitle').textContent = listTitle(viewDate);
-    $('foodTotals').textContent = items.length ? plural(items.length, 'meal', 'meals') + (cal ? ' · ' + cal.toLocaleString() + ' cal' : '') : '';
+    $('foodTotals').textContent = items.length ? plural(items.length, 'entry', 'entries') : '';
+    var dt = $('foodDayTotal');
+    dt.hidden = !items.length;
+    dt.innerHTML = items.length ? '<div><span class="ml">Calories</span><span class="mv">' + (n.anyCal ? Math.round(n.calories).toLocaleString() : '--') + '</span></div>' +
+      MACROS.map(function (m) {
+        return '<div><span class="ml">' + m[1] + '</span><span class="mv">' + (n.anyMacro ? fmtG(n[m[0]]) + '<small> g</small>' : '--') + '</span></div>';
+      }).join('') : '';
     $('foodList').innerHTML = items.length ? items.map(function (e) {
+      var nut = [];
+      if (has(e.calories)) nut.push(Math.round(Number(e.calories)).toLocaleString() + ' cal');
+      MACROS.forEach(function (m) { if (has(e[m[0]])) nut.push(m[2] + ' ' + fmtG(e[m[0]]) + 'g'); });
       return '<li class="item"><div class="main"><div class="title">' + esc(e.name) + '</div>' +
-        '<div class="meta">' + esc(cap(e.meal)) + ' · ' + fmtTime(e.time) + (e.calories != null ? ' · ' + Number(e.calories).toLocaleString() + ' cal' : '') + '</div>' +
+        '<div class="meta">' + esc(cap(e.meal)) + ' · ' + fmtTime(e.time) + '</div>' +
+        (nut.length ? '<div class="meta">' + nut.join(' · ') + '</div>' : '') +
         (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' + delBtn('food', e.id, e.name) + '</li>';
     }).join('') : '<li class="empty">No meals logged ' + emptyWhen(viewDate) + '. Use the form above to add one.</li>';
   }
@@ -803,10 +878,18 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
     if (!name) { err('foodErr', 'Describe what you ate.'); $('foodName').focus(); return; }
     if (!meal) { err('foodErr', 'Choose a meal type.'); return; }
     if (cal !== null && (isNaN(cal) || cal < 0 || cal > 10000)) { err('foodErr', 'Calories should be a number from 0 to 10,000, or left blank.'); return; }
+    var mac = {}, ids = { protein: 'foodProtein', carbs: 'foodCarbs', fat: 'foodFat' };
+    for (var i = 0; i < MACROS.length; i++) {
+      var k = MACROS[i][0], v = numVal(ids[k]);
+      if (v !== null && (isNaN(v) || v < 0 || v > 1000)) { err('foodErr', MACROS[i][1] + ' should be 0 to 1,000 grams, or left blank.'); $(ids[k]).focus(); return; }
+      mac[k] = v === null ? null : Math.round(v * 10) / 10;
+    }
     if (!time) { err('foodErr', 'Add a time.'); return; }
     err('foodErr');
-    if (add('food', { date: viewDate, time: time, name: name, meal: meal, calories: cal === null ? null : Math.round(cal), notes: $('foodNotes').value.trim() })) {
+    if (add('food', { date: viewDate, time: time, name: name, meal: meal, calories: cal === null ? null : Math.round(cal),
+        protein: mac.protein, carbs: mac.carbs, fat: mac.fat, notes: $('foodNotes').value.trim() })) {
       $('foodName').value = ''; $('foodCal').value = ''; $('foodNotes').value = '';
+      $('foodProtein').value = ''; $('foodCarbs').value = ''; $('foodFat').value = '';
       resetTime('foodTime'); checkRadio('mealType', defaultMeal()); blurActive();
       toast('Meal saved'); render();
     }
