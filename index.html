@@ -178,6 +178,83 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;max-width:calc(100% - 32px);text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .footer-note{font-size:13px;color:var(--faint);text-align:center;margin:18px 0 6px}
+
+/* Food database */
+input[type=search]{width:100%;min-height:48px;font-size:16px;padding:12px 44px 12px 40px;border:1px solid var(--line);border-radius:12px;background:#FBFAF7;-webkit-appearance:none;appearance:none}
+input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none;display:none}
+select{width:100%;min-height:48px;font-size:16px;padding:12px 40px 12px 14px;border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  background:#FBFAF7 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235E6A67' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center/16px;
+  -webkit-appearance:none;appearance:none}
+select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.search-row{display:flex;gap:10px}
+.search-box{position:relative;flex:1;min-width:0}
+.search-box>svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--faint);pointer-events:none}
+.clear-btn{position:absolute;right:2px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:transparent;color:var(--faint);display:flex;align-items:center;justify-content:center}
+.clear-btn svg{width:18px;height:18px}
+.scan-btn{flex:none;min-height:48px;padding:0 14px;gap:6px}
+.scan-btn svg{width:22px;height:22px}
+.search-status{font-size:14px;color:var(--muted);margin:10px 0 0;line-height:1.45}
+.search-status:empty{display:none}
+.search-status.warn{color:var(--warn);background:var(--warn-soft);padding:8px 10px;border-radius:10px}
+.res-head{font-size:13px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 2px}
+.food-rows{list-style:none;margin:0;padding:0}
+.food-rows li{display:flex;align-items:center;gap:2px;border-top:1px solid var(--line)}
+.food-rows li:first-child{border-top:0}
+.food-rows .empty{display:block;border:0;padding:10px 0 4px}
+.food-row{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:11px 0;border:0;background:transparent;text-align:left;min-height:60px;border-radius:10px}
+.food-row:active{background:#FAF9F5}
+.fr-main{flex:1;min-width:0}
+.fr-name{display:block;font-weight:600;overflow-wrap:anywhere;line-height:1.3}
+.fr-sub{display:block;font-size:13px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.fr-num{flex:none;text-align:right;min-width:56px}
+.fr-num b{display:block;font-size:17px;font-weight:700}
+.fr-num small{display:block;font-size:12px;color:var(--muted)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);letter-spacing:.02em;margin-right:4px;vertical-align:1px}
+.tag.off{background:#EEEFE3;color:#4E5A24}
+.tag.manual{background:#F0EEE8;color:var(--muted)}
+.star,.qadd{width:44px;height:44px;flex:none;border:0;background:transparent;color:var(--faint);display:inline-flex;align-items:center;justify-content:center;border-radius:12px}
+.star svg,.qadd svg{width:22px;height:22px}
+.star[aria-pressed=true]{color:#B8842F}
+.star[aria-pressed=true] svg{fill:currentColor}
+.qadd{color:var(--accent);background:var(--accent-soft)}
+.qadd:active{background:var(--accent);color:#fff}
+.tabs-mini{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#EFEDE6;padding:4px;border-radius:12px;margin:14px 0 4px}
+.tabs-mini button{min-height:40px;border:0;border-radius:9px;background:transparent;font-weight:600;color:var(--muted);font-size:15px}
+.tabs-mini button[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.stepper{display:flex;gap:8px}
+.stepper button{width:52px;flex:none;min-height:48px;border:1px solid var(--line);border-radius:12px;background:#FBFAF7;font-size:24px;font-weight:600;color:var(--accent);line-height:1}
+.stepper input{text-align:center;font-weight:650}
+.fs-titles{min-width:0;flex:1}
+.fs-titles h2{overflow-wrap:anywhere;line-height:1.25}
+.fs-titles p{margin:3px 0 0}
+.sheet-head .star{color:var(--faint)}
+.sheet-head .star[aria-pressed=true]{color:#B8842F}
+.fs-note{font-size:14px;color:var(--warn);background:var(--warn-soft);padding:8px 10px;border-radius:10px;margin:0}
+.fs-note.info{color:var(--muted);background:#F0EEE8}
+.fs-note:empty{display:none}
+.nut-sum{display:flex;align-items:baseline;gap:6px}
+.nut-sum .big{font-size:38px;font-weight:750;letter-spacing:-.02em;line-height:1}
+.nut-sum .unit{color:var(--muted);font-weight:600}
+.link-btn{border:0;background:transparent;color:var(--accent);font-weight:600;font-size:15px;padding:10px 4px;min-height:44px}
+.manual-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.manual-head h2{margin:0}
+
+/* Scanner */
+.overlay.scanner{background:#0B1312;align-items:stretch;z-index:35}
+.scan-wrap{width:100%;max-width:640px;margin:0 auto;display:flex;flex-direction:column;color:#fff;height:100%;overflow-y:auto;
+  padding:calc(var(--sat) + 8px) calc(16px + var(--sar)) calc(16px + var(--sab)) calc(16px + var(--sal))}
+.scan-head{display:flex;justify-content:space-between;align-items:center;min-height:48px}
+.scan-head h2{margin:0;font-size:20px}
+.scan-view{position:relative;flex:1 1 auto;min-height:220px;max-height:58vh;border-radius:18px;overflow:hidden;background:#000;margin:8px 0 12px}
+.scan-view video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scan-frame{position:absolute;left:10%;right:10%;top:28%;bottom:28%;border:3px solid rgba(255,255,255,.92);border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.38)}
+.scan-status{font-size:15px;color:#DCE7E4;margin:0 0 12px;line-height:1.45}
+.scan-wrap input{background:#17211F;border-color:#2C3A38;color:#fff}
+.scan-wrap input::placeholder{color:#93A3A0}
+.scan-wrap .btn-secondary{background:#1F3B38;color:#fff}
+.scan-wrap .btn-ghost{color:#fff;border-color:#2C3A38}
+.scan-actions{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.scan-actions:empty{display:none}
 </style>
 </head>
 <body>
@@ -211,8 +288,34 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   </section>
 
   <section class="view" id="view-food">
-    <form class="card" id="foodForm" novalidate>
-      <h2>Log a meal</h2>
+    <div class="card" id="foodSearchCard">
+      <h2>Add food</h2>
+      <div class="search-row">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <label for="foodSearch" class="sr-only">Search foods and brands</label>
+          <input type="search" id="foodSearch" placeholder="Search foods" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search">
+          <button type="button" class="clear-btn" id="foodSearchClear" aria-label="Clear search" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <button type="button" class="btn btn-secondary scan-btn" id="scanBtn" aria-label="Scan a barcode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M10 8v8M13 8v8M17 8v8"/></svg>Scan
+        </button>
+      </div>
+      <p class="search-status" id="searchStatus" role="status" aria-live="polite"></p>
+      <div id="searchResults"></div>
+      <div id="foodBrowse">
+        <div class="tabs-mini" role="tablist" aria-label="Saved foods">
+          <button type="button" role="tab" id="browseRecentTab" aria-selected="true" aria-controls="browseList">Recent</button>
+          <button type="button" role="tab" id="browseFavTab" aria-selected="false" aria-controls="browseList">Favorites</button>
+        </div>
+        <ul class="food-rows" id="browseList" role="tabpanel"></ul>
+      </div>
+      <button type="button" class="btn btn-ghost" id="manualToggle" style="width:100%;margin-top:12px" aria-expanded="false" aria-controls="foodForm">Add manually</button>
+    </div>
+    <form class="card" id="foodForm" novalidate hidden>
+      <div class="manual-head"><h2>Add manually</h2><button type="button" class="link-btn" id="manualClose">Done</button></div>
       <div class="field">
         <label for="foodName">What did you eat?</label>
         <input type="text" id="foodName" autocomplete="off" autocapitalize="sentences" placeholder="e.g. Turkey sandwich and an apple">
@@ -476,10 +579,85 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   </div>
 </div>
 
+<div class="overlay" id="foodSheetOverlay" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fsName">
+    <div class="sheet-head">
+      <div class="fs-titles"><h2 id="fsName"></h2><p class="muted small" id="fsSub"></p></div>
+      <button type="button" class="star" id="fsFav" aria-pressed="false" aria-label="Favorite">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="fsClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="fsForm" novalidate>
+      <div class="card">
+        <div class="field">
+          <label for="fsServing">Serving size</label>
+          <select id="fsServing"></select>
+        </div>
+        <div class="field">
+          <label for="fsQty" id="fsQtyLabel">Number of servings</label>
+          <div class="stepper">
+            <button type="button" id="fsMinus" aria-label="Decrease amount">&minus;</button>
+            <input type="number" id="fsQty" inputmode="decimal" min="0" step="any">
+            <button type="button" id="fsPlus" aria-label="Increase amount">+</button>
+          </div>
+        </div>
+        <p class="fs-note" id="fsNote"></p>
+      </div>
+      <div class="card" id="fsNut" aria-live="polite"></div>
+      <div class="card">
+        <div class="field">
+          <span class="label" id="fsMealLabel">Meal</span>
+          <div class="seg" role="radiogroup" aria-labelledby="fsMealLabel" style="--cols:4">
+            <label><input type="radio" name="fsMeal" value="breakfast"><span>Breakfast</span></label>
+            <label><input type="radio" name="fsMeal" value="lunch"><span>Lunch</span></label>
+            <label><input type="radio" name="fsMeal" value="dinner"><span>Dinner</span></label>
+            <label><input type="radio" name="fsMeal" value="snack"><span>Snack</span></label>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="fsTime">Time</label>
+          <input type="time" id="fsTime">
+        </div>
+      </div>
+      <p class="err" id="fsErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit" id="fsSave">Add to food log</button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay scanner" id="scanOverlay" aria-hidden="true">
+  <div class="scan-wrap" role="dialog" aria-modal="true" aria-labelledby="scanTitle">
+    <div class="scan-head">
+      <h2 id="scanTitle">Scan a barcode</h2>
+      <button type="button" class="icon-btn" id="scanClose" aria-label="Close scanner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="scan-view">
+      <video id="scanVideo" playsinline muted autoplay></video>
+      <div class="scan-frame" aria-hidden="true"></div>
+    </div>
+    <p class="scan-status" id="scanStatus" role="status" aria-live="polite"></p>
+    <form class="inline-form" id="scanManual" novalidate>
+      <label for="scanCode" class="sr-only">Barcode number</label>
+      <input type="text" id="scanCode" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Or type the barcode number">
+      <button class="btn btn-secondary" type="submit">Look up</button>
+    </form>
+    <div class="scan-actions" id="scanActions"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 (function () {
   'use strict';
+
+  /* USDA FoodData Central API key. DEMO_KEY works without signing up but is shared and
+     heavily rate-limited. Get a free personal key at https://api.data.gov/signup/ and paste it here. */
+  var USDA_API_KEY = 'DEMO_KEY';
 
   /* ---------- Storage ---------- */
   var KEY = 'healthTracker.v1';
@@ -487,7 +665,15 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   var DEFAULT_GOAL = 64;
 
   function blank() {
-    return { version: 1, settings: { waterGoal: DEFAULT_GOAL }, food: [], workouts: [], water: [], bp: [], sleep: [] };
+    return { version: 1, settings: { waterGoal: DEFAULT_GOAL }, food: [], workouts: [], water: [], bp: [], sleep: [], recentFoods: [], favorites: [] };
+  }
+  function validFood(f) {
+    if (!f || typeof f !== 'object' || typeof f.key !== 'string' || typeof f.name !== 'string') return false;
+    if (!(f.per100 && typeof f.per100 === 'object') && !(f.fixed && typeof f.fixed === 'object')) return false;
+    if (!Array.isArray(f.portions)) f.portions = [];
+    f.portions = f.portions.filter(function (p) { return p && typeof p.label === 'string' && Number(p.g) > 0; });
+    if (f.unit !== 'ml') f.unit = 'g';
+    return true;
   }
   function validEntry(e) {
     return e && typeof e === 'object' && typeof e.id === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date);
@@ -500,6 +686,8 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
     var g = o.settings && Number(o.settings.waterGoal);
     if (g && g >= 8 && g <= 300) out.settings.waterGoal = Math.round(g);
     LISTS.forEach(function (k) { out[k] = Array.isArray(o[k]) ? o[k].filter(validEntry) : []; });
+    out.recentFoods = Array.isArray(o.recentFoods) ? o.recentFoods.filter(validFood).slice(0, 20) : [];
+    out.favorites = Array.isArray(o.favorites) ? o.favorites.filter(validFood) : [];
     return out;
   }
   function load() {
@@ -757,6 +945,7 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   }
 
   function renderFood() {
+    if (!$('foodSearch').value.trim() || $('foodSearch').value.trim().length < 2) renderBrowse();
     var items = forDate('food', viewDate), n = nutritionTotals(items);
     $('foodListTitle').textContent = listTitle(viewDate);
     $('foodTotals').textContent = items.length ? plural(items.length, 'entry', 'entries') : '';
@@ -772,6 +961,7 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
       MACROS.forEach(function (m) { if (has(e[m[0]])) nut.push(m[2] + ' ' + fmtG(e[m[0]]) + 'g'); });
       return '<li class="item"><div class="main"><div class="title">' + esc(e.name) + '</div>' +
         '<div class="meta">' + esc(cap(e.meal)) + ' · ' + fmtTime(e.time) + '</div>' +
+        ((e.brand || e.serving) ? '<div class="meta">' + esc([e.brand, e.serving].filter(Boolean).join(' · ')) + '</div>' : '') +
         (nut.length ? '<div class="meta">' + nut.join(' · ') + '</div>' : '') +
         (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' + delBtn('food', e.id, e.name) + '</li>';
     }).join('') : '<li class="empty">No meals logged ' + emptyWhen(viewDate) + '. Use the form above to add one.</li>';
@@ -890,7 +1080,10 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
         protein: mac.protein, carbs: mac.carbs, fat: mac.fat, notes: $('foodNotes').value.trim() })) {
       $('foodName').value = ''; $('foodCal').value = ''; $('foodNotes').value = '';
       $('foodProtein').value = ''; $('foodCarbs').value = ''; $('foodFat').value = '';
-      resetTime('foodTime'); checkRadio('mealType', defaultMeal()); blurActive();
+      touchRecent({ key: 'manual:' + name.toLowerCase(), src: 'manual', id: '', name: name, brand: '', unit: 'g', per100: null,
+        fixed: { label: '1 serving', kcal: cal === null ? null : Math.round(cal), p: mac.protein, c: mac.carbs, f: mac.fat }, portions: [] }, '1 serving', 1);
+      save();
+      resetTime('foodTime'); checkRadio('mealType', defaultMeal()); blurActive(); closeManual();
       toast('Meal saved'); render();
     }
   });
@@ -1084,6 +1277,7 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
               if (k === 'sleep') dates[x.date] = 1;
             });
           });
+          mergeSavedFoods(db, incoming);
         }
         if (save()) {
           toast(mode === 'replace' ? 'Data replaced' : 'Data merged');
@@ -1113,6 +1307,8 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if ($('confirmOverlay').classList.contains('open')) return;
+    if ($('scanOverlay').classList.contains('open')) { closeScanner(); return; }
+    if ($('foodSheetOverlay').classList.contains('open')) { closeFoodSheet(); return; }
     if ($('settingsOverlay').classList.contains('open')) closeSettings();
   });
 
@@ -1129,6 +1325,789 @@ nav.tabs button[aria-current=page]{color:var(--accent)}
   }
   document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
   setInterval(function () { if (!document.hidden && current === 'today') refresh(); }, 60000);
+
+
+  /* =====================================================================
+     Food database: USDA FoodData Central + Open Food Facts, barcode scan,
+     serving picker, recent and favorite foods.
+     ===================================================================== */
+  var USDA_BASE = 'https://api.nal.usda.gov/fdc/v1/';
+  var OFF_BASE = 'https://world.openfoodfacts.org/';
+  var OFF_FIELDS = 'code,product_name,product_name_en,generic_name,brands,serving_size,serving_quantity,serving_quantity_unit,product_quantity,nutrition_data_per,nutriments';
+  var USDA_BLOCK_KEY = 'healthTracker.usdaLimitedUntil';
+  var MAX_RECENTS = 20;
+  var searchCache = {};
+
+  function r1(n) { return Math.round(n * 10) / 10; }
+  function cleanNum(v) { if (v === null || v === undefined || v === '') return null; var n = Number(v); return isFinite(n) && n >= 0 ? n : null; }
+  function titleCase(s) {
+    s = String(s || '').trim();
+    if (!s || s !== s.toUpperCase()) return s;
+    return s.toLowerCase().replace(/(^|[\s\-\/(&,.])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); });
+  }
+  function fmtQty(n) { return (Math.round(n * 100) / 100).toLocaleString(undefined, { maximumFractionDigits: 2 }); }
+  function usdaLimitedUntil() { var v = Number(localStorage.getItem(USDA_BLOCK_KEY)); return isFinite(v) ? v : 0; }
+  function setUsdaLimited() { try { localStorage.setItem(USDA_BLOCK_KEY, String(Date.now() + 60 * 60 * 1000)); } catch (_) {} }
+  function usdaKeyUrl() { return 'api_key=' + encodeURIComponent(USDA_API_KEY); }
+
+  // fetch JSON with a timeout; distinguishes caller aborts from timeouts.
+  function fetchJSON(url, opts, ms, outer) {
+    var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timedOut = false;
+    var timer = setTimeout(function () { timedOut = true; if (ctl) ctl.abort(); }, ms || 10000);
+    function onOuter() { if (ctl) ctl.abort(); }
+    if (outer) outer.addEventListener('abort', onOuter);
+    var o = Object.assign({}, opts || {});
+    if (ctl) o.signal = ctl.signal;
+    return fetch(url, o).then(function (res) {
+      if (!res.ok) { var e = new Error('HTTP ' + res.status); e.status = res.status; throw e; }
+      return res.json();
+    }).catch(function (e) {
+      if (outer && outer.aborted) { var a = new Error('aborted'); a.name = 'AbortError'; throw a; }
+      if (timedOut) { var t = new Error('timeout'); t.name = 'TimeoutError'; throw t; }
+      throw e;
+    }).finally(function () { clearTimeout(timer); if (outer) outer.removeEventListener('abort', onOuter); });
+  }
+
+  /* ---------- Normalizing API data into one food shape ----------
+     food = { key, src: 'usda'|'off'|'manual', id, name, brand, unit: 'g'|'ml',
+              per100: {kcal,p,c,f} | null, fixed: {label,kcal,p,c,f} | null,
+              portions: [{label, g}], upc, needsPortions } */
+  function usdaNutrients(f) {
+    var by = {};
+    (f.foodNutrients || []).forEach(function (n) {
+      var num = String(n.nutrientNumber || (n.nutrient && n.nutrient.number) || '');
+      var val = n.value != null ? n.value : n.amount;
+      if (!num || val == null || !isFinite(Number(val))) return;
+      by[num] = { v: Number(val), u: String(n.unitName || (n.nutrient && n.nutrient.unitName) || '').toLowerCase() };
+    });
+    var kcal = null;
+    if (by['208']) kcal = by['208'].u === 'kj' ? by['208'].v / 4.184 : by['208'].v;
+    else if (by['958']) kcal = by['958'].v;
+    else if (by['957']) kcal = by['957'].v;
+    else if (by['268']) kcal = by['268'].v / 4.184;
+    if (kcal == null || kcal < 0) return null;
+    function g(k) { return by[k] && by[k].v >= 0 ? by[k].v : null; }
+    var carbs = g('205'); if (carbs == null) carbs = g('205.2');
+    return { kcal: kcal, p: g('203') || 0, c: carbs || 0, f: g('204') || 0 };
+  }
+  function usdaToFood(f) {
+    if (!f || !f.fdcId) return null;
+    var per = usdaNutrients(f);
+    if (!per) return null;
+    var branded = f.dataType === 'Branded';
+    var unit = 'g', portions = [];
+    if (branded) {
+      var su = String(f.servingSizeUnit || '').toLowerCase();
+      if (/^(ml|mlt)$/.test(su)) unit = 'ml';
+      var ss = cleanNum(f.servingSize);
+      if (ss && /^(g|grm|ml|mlt)$/.test(su)) {
+        var hh = String(f.householdServingFullText || '').trim();
+        if (hh && hh === hh.toUpperCase()) hh = hh.toLowerCase();
+        portions.push({ label: (hh || '1 serving') + ' (' + fmtG(ss) + ' ' + unit + ')', g: ss });
+      }
+    } else {
+      (f.foodMeasures || []).filter(function (m) {
+        return m && m.gramWeight > 0 && m.disseminationText && !/quantity not specified/i.test(m.disseminationText);
+      }).sort(function (a, b) { return (a.rank || 99) - (b.rank || 99); }).slice(0, 6).forEach(function (m) {
+        portions.push({ label: m.disseminationText + ' (' + fmtG(m.gramWeight) + ' g)', g: m.gramWeight });
+      });
+    }
+    return {
+      key: 'usda:' + f.fdcId, src: 'usda', id: String(f.fdcId),
+      name: branded ? titleCase(f.description) : String(f.description || '').trim(),
+      brand: branded ? titleCase(f.brandName || f.brandOwner || '') : '',
+      unit: unit, per100: per, fixed: null, portions: portions, upc: f.gtinUpc || '',
+      generic: !branded, needsPortions: !branded && !portions.length, dataType: f.dataType
+    };
+  }
+  function offToFood(p) {
+    if (!p) return null;
+    var name = String(p.product_name || p.product_name_en || p.generic_name || '').trim();
+    if (!name) return null;
+    var n = p.nutriments || {};
+    var unit = (p.nutrition_data_per === '100ml' || String(p.serving_quantity_unit || '').toLowerCase() === 'ml') ? 'ml' : 'g';
+    var kcal = cleanNum(n['energy-kcal_100g']);
+    if (kcal == null) { var kj = cleanNum(n['energy-kj_100g']); if (kj == null) kj = cleanNum(n['energy_100g']); if (kj != null) kcal = kj / 4.184; }
+    var per100 = kcal == null ? null : { kcal: kcal, p: cleanNum(n.proteins_100g) || 0, c: cleanNum(n.carbohydrates_100g) || 0, f: cleanNum(n.fat_100g) || 0 };
+    var ssText = String(p.serving_size || '').trim();
+    var sq = cleanNum(p.serving_quantity), pq = cleanNum(p.product_quantity);
+    // Some entries list the whole package as a bare-weight "serving" (e.g. "500 g"); treat that as no serving size.
+    if (sq && pq && sq >= 250 && Math.abs(sq - pq) < 1 && /^[\d.,\s]+(g|gr|grams?|ml)\s*$/i.test(ssText)) sq = null;
+    var portions = [], fixed = null;
+    if (per100 && sq) {
+      portions.push({ label: ssText ? (/\d\s*(g|ml)\b/i.test(ssText) ? ssText : ssText + ' (' + fmtG(sq) + ' ' + unit + ')') : '1 serving (' + fmtG(sq) + ' ' + unit + ')', g: sq });
+    }
+    if (!per100) {
+      var ks = cleanNum(n['energy-kcal_serving']);
+      if (ks == null) { var kjs = cleanNum(n['energy-kj_serving']); if (kjs != null) ks = kjs / 4.184; }
+      if (ks != null) fixed = { label: ssText || '1 serving', kcal: ks, p: cleanNum(n.proteins_serving) || 0, c: cleanNum(n.carbohydrates_serving) || 0, f: cleanNum(n.fat_serving) || 0 };
+    }
+    if (!per100 && !fixed) return null; // no energy data at all: skip
+    return {
+      key: 'off:' + p.code, src: 'off', id: String(p.code), name: name,
+      brand: String(p.brands || '').split(',')[0].trim(), unit: unit,
+      per100: per100, fixed: fixed, portions: portions, upc: String(p.code || ''), generic: false, needsPortions: false
+    };
+  }
+
+  /* ---------- Serving math ---------- */
+  function servingOptions(food) {
+    var opts = [];
+    if (food.per100) {
+      (food.portions || []).forEach(function (p) { opts.push({ type: 'portion', label: p.label, g: p.g }); });
+      opts.push({ type: 'grams', label: food.unit === 'ml' ? 'Milliliters (ml)' : 'Grams (g)' });
+      opts.push({ type: 'per100', label: '100 ' + food.unit });
+    } else if (food.fixed) {
+      opts.push({ type: 'fixed', label: food.fixed.label || '1 serving' });
+    }
+    return opts;
+  }
+  function defaultOptIndex(opts) {
+    var i = opts.findIndex(function (o) { return o.type === 'portion' || o.type === 'fixed'; });
+    if (i < 0) i = opts.findIndex(function (o) { return o.type === 'per100'; });
+    return i < 0 ? 0 : i;
+  }
+  function gramsFor(opt, qty) {
+    if (opt.type === 'portion') return opt.g * qty;
+    if (opt.type === 'grams') return qty;
+    if (opt.type === 'per100') return 100 * qty;
+    return null;
+  }
+  function scaleNut(b, k) {
+    function s(v, whole) { if (v === null || v === undefined || !isFinite(Number(v))) return null; var x = Number(v) * k; return whole ? Math.round(x) : r1(x); }
+    return { kcal: s(b.kcal, true), p: s(b.p), c: s(b.c), f: s(b.f) };
+  }
+  function computeNut(food, opt, qty) {
+    if (opt.type === 'fixed') return scaleNut(food.fixed, qty);
+    return scaleNut(food.per100, gramsFor(opt, qty) / 100);
+  }
+  function servingText(food, opt, qty) {
+    if (opt.type === 'grams') return fmtG(qty) + ' ' + food.unit;
+    if (opt.type === 'per100') return fmtG(qty * 100) + ' ' + food.unit;
+    return (qty === 1 ? '' : fmtQty(qty) + ' \u00d7 ') + opt.label;
+  }
+  function srcTag(food) {
+    if (food.src === 'usda') return '<span class="tag">USDA</span>';
+    if (food.src === 'off') return '<span class="tag off">Open Food Facts</span>';
+    return '<span class="tag manual">Your entry</span>';
+  }
+  function snapshot(food) {
+    return JSON.parse(JSON.stringify({
+      key: food.key, src: food.src, id: food.id, name: food.name, brand: food.brand || '', unit: food.unit || 'g',
+      per100: food.per100 || null, fixed: food.fixed || null, portions: food.portions || [], upc: food.upc || '',
+      generic: !!food.generic, needsPortions: !!food.needsPortions
+    }));
+  }
+
+  /* ---------- Recent + favorites (stored in db, exported with everything else) ---------- */
+  function isFav(key) { return db.favorites.some(function (f) { return f.key === key; }); }
+  function toggleFav(food) {
+    if (isFav(food.key)) db.favorites = db.favorites.filter(function (f) { return f.key !== food.key; });
+    else db.favorites.unshift(Object.assign(snapshot(food), { addedAt: Date.now() }));
+    save();
+    return isFav(food.key);
+  }
+  function touchRecent(food, optLabel, qty) {
+    var snap = Object.assign(snapshot(food), { lastOpt: optLabel, lastQty: qty, lastUsed: Date.now() });
+    db.recentFoods = [snap].concat(db.recentFoods.filter(function (f) { return f.key !== food.key; })).slice(0, MAX_RECENTS);
+    // keep favorite copy fresh (e.g. serving sizes loaded later)
+    db.favorites = db.favorites.map(function (f) { return f.key === food.key ? Object.assign(snapshot(food), { addedAt: f.addedAt }) : f; });
+  }
+  function rememberFood(food) {
+    // after serving sizes are fetched, update stored copies
+    ['recentFoods', 'favorites'].forEach(function (k) {
+      db[k] = db[k].map(function (f) { return f.key === food.key ? Object.assign({}, f, { portions: food.portions, needsPortions: false }) : f; });
+    });
+    save();
+  }
+  function mergeSavedFoods(target, incoming) {
+    var favKeys = {};
+    target.favorites.forEach(function (f) { favKeys[f.key] = 1; });
+    incoming.favorites.forEach(function (f) { if (!favKeys[f.key]) { target.favorites.push(f); favKeys[f.key] = 1; } });
+    var all = target.recentFoods.concat(incoming.recentFoods).sort(function (a, b) { return (b.lastUsed || 0) - (a.lastUsed || 0); });
+    var seen = {};
+    target.recentFoods = all.filter(function (f) { if (seen[f.key]) return false; seen[f.key] = 1; return true; }).slice(0, MAX_RECENTS);
+  }
+
+  /* ---------- Search ---------- */
+  function searchUSDA(q, signal) {
+    if (Date.now() < usdaLimitedUntil()) { var e = new Error('limited'); e.status = 429; return Promise.reject(e); }
+    // POST avoids a USDA gateway quirk with "(" in GET query strings.
+    return fetchJSON(USDA_BASE + 'foods/search?' + usdaKeyUrl(), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: q, pageSize: 50, requireAllWords: true, dataType: ['Foundation', 'SR Legacy', 'Survey (FNDDS)', 'Branded'] })
+    }, 10000, signal).then(function (j) {
+      return (j.foods || []).map(usdaToFood).filter(Boolean);
+    }, function (e) { if (e.status === 429) setUsdaLimited(); throw e; });
+  }
+  var offPausedUntil = 0; // Open Food Facts allows ~10 searches/minute; back off after a failure
+  function searchOFF(q, signal) {
+    if (Date.now() < offPausedUntil) { var e = new Error('paused'); e.status = 429; return Promise.reject(e); }
+    return fetchJSON(OFF_BASE + 'cgi/search.pl?search_terms=' + encodeURIComponent(q) +
+      '&search_simple=1&action=process&json=1&page_size=24&sort_by=unique_scans_n&fields=' + OFF_FIELDS, null, 12000, signal)
+      .then(function (j) { return (j.products || []).map(offToFood).filter(Boolean); }, function (e) {
+        if (e.name !== 'AbortError' && navigator.onLine) offPausedUntil = Date.now() + 60 * 1000;
+        throw e;
+      });
+  }
+  function relevance(food, words) {
+    var hay = (food.name + ' ' + (food.brand || '')).toLowerCase();
+    var missing = words.filter(function (w) { return hay.indexOf(w) < 0; }).length;
+    var s = missing * 10 + Math.min(food.name.length, 90) / 18;
+    if (food.name.toLowerCase().indexOf(words[0] || '') === 0) s -= 3;
+    if (/\braw\b/i.test(food.name) && words.indexOf('raw') < 0) s -= 1.5; // plain/whole versions first
+    if (food.src === 'usda' && food.generic && food.dataType !== 'Survey (FNDDS)') s -= 0.5;
+    return s;
+  }
+  function mergeResults(q, usda, off) {
+    var words = q.toLowerCase().split(/[\s,]+/).filter(Boolean);
+    var generic = [], branded = [], seen = {};
+    (usda || []).forEach(function (f, i) { f._r = relevance(f, words) + i * 0.12; (f.generic ? generic : branded).push(f); });
+    (off || []).forEach(function (f, i) { f._r = relevance(f, words) + i * 0.12 + 0.05; branded.push(f); });
+    function byR(a, b) { return a._r - b._r; }
+    function nameKey(f) { return ((f.brand || '') + '|' + f.name).toLowerCase().replace(/[^a-z0-9|]+/g, ''); }
+    function upcKey(f) { var c = String(f.upc || '').replace(/\D/g, '').replace(/^0+/, ''); return c ? 'u' + c : ''; }
+    function dedupe(list, max) {
+      var out = [];
+      list.sort(byR).forEach(function (f) {
+        var a = nameKey(f), u = upcKey(f);
+        if (seen[a] || (u && seen[u])) return;
+        seen[a] = 1; if (u) seen[u] = 1;
+        if (out.length < max) out.push(f);
+      });
+      return out;
+    }
+    return { generic: dedupe(generic, 15), branded: dedupe(branded, 20) };
+  }
+
+  /* ---------- Search UI ---------- */
+  var STAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>';
+  var PLUS_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+  var shown = { results: [], browse: [] };
+  var searchSeq = 0, searchTimer = null, searchCtl = null, browseTab = 'recent';
+
+  function setSearchStatus(msg, warn) {
+    var el = $('searchStatus');
+    el.textContent = msg || '';
+    el.classList.toggle('warn', !!(msg && warn));
+  }
+  function foodRowHtml(food, attr, pref) {
+    var opts = servingOptions(food);
+    if (!opts.length) return '';
+    var idx = defaultOptIndex(opts), qty = 1;
+    if (pref && pref.opt) { var i = opts.findIndex(function (o) { return o.label === pref.opt; }); if (i >= 0) { idx = i; qty = pref.qty || 1; } }
+    var opt = opts[idx], n = computeNut(food, opt, qty);
+    var serving = servingText(food, opt, qty) + (food.per100 && !(food.portions || []).length && !food.needsPortions && opt.type === 'per100' ? ', no serving size listed' : '');
+    var macros = [n.p, n.c, n.f].some(function (v) { return v != null; })
+      ? 'P ' + (n.p == null ? '--' : fmtG(n.p)) + ' \u00b7 C ' + (n.c == null ? '--' : fmtG(n.c)) + ' \u00b7 F ' + (n.f == null ? '--' : fmtG(n.f)) + ' g'
+      : '';
+    return '<button type="button" class="food-row" ' + attr + '>' +
+      '<span class="fr-main"><span class="fr-name">' + esc(food.name) + '</span>' +
+      '<span class="fr-sub">' + srcTag(food) + (food.brand ? esc(food.brand) + ' \u00b7 ' : '') + esc(serving) + '</span>' +
+      (macros ? '<span class="fr-sub">' + macros + '</span>' : '') + '</span>' +
+      '<span class="fr-num"><b>' + (n.kcal == null ? '--' : n.kcal.toLocaleString()) + '</b><small>cal</small></span></button>';
+  }
+  function renderSearchResults(q, st, pending) {
+    var m = mergeResults(q, st.usda, st.off);
+    shown.results = m.generic.concat(m.branded);
+    var html = '';
+    if (m.generic.length) {
+      html += '<p class="res-head">Common foods</p><ul class="food-rows">' + m.generic.map(function (f, i) {
+        return '<li>' + foodRowHtml(f, 'data-pick="' + i + '"') + '</li>';
+      }).join('') + '</ul>';
+    }
+    if (m.branded.length) {
+      html += '<p class="res-head">Brands and packaged</p><ul class="food-rows">' + m.branded.map(function (f, i) {
+        return '<li>' + foodRowHtml(f, 'data-pick="' + (m.generic.length + i) + '"') + '</li>';
+      }).join('') + '</ul>';
+    }
+    $('searchResults').innerHTML = html;
+    var notes = st.notes.slice();
+    if (pending) notes.push(shown.results.length ? 'Loading more results\u2026' : 'Searching\u2026');
+    else if (!shown.results.length && !st.failedAll) notes.push('No matches for \u201c' + q + '\u201d. Try fewer or simpler words, scan the barcode, or add it manually.');
+    setSearchStatus(notes.join(' '), st.notes.length > 0);
+  }
+  function usdaErrorNote(e) {
+    if (e.status === 429) return 'USDA\u2019s free lookup limit is used up for now, so results are from Open Food Facts. USDA results come back within the hour.';
+    if (e.status === 401 || e.status === 403) return 'USDA search isn\u2019t available right now (API key problem). Showing Open Food Facts results.';
+    return 'USDA didn\u2019t respond, so results are from Open Food Facts.';
+  }
+  function offErrorNote() { return 'Open Food Facts is busy right now, so brand results may be missing. Try again in a minute.'; }
+  function offlineNote() { return 'You\u2019re offline. Search and barcode lookups need a connection; your recent and favorite foods below still work.'; }
+
+  function clearSearch() {
+    searchSeq++; clearTimeout(searchTimer); if (searchCtl) searchCtl.abort();
+    $('searchResults').innerHTML = ''; shown.results = [];
+    $('foodBrowse').hidden = false;
+    setSearchStatus(navigator.onLine ? '' : offlineNote(), !navigator.onLine);
+    renderBrowse();
+  }
+  function runSearch(q) {
+    var key = q.toLowerCase(), seq = ++searchSeq;
+    if (searchCtl) searchCtl.abort();
+    searchCtl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var signal = searchCtl ? searchCtl.signal : null;
+    if (!navigator.onLine) {
+      $('searchResults').innerHTML = ''; $('foodBrowse').hidden = false; renderBrowse();
+      setSearchStatus(offlineNote(), true); return;
+    }
+    $('foodBrowse').hidden = true;
+    if (searchCache[key]) { renderSearchResults(q, searchCache[key], false); return; }
+    var st = { usda: null, off: null, notes: [], pending: 2, ok: 0, failedAll: false };
+    $('searchResults').innerHTML = ''; setSearchStatus('Searching\u2026');
+    function finish() {
+      if (seq !== searchSeq) return;
+      st.pending--;
+      if (!st.pending && !st.ok) {
+        st.failedAll = true;
+        st.notes = [navigator.onLine ? 'Search isn\u2019t available right now. Try again in a minute, or add the food manually.' : offlineNote()];
+        $('foodBrowse').hidden = false; renderBrowse();
+      }
+      renderSearchResults(q, st, st.pending > 0);
+      if (!st.pending && st.ok === 2) searchCache[key] = { usda: st.usda, off: st.off, notes: [], failedAll: false };
+    }
+    searchUSDA(q, signal).then(function (r) { st.usda = r; st.ok++; }, function (e) {
+      st.usda = []; if (e.name !== 'AbortError') st.notes.unshift(usdaErrorNote(e));
+    }).then(finish);
+    searchOFF(q, signal).then(function (r) { st.off = r; st.ok++; }, function (e) {
+      st.off = []; if (e.name !== 'AbortError') st.notes.push(offErrorNote());
+    }).then(finish);
+  }
+
+  $('foodSearch').addEventListener('input', function () {
+    var q = $('foodSearch').value.trim();
+    $('foodSearchClear').hidden = !$('foodSearch').value;
+    clearTimeout(searchTimer);
+    if (q.length < 2) { clearSearch(); return; }
+    searchTimer = setTimeout(function () { runSearch(q); }, 600);
+  });
+  $('foodSearch').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    var q = $('foodSearch').value.trim();
+    clearTimeout(searchTimer);
+    if (q.length >= 2) { runSearch(q); $('foodSearch').blur(); }
+  });
+  $('foodSearchClear').addEventListener('click', function () {
+    $('foodSearch').value = ''; $('foodSearchClear').hidden = true; clearSearch(); $('foodSearch').focus();
+  });
+  $('searchResults').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pick]'); if (!b) return;
+    var f = shown.results[Number(b.dataset.pick)]; if (f) openFoodSheet(f);
+  });
+
+  /* ---------- Recent / favorites ---------- */
+  function renderBrowse() {
+    var list = browseTab === 'fav' ? db.favorites : db.recentFoods;
+    shown.browse = list;
+    $('browseRecentTab').setAttribute('aria-selected', String(browseTab === 'recent'));
+    $('browseFavTab').setAttribute('aria-selected', String(browseTab === 'fav'));
+    if (!list.length) {
+      $('browseList').innerHTML = '<li class="empty">' + (browseTab === 'fav'
+        ? 'Tap the star on any food to keep it here.'
+        : 'Foods you log will show up here so you can add them again in one tap.') + '</li>';
+      return;
+    }
+    $('browseList').innerHTML = list.map(function (f, i) {
+      var pref = { opt: f.lastOpt, qty: f.lastQty };
+      var fav = isFav(f.key);
+      return '<li>' + foodRowHtml(f, 'data-browse="' + i + '"', pref) +
+        '<button type="button" class="star" data-fav="' + i + '" aria-pressed="' + fav + '" aria-label="' + (fav ? 'Remove ' : 'Add ') + esc(f.name) + (fav ? ' from' : ' to') + ' favorites">' + STAR_SVG + '</button>' +
+        '<button type="button" class="qadd" data-qadd="' + i + '" aria-label="Quick add ' + esc(f.name) + '">' + PLUS_SVG + '</button></li>';
+    }).join('');
+  }
+  function setBrowseTab(t) { browseTab = t; renderBrowse(); }
+  $('browseRecentTab').addEventListener('click', function () { setBrowseTab('recent'); });
+  $('browseFavTab').addEventListener('click', function () { setBrowseTab('fav'); });
+  $('browseList').addEventListener('click', function (e) {
+    var b;
+    if ((b = e.target.closest('[data-fav]'))) {
+      var f1 = shown.browse[Number(b.dataset.fav)]; if (!f1) return;
+      var on = toggleFav(f1); toast(on ? 'Added to favorites' : 'Removed from favorites'); renderBrowse(); return;
+    }
+    if ((b = e.target.closest('[data-qadd]'))) {
+      var f2 = shown.browse[Number(b.dataset.qadd)]; if (f2) quickAdd(f2); return;
+    }
+    if ((b = e.target.closest('[data-browse]'))) {
+      var f3 = shown.browse[Number(b.dataset.browse)]; if (f3) openFoodSheet(f3, { opt: f3.lastOpt, qty: f3.lastQty });
+    }
+  });
+  function logFood(food, opt, qty, meal, time) {
+    var n = computeNut(food, opt, qty);
+    var g = gramsFor(opt, qty);
+    var entry = {
+      date: viewDate, time: time, name: food.name, brand: food.brand || '', meal: meal,
+      calories: n.kcal, protein: n.p, carbs: n.c, fat: n.f, notes: '',
+      source: food.src, sourceId: food.id || '', serving: servingText(food, opt, qty), quantity: qty,
+      grams: g == null ? null : r1(g), unit: food.unit || 'g'
+    };
+    if (!add('food', entry)) return false;
+    touchRecent(food, opt.label, qty);
+    save();
+    return true;
+  }
+  function quickAdd(f) {
+    var opts = servingOptions(f); if (!opts.length) return;
+    var idx = opts.findIndex(function (o) { return o.label === f.lastOpt; });
+    var qty = idx >= 0 ? (f.lastQty || 1) : 1;
+    if (idx < 0) idx = defaultOptIndex(opts);
+    var meal = defaultMeal();
+    if (logFood(f, opts[idx], qty, meal, nowTime())) { toast('Added ' + f.name + ' to ' + cap(meal)); render(); }
+  }
+
+  /* ---------- Serving sheet ---------- */
+  var sheet = { food: null, opts: [], idx: 0, touched: false };
+  function setNote(msg, info) { var el = $('fsNote'); el.textContent = msg || ''; el.classList.toggle('info', !!info); }
+  function sheetNote() {
+    var f = sheet.food, opt = sheet.opts[sheet.idx];
+    if (!f || !opt) return;
+    if (f.needsPortions) return; // "Loading serving sizes" stays until done
+    if (opt.type === 'fixed') setNote('Only per-serving values are available for this item.', true);
+    else if (!(f.portions || []).length) setNote('No serving size is listed for this item, so it starts at 100 ' + f.unit + '. Switch to ' + (f.unit === 'ml' ? 'milliliters' : 'grams') + ' to enter an exact amount.');
+    else if (f.unit === 'ml') setNote('Values are based on 100 ml.', true);
+    else setNote('');
+  }
+  function buildSheetOptions(pref) {
+    var opts = servingOptions(sheet.food);
+    sheet.opts = opts;
+    var idx = defaultOptIndex(opts), qty = 1;
+    if (pref && pref.opt) {
+      var i = opts.findIndex(function (o) { return o.label === pref.opt; });
+      if (i >= 0) { idx = i; qty = pref.qty || 1; }
+    }
+    if (opts[idx].type === 'grams' && !(pref && pref.qty)) qty = 100;
+    $('fsServing').innerHTML = opts.map(function (o, i) { return '<option value="' + i + '">' + esc(o.label) + '</option>'; }).join('');
+    $('fsServing').value = String(idx);
+    sheet.idx = idx;
+    $('fsQty').value = String(r1(qty) === qty ? qty : Math.round(qty * 100) / 100);
+    updateSheet();
+  }
+  function sheetQty() { var v = numVal('fsQty'); return v === null || isNaN(v) ? null : v; }
+  function updateSheet() {
+    if (!sheet.food) return;
+    var opt = sheet.opts[sheet.idx], qty = sheetQty();
+    $('fsQtyLabel').textContent = opt.type === 'grams' ? 'Amount (' + sheet.food.unit + ')' : 'Number of servings';
+    var ok = qty !== null && qty > 0 && (gramsFor(opt, qty) === null || gramsFor(opt, qty) <= 20000) && qty <= 1000;
+    var n = ok ? computeNut(sheet.food, opt, qty) : { kcal: null, p: null, c: null, f: null };
+    function v(x) { return x == null ? '--' : fmtG(x); }
+    var g = ok ? gramsFor(opt, qty) : null;
+    $('fsNut').innerHTML = '<div class="nut-sum"><span class="big">' + (n.kcal == null ? '--' : n.kcal.toLocaleString()) + '</span><span class="unit">cal</span>' +
+      (g != null && opt.type !== 'grams' ? '<span class="unit">\u00b7 ' + fmtG(g) + ' ' + sheet.food.unit + '</span>' : '') + '</div>' +
+      '<span class="macros">' + MACROS.map(function (m) {
+        return '<span class="macro ' + m[3] + '"><span class="ml">' + m[1] + '</span><span class="mv">' + v(n[m[0] === 'protein' ? 'p' : m[0] === 'carbs' ? 'c' : 'f']) + ' <small>g</small></span></span>';
+      }).join('') + '</span>';
+    $('fsSave').disabled = !ok;
+    sheetNote();
+  }
+  function paintFav() {
+    var on = sheet.food && isFav(sheet.food.key);
+    $('fsFav').setAttribute('aria-pressed', String(!!on));
+    $('fsFav').setAttribute('aria-label', on ? 'Remove from favorites' : 'Add to favorites');
+  }
+  function loadPortions(food) {
+    if (!food.needsPortions || food.src !== 'usda') return Promise.resolve(false);
+    if (!navigator.onLine || Date.now() < usdaLimitedUntil()) return Promise.resolve(false);
+    return fetchJSON(USDA_BASE + 'food/' + encodeURIComponent(food.id) + '?' + usdaKeyUrl(), null, 9000).then(function (d) {
+      var seenLbl = {};
+      var ps = (d.foodPortions || []).filter(function (p) { return p && p.gramWeight > 0; }).map(function (p) {
+        var unit = p.measureUnit && p.measureUnit.name && p.measureUnit.name !== 'undetermined' ? p.measureUnit.name : '';
+        var desc = p.portionDescription && !/quantity not specified/i.test(p.portionDescription) ? p.portionDescription : '';
+        var mod = p.modifier && !/^\d+$/.test(p.modifier) ? p.modifier : '';
+        var lbl = desc || [fmtQty(p.amount || 1), unit, mod].filter(Boolean).join(' ');
+        return { label: lbl.trim() + ' (' + fmtG(p.gramWeight) + ' g)', g: p.gramWeight, ok: !!(desc || unit || mod) };
+      }).filter(function (p) { if (!p.ok || seenLbl[p.label]) return false; seenLbl[p.label] = 1; return true; })
+        .slice(0, 8).map(function (p) { return { label: p.label, g: p.g }; });
+      food.portions = ps; food.needsPortions = false;
+      return true;
+    }).catch(function (e) { if (e.status === 429) setUsdaLimited(); return false; });
+  }
+  function openFoodSheet(food, pref) {
+    food = Object.assign({}, food, { portions: (food.portions || []).slice() });
+    sheet.food = food; sheet.touched = false;
+    $('fsName').textContent = food.name;
+    $('fsSub').innerHTML = srcTag(food) + esc(food.brand || '');
+    err('fsErr'); paintFav();
+    checkRadio('fsMeal', defaultMeal());
+    $('fsTime').value = nowTime();
+    buildSheetOptions(pref);
+    openOverlay($('foodSheetOverlay'));
+    if (food.needsPortions) {
+      setNote('Loading serving sizes\u2026', true);
+      loadPortions(food).then(function (ok) {
+        if (sheet.food !== food) return;
+        food.needsPortions = false;
+        if (ok && food.portions.length) {
+          rememberFood(food);
+          if (!sheet.touched) buildSheetOptions(pref);
+          else { var cur = sheet.opts[sheet.idx].label, q = sheetQty(); buildSheetOptions({ opt: cur, qty: q }); }
+        } else updateSheet();
+      });
+    }
+  }
+  function closeFoodSheet() { closeOverlay($('foodSheetOverlay')); sheet.food = null; }
+  $('fsServing').addEventListener('change', function () {
+    if (!sheet.food) return;
+    var prev = sheet.opts[sheet.idx], q = sheetQty();
+    var next = sheet.opts[Number($('fsServing').value)];
+    var g = q != null && q > 0 ? gramsFor(prev, q) : null;
+    sheet.idx = Number($('fsServing').value); sheet.touched = true;
+    $('fsQty').value = next.type === 'grams' ? String(g != null ? r1(g) : 100) : '1';
+    updateSheet();
+  });
+  $('fsQty').addEventListener('input', function () { sheet.touched = true; updateSheet(); });
+  function stepQty(dir) {
+    if (!sheet.food) return;
+    var opt = sheet.opts[sheet.idx], q = sheetQty() || 0;
+    var step = opt.type === 'grams' ? (q >= 100 ? 10 : 5) : 0.5;
+    var nq = Math.max(0, Math.round((q + dir * step) / step) * step);
+    if (nq === 0) nq = opt.type === 'grams' ? step : 0.5;
+    $('fsQty').value = String(r1(nq)); sheet.touched = true; updateSheet();
+  }
+  $('fsMinus').addEventListener('click', function () { stepQty(-1); });
+  $('fsPlus').addEventListener('click', function () { stepQty(1); });
+  $('fsFav').addEventListener('click', function () {
+    if (!sheet.food) return;
+    var on = toggleFav(sheet.food); paintFav(); toast(on ? 'Added to favorites' : 'Removed from favorites');
+    if (current === 'food') renderBrowse();
+  });
+  $('fsClose').addEventListener('click', closeFoodSheet);
+  $('foodSheetOverlay').addEventListener('click', function (e) { if (e.target === $('foodSheetOverlay')) closeFoodSheet(); });
+  $('fsForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!sheet.food) return;
+    var opt = sheet.opts[sheet.idx], qty = sheetQty(), meal = radioVal('fsMeal'), time = $('fsTime').value;
+    if (qty === null || qty <= 0) { err('fsErr', 'Enter an amount greater than zero.'); $('fsQty').focus(); return; }
+    if (!meal) { err('fsErr', 'Choose a meal.'); return; }
+    if (!time) { err('fsErr', 'Add a time.'); return; }
+    err('fsErr');
+    var name = sheet.food.name;
+    if (logFood(sheet.food, opt, qty, meal, time)) {
+      closeFoodSheet(); blurActive();
+      toast('Added ' + name + ' to ' + cap(meal)); render();
+    }
+  });
+
+  /* ---------- Barcode lookup ---------- */
+  function digits(s) { return String(s || '').replace(/\D/g, ''); }
+  function validGtin(code) {
+    if (!/^\d+$/.test(code) || [8, 12, 13, 14].indexOf(code.length) < 0) return false;
+    if (code.length === 8 && code.charAt(0) === '0') return true; // may be UPC-E; checksum is on the expanded form
+    var sum = 0, n = code.length;
+    for (var i = 0; i < n - 1; i++) sum += Number(code.charAt(i)) * ((n - 1 - i) % 2 === 1 ? 3 : 1);
+    return (10 - (sum % 10)) % 10 === Number(code.charAt(n - 1));
+  }
+  function lookupOFF(code) {
+    return fetchJSON(OFF_BASE + 'api/v2/product/' + encodeURIComponent(code) + '.json?fields=' + OFF_FIELDS, null, 10000).then(function (j) {
+      if (!j || j.status !== 1 || !j.product) return { food: null, missing: true };
+      var food = offToFood(Object.assign({ code: j.code || code }, j.product));
+      return { food: food, missing: !food, noEnergy: !food };
+    }, function (e) { return { food: null, missing: e.status === 404, error: e.status !== 404 }; });
+  }
+  function lookupUSDAUpc(code) {
+    if (Date.now() < usdaLimitedUntil()) return Promise.resolve({ food: null, limited: true });
+    var want = code.replace(/^0+/, '');
+    return fetchJSON(USDA_BASE + 'foods/search?' + usdaKeyUrl(), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: code, dataType: ['Branded'], pageSize: 10 })
+    }, 10000).then(function (j) {
+      var hit = (j.foods || []).filter(function (f) { return digits(f.gtinUpc).replace(/^0+/, '') === want; })[0];
+      return { food: hit ? usdaToFood(hit) : null };
+    }, function (e) { if (e.status === 429) setUsdaLimited(); return { food: null, error: true, limited: e.status === 429 }; });
+  }
+  // UPC-E (8 digits, number system 0/1) to UPC-A (12 digits).
+  function upcEtoA(e) {
+    if (!/^[01]\d{7}$/.test(e)) return null;
+    var x = e.slice(1, 7), last = x.charAt(5), body;
+    if ('012'.indexOf(last) >= 0) body = x.slice(0, 2) + last + '0000' + x.slice(2, 5);
+    else if (last === '3') body = x.slice(0, 3) + '00000' + x.slice(3, 5);
+    else if (last === '4') body = x.slice(0, 4) + '00000' + x.charAt(4);
+    else body = x.slice(0, 5) + '0000' + last;
+    return e.charAt(0) + body + e.charAt(7);
+  }
+  function lookupBarcode(code) {
+    var alt = code.length === 8 ? upcEtoA(code) : null;
+    return lookupOFF(code).then(function (r) {
+      if (r.food || !alt) return r;
+      return lookupOFF(alt).then(function (r2) { return r2.food ? r2 : r; });
+    }).then(function (r) {
+      if (r.food) return r;
+      return lookupUSDAUpc(alt || code).then(function (u) {
+        if (u.food) return u;
+        return { food: null, error: r.error && u.error, limited: u.limited, noEnergy: r.noEnergy };
+      });
+    });
+  }
+
+  /* ---------- Camera scanner ---------- */
+  var scan = { stream: null, running: false, timer: null, decode: null, busy: false };
+  var zxingLoad = null;
+  function loadZXing() {
+    if (window.ZXing) return Promise.resolve(window.ZXing);
+    if (zxingLoad) return zxingLoad;
+    zxingLoad = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'vendor/zxing.min.js';
+      s.onload = function () { window.ZXing ? resolve(window.ZXing) : reject(new Error('Scanner failed to load')); };
+      s.onerror = function () { zxingLoad = null; reject(new Error('Scanner failed to load')); };
+      document.head.appendChild(s);
+    });
+    return zxingLoad;
+  }
+  function makeDecoder() {
+    // Native detector where it exists (Chrome on Android); ZXing everywhere else (iPhone).
+    if (typeof window.BarcodeDetector === 'function' && typeof window.BarcodeDetector.getSupportedFormats === 'function') {
+      return window.BarcodeDetector.getSupportedFormats().then(function (fmts) {
+        if (fmts.indexOf('ean_13') < 0) throw new Error('unsupported');
+        var det = new window.BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'].filter(function (f) { return fmts.indexOf(f) >= 0; }) });
+        return function (video) { return det.detect(video).then(function (c) { return c && c[0] ? c[0].rawValue : null; }); };
+      }).catch(zxingDecoder);
+    }
+    return zxingDecoder();
+  }
+  function zxingDecoder() {
+    return loadZXing().then(function (Z) {
+      var hints = new Map();
+      hints.set(Z.DecodeHintType.POSSIBLE_FORMATS, [Z.BarcodeFormat.EAN_13, Z.BarcodeFormat.EAN_8, Z.BarcodeFormat.UPC_A, Z.BarcodeFormat.UPC_E]);
+      hints.set(Z.DecodeHintType.TRY_HARDER, true);
+      var reader = new Z.MultiFormatReader(); reader.setHints(hints);
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d', { willReadFrequently: true });
+      return function (video) {
+        var vw = video.videoWidth, vh = video.videoHeight;
+        if (!vw || !vh) return Promise.resolve(null);
+        // Center band, matching the on-screen frame.
+        var sw = Math.round(vw * 0.86), sh = Math.round(vh * 0.5), sx = Math.round((vw - sw) / 2), sy = Math.round((vh - sh) / 2);
+        var k = Math.min(1, 1000 / sw);
+        canvas.width = Math.round(sw * k); canvas.height = Math.round(sh * k);
+        ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+        try {
+          var bmp = new Z.BinaryBitmap(new Z.HybridBinarizer(new Z.HTMLCanvasElementLuminanceSource(canvas)));
+          return Promise.resolve(reader.decodeWithState(bmp).getText());
+        } catch (e) { return Promise.resolve(null); } finally { reader.reset(); }
+      };
+    });
+  }
+  function scanMsg(msg) { $('scanStatus').textContent = msg; }
+  function scanActions(btns) {
+    var box = $('scanActions'); box.innerHTML = '';
+    (btns || []).forEach(function (b) {
+      var el = document.createElement('button'); el.type = 'button'; el.className = 'btn ' + b.cls; el.textContent = b.label;
+      el.addEventListener('click', b.run); box.appendChild(el);
+    });
+  }
+  function stopCamera() {
+    scan.running = false; clearTimeout(scan.timer);
+    if (scan.stream) { scan.stream.getTracks().forEach(function (t) { t.stop(); }); scan.stream = null; }
+    var v = $('scanVideo'); try { v.pause(); } catch (_) {} v.srcObject = null;
+  }
+  function cameraError(e) {
+    stopCamera();
+    var n = e && e.name;
+    if (n === 'NotAllowedError' || n === 'SecurityError') scanMsg('Camera access is turned off for this app. To scan, allow the camera (on iPhone: Settings \u203a Safari \u203a Camera, or the prompt next time you tap Scan). You can type the barcode number below instead.');
+    else if (n === 'NotFoundError' || n === 'OverconstrainedError') scanMsg('No camera was found. Type the barcode number below instead.');
+    else if (n === 'NotReadableError') scanMsg('The camera is being used by another app. Close it and try again, or type the barcode number below.');
+    else scanMsg('The camera couldn\u2019t start. Type the barcode number below instead.');
+    scanActions([{ label: 'Try camera again', cls: 'btn-ghost', run: startCamera }]);
+  }
+  function startCamera() {
+    scanActions([]);
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      scanMsg('The camera isn\u2019t available here (it needs a secure https page). Type the barcode number below instead.');
+      return;
+    }
+    scanMsg('Starting camera\u2026');
+    navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } })
+      .then(function (stream) {
+        if (!$('scanOverlay').classList.contains('open')) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
+        scan.stream = stream;
+        var v = $('scanVideo');
+        v.setAttribute('playsinline', ''); v.muted = true; v.srcObject = stream;
+        return Promise.resolve(v.play()).then(makeDecoder).then(function (decode) {
+          if (!scan.stream) return;
+          scan.decode = decode; scan.running = true;
+          scanMsg('Line up the barcode inside the frame. It scans automatically.');
+          scanLoop();
+        });
+      })
+      .catch(cameraError);
+  }
+  function scanLoop() {
+    if (!scan.running) return;
+    scan.decode($('scanVideo')).then(function (text) {
+      if (!scan.running) return;
+      var code = digits(text);
+      if (code && validGtin(code)) { if (navigator.vibrate) navigator.vibrate(60); handleCode(code); return; }
+      scan.timer = setTimeout(scanLoop, 120);
+    }, function () { if (scan.running) scan.timer = setTimeout(scanLoop, 250); });
+  }
+  function handleCode(code) {
+    stopCamera();
+    $('scanCode').value = code;
+    if (!navigator.onLine) {
+      scanMsg('You\u2019re offline, so barcode ' + code + ' can\u2019t be looked up right now. Try again when you\u2019re connected.');
+      scanActions([{ label: 'Scan again', cls: 'btn-ghost', run: startCamera }]);
+      return;
+    }
+    scanMsg('Looking up ' + code + '\u2026');
+    scanActions([]);
+    var token = scan.token = {};
+    lookupBarcode(code).then(function (r) {
+      if (scan.token !== token || !$('scanOverlay').classList.contains('open')) return;
+      if (r.food) { closeScanner(); openFoodSheet(r.food); return; }
+      scanMsg(r.error
+        ? 'Couldn\u2019t reach the food databases to look up ' + code + '. Check your connection and try again, or add it manually.'
+        : r.noEnergy
+          ? 'Barcode ' + code + ' was found, but it has no calorie information yet. You can add it manually.'
+          : 'No match for barcode ' + code + ' in Open Food Facts or USDA. You can add it manually.');
+      scanActions([
+        { label: 'Add manually', cls: 'btn-secondary', run: function () { closeScanner(); openManual('Barcode ' + code); } },
+        { label: 'Scan again', cls: 'btn-ghost', run: startCamera }
+      ]);
+    });
+  }
+  function openScanner() {
+    $('scanCode').value = ''; scanActions([]); scanMsg('');
+    openOverlay($('scanOverlay'));
+    startCamera();
+  }
+  function closeScanner() { stopCamera(); scan.token = null; closeOverlay($('scanOverlay')); }
+  $('scanBtn').addEventListener('click', openScanner);
+  $('scanClose').addEventListener('click', closeScanner);
+  $('scanManual').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var code = digits($('scanCode').value);
+    if (code.length < 8 || code.length > 14) { scanMsg('Barcodes are 8 to 14 digits. Check the number and try again.'); return; }
+    blurActive(); handleCode(code);
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden && scan.stream) {
+      stopCamera();
+      scanMsg('Camera paused.');
+      scanActions([{ label: 'Resume camera', cls: 'btn-ghost', run: startCamera }]);
+    }
+  });
+
+  /* ---------- Manual entry toggle ---------- */
+  function openManual(note) {
+    $('foodForm').hidden = false; $('manualToggle').hidden = true;
+    $('manualToggle').setAttribute('aria-expanded', 'true');
+    if (note && !$('foodNotes').value) $('foodNotes').value = note;
+    resetTimes();
+    setTimeout(function () { $('foodForm').scrollIntoView({ behavior: 'smooth', block: 'start' }); $('foodName').focus(); }, 60);
+  }
+  function closeManual() {
+    $('foodForm').hidden = true; $('manualToggle').hidden = false;
+    $('manualToggle').setAttribute('aria-expanded', 'false'); err('foodErr');
+  }
+  $('manualToggle').addEventListener('click', function () { openManual(); });
+  $('manualClose').addEventListener('click', closeManual);
+
+  window.addEventListener('online', function () { if (current === 'food' && !$('foodSearch').value.trim()) setSearchStatus(''); });
+  window.addEventListener('offline', function () { if (current === 'food') setSearchStatus(offlineNote(), true); });
+
+  // Exposed for automated tests only (no effect on normal use).
+  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA };
 
   /* ---------- Init ---------- */
   checkRadio('mealType', defaultMeal());

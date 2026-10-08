@@ -9,7 +9,17 @@ No App Store, no Mac, no account. Everything is stored on the phone (localStorag
 - `sw.js` – service worker that caches the app so it works offline
 - `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` – app icons
 
+- `vendor/zxing.min.js` – ZXing barcode reader (Apache-2.0, see `vendor/ZXING-LICENSE.txt`), used for barcode scanning on iPhone
+
 Keep all files together in the same folder.
+
+## Food database
+- **Search** (Food tab): USDA FoodData Central (generic foods plus branded) and Open Food Facts (packaged foods), merged and de-duplicated.
+- **Scan**: reads UPC/EAN barcodes with the rear camera, looks them up in Open Food Facts, then USDA Branded. You can also type the barcode number.
+- **Serving picker**: household servings when the database has them, plus grams and 100 g; quantity can be a decimal.
+- **Recent and favorites**: tap + to re-log a recent food in one tap; tap the star to save a favorite. Both are included in Export/Import.
+- **USDA API key**: the app ships with `DEMO_KEY`, which is shared and heavily rate-limited. Get a free personal key at https://api.data.gov/signup/ and set `USDA_API_KEY` near the top of the script in `index.html`. When USDA's limit is hit, search falls back to Open Food Facts for an hour.
+- Search and barcode lookups need a connection; recent and favorite foods work offline. API responses are never cached by the service worker.
 
 ## Open it
 The app needs to be served over **https** (or `http://localhost` for testing) for the
@@ -39,4 +49,5 @@ Easiest options:
 - No Apple Health sync (web apps can't access HealthKit).
 - No sync between devices; use Export/Import to move data.
 - Deleting the home-screen app deletes its data.
+- Food data comes from public databases and can have gaps or errors (especially crowd-sourced Open Food Facts entries); check the label when it matters.
 - Blood pressure categories follow AHA adult ranges and are not medical advice.

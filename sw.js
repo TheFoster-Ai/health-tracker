@@ -1,12 +1,13 @@
 /* Health Tracker service worker: caches the app shell for offline use. */
-const CACHE = 'health-tracker-v2';
+const CACHE = 'health-tracker-v3';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './vendor/zxing.min.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -26,6 +27,7 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
+  // Food database APIs (USDA, Open Food Facts) and anything else off-site: network only, never cached.
   if (url.origin !== self.location.origin) return;
 
   const isNav = req.mode === 'navigate';
