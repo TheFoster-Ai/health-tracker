@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Health Tracker</title>
+<meta name="description" content="Track food, workouts, water, blood pressure, and sleep. Data stays on your device.">
+<meta name="theme-color" content="#0E5E5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Health">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+:root{
+  --bg:#F6F4EF; --card:#FFFFFF; --ink:#1C2321; --muted:#5E6A67; --faint:#8A9491;
+  --line:#E3E0D8; --accent:#0E5E5C; --accent-ink:#0A4846; --accent-soft:#E2EEEB;
+  --danger:#A8322A; --danger-soft:#F7E6E3; --warn:#8A5A00; --warn-soft:#FBF0D9;
+  --radius:16px; --tabh:58px;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--font);
+  -webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;font-size:16px;line-height:1.4}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+header.app{background:var(--accent);color:#fff;padding:calc(var(--sat) + 10px) calc(16px + var(--sar)) 12px calc(16px + var(--sal));flex:none}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+.head-row h1{font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:0;background:transparent;color:inherit;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:active{background:rgba(255,255,255,.15)}
+.icon-btn svg{width:24px;height:24px}
+.datebar{display:flex;align-items:center;gap:6px;margin-top:8px}
+.datebar .icon-btn{width:44px;height:44px;background:rgba(255,255,255,.12)}
+.datebar .icon-btn:disabled{opacity:.35}
+.date-pick{position:relative;flex:1;height:44px;border-radius:12px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-weight:600;overflow:hidden}
+.date-pick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px;-webkit-appearance:none;appearance:none}
+.pill-btn{height:44px;padding:0 14px;border-radius:12px;border:0;background:#fff;color:var(--accent);font-weight:600}
+
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  padding:16px calc(16px + var(--sar)) calc(var(--tabh) + var(--sab) + 24px) calc(16px + var(--sal))}
+.view{display:none;max-width:640px;margin:0 auto}
+.view.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.card h2{font-size:17px;margin:0 0 12px;font-weight:650}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.lead{font-size:15px;color:var(--muted);margin:0 0 14px}
+.greet{font-size:24px;font-weight:700;margin:4px 0 2px;letter-spacing:-.01em}
+
+.field{margin-bottom:14px}
+.field>label,.field>.label{display:block;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.opt{font-weight:400;color:var(--faint)}
+input[type=text],input[type=number],input[type=time],input[type=date],textarea{
+  width:100%;min-height:48px;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#FBFAF7;
+  -webkit-appearance:none;appearance:none}
+input[type=time],input[type=date]{display:flex;align-items:center}
+textarea{min-height:72px;resize:vertical}
+input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);background:#fff}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+.seg{display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:8px}
+.seg label{position:relative;display:block}
+.seg input{position:absolute;opacity:0;inset:0;margin:0}
+.seg span{display:flex;align-items:center;justify-content:center;min-height:46px;padding:6px 4px;border:1px solid var(--line);border-radius:12px;background:#FBFAF7;font-size:15px;font-weight:500;text-align:center}
+.seg input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff}
+.seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.qual{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.qual button{min-height:46px;border:1px solid var(--line);border-radius:12px;background:#FBFAF7;font-weight:600}
+.qual button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px;border-radius:14px;border:1px solid transparent;font-weight:650;font-size:16px}
+.btn-primary{background:var(--accent);color:#fff;width:100%}
+.btn-primary:active{background:var(--accent-ink)}
+.btn-secondary{background:var(--accent-soft);color:var(--accent-ink)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger-ghost{background:var(--danger-soft);color:var(--danger)}
+.btn:disabled{opacity:.45}
+.err{color:var(--danger);font-size:14px;margin:-4px 0 12px;font-weight:500}
+.err:empty{display:none}
+
+.list{list-style:none;margin:0;padding:0}
+.item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0;padding-top:2px}
+.item .main{flex:1;min-width:0}
+.item .title{font-weight:600;overflow-wrap:anywhere}
+.item .meta{font-size:14px;color:var(--muted);margin-top:2px}
+.item .note{font-size:14px;color:var(--muted);margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}
+.item .val{font-weight:650;white-space:nowrap}
+.del{width:44px;height:44px;flex:none;border:0;border-radius:10px;background:transparent;color:var(--faint);display:inline-flex;align-items:center;justify-content:center;margin:-10px -10px 0 0}
+.del:active{background:var(--danger-soft);color:var(--danger)}
+.del svg{width:20px;height:20px}
+.empty{color:var(--muted);font-size:15px;padding:4px 0}
+.chip{display:inline-block;font-size:12px;font-weight:650;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);vertical-align:middle}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.danger{background:var(--danger-soft);color:var(--danger)}
+.list-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.list-head h2{margin:0}
+
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.sum{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;text-align:left;width:100%;min-height:118px;display:flex;flex-direction:column}
+.sum.wide{grid-column:1/-1;min-height:0}
+.sum:active{background:#FAF9F5}
+.sum .k{font-size:13px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px}
+.sum .k svg{width:16px;height:16px;color:var(--accent)}
+.sum .v{font-size:26px;font-weight:700;margin-top:8px;letter-spacing:-.01em}
+.sum .v small{font-size:15px;font-weight:600;color:var(--muted)}
+.sum .d{font-size:14px;color:var(--muted);margin-top:auto;padding-top:6px;overflow-wrap:anywhere}
+.sum .d.cta{color:var(--accent);font-weight:600}
+.bar{display:block;height:10px;background:var(--accent-soft);border-radius:999px;overflow:hidden;margin-top:10px;width:100%}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
+
+.water-total{text-align:center;padding:6px 0 4px}
+.water-total .big{font-size:48px;font-weight:750;letter-spacing:-.02em;line-height:1}
+.water-total .of{color:var(--muted);margin-top:6px}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 12px}
+.quick button{min-height:64px;border-radius:14px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent-ink);font-size:18px;font-weight:700}
+.quick button:active{background:var(--accent);color:#fff}
+.inline-form{display:flex;gap:10px;align-items:stretch}
+.inline-form input{flex:1}
+.inline-form .btn{flex:none}
+
+.bp-hero{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bp-hero .big{font-size:44px;font-weight:750;letter-spacing:-.02em;line-height:1.05}
+.bp-hero .unit{color:var(--muted);font-weight:600}
+.alert{background:var(--danger-soft);color:var(--danger);border-radius:12px;padding:10px 12px;font-size:14px;margin-top:10px;font-weight:500}
+.dur-preview{font-size:15px;color:var(--muted);margin:-4px 0 14px}
+.dur-preview:empty{display:none}
+.dur-preview b{color:var(--ink)}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding:0 var(--sar) var(--sab) var(--sal);z-index:10}
+nav.tabs button{height:var(--tabh);border:0;background:transparent;color:var(--faint);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;padding:0}
+nav.tabs svg{width:24px;height:24px}
+nav.tabs button[aria-current=page]{color:var(--accent)}
+
+.overlay{position:fixed;inset:0;background:rgba(20,28,26,.42);z-index:30;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:auto}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:92vh;max-height:92dvh;overflow-y:auto;border-radius:20px 20px 0 0;
+  padding:8px calc(16px + var(--sar)) calc(20px + var(--sab)) calc(16px + var(--sal));transform:translateY(24px);transition:transform .22s}
+.overlay.open .sheet{transform:none}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:6px 0 10px;position:sticky;top:-8px;background:var(--bg);z-index:1}
+.sheet-head h2{margin:0;font-size:20px}
+.sheet-head .icon-btn{color:var(--accent)}
+.sheet-head .icon-btn:active{background:var(--accent-soft)}
+.overlay.center{align-items:center}
+.dialog{background:var(--card);border-radius:18px;padding:20px;width:calc(100% - 32px);max-width:400px;margin:auto;transform:scale(.97);transition:transform .18s}
+.overlay.open .dialog{transform:none}
+.dialog h2{margin:0 0 8px;font-size:18px}
+.dialog p{margin:0 0 18px;color:var(--muted)}
+.dialog .actions{display:flex;gap:10px;flex-direction:column}
+.stack>*+*{margin-top:10px}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabh) + var(--sab) + 14px);transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;font-size:15px;font-weight:500;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.footer-note{font-size:13px;color:var(--faint);text-align:center;margin:18px 0 6px}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="head-row">
+    <h1 id="title">Today</h1>
+    <button class="icon-btn" id="openSettings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+  <div class="datebar" id="datebar" hidden>
+    <button class="icon-btn" id="prevDay" aria-label="Previous day">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <label class="date-pick"><span id="dateLabel">Today</span><input type="date" id="dateInput" aria-label="Choose a date to view"></label>
+    <button class="icon-btn" id="nextDay" aria-label="Next day">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <button class="pill-btn" id="todayBtn" hidden>Today</button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="view" id="view-today" aria-labelledby="title">
+    <p class="greet" id="greet"></p>
+    <p class="lead" id="todayDate"></p>
+    <div class="sum-grid" id="summary"></div>
+    <p class="footer-note">Your entries are stored only on this iPhone. Export a backup from Settings.</p>
+  </section>
+
+  <section class="view" id="view-food">
+    <form class="card" id="foodForm" novalidate>
+      <h2>Log a meal</h2>
+      <div class="field">
+        <label for="foodName">What did you eat?</label>
+        <input type="text" id="foodName" autocomplete="off" autocapitalize="sentences" placeholder="e.g. Turkey sandwich and an apple">
+      </div>
+      <div class="field">
+        <span class="label" id="mealTypeLabel">Meal</span>
+        <div class="seg" role="radiogroup" aria-labelledby="mealTypeLabel" style="--cols:4">
+          <label><input type="radio" name="mealType" value="breakfast"><span>Breakfast</span></label>
+          <label><input type="radio" name="mealType" value="lunch"><span>Lunch</span></label>
+          <label><input type="radio" name="mealType" value="dinner"><span>Dinner</span></label>
+          <label><input type="radio" name="mealType" value="snack"><span>Snack</span></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="foodCal">Calories <span class="opt">(optional)</span></label>
+          <input type="number" id="foodCal" inputmode="numeric" min="0" max="10000" step="1">
+        </div>
+        <div class="field">
+          <label for="foodTime">Time</label>
+          <input type="time" id="foodTime">
+        </div>
+      </div>
+      <div class="field">
+        <label for="foodNotes">Notes <span class="opt">(optional)</span></label>
+        <textarea id="foodNotes" rows="2" autocapitalize="sentences"></textarea>
+      </div>
+      <p class="err" id="foodErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit">Save meal</button>
+    </form>
+    <div class="card">
+      <div class="list-head"><h2 id="foodListTitle">Today</h2><span class="muted small" id="foodTotals"></span></div>
+      <ul class="list" id="foodList"></ul>
+    </div>
+  </section>
+
+  <section class="view" id="view-workouts">
+    <form class="card" id="workoutForm" novalidate>
+      <h2>Log a workout</h2>
+      <div class="field">
+        <span class="label" id="woTypeLabel">Type</span>
+        <div class="seg" role="radiogroup" aria-labelledby="woTypeLabel" style="--cols:3">
+          <label><input type="radio" name="woType" value="walk"><span>Walk</span></label>
+          <label><input type="radio" name="woType" value="run"><span>Run</span></label>
+          <label><input type="radio" name="woType" value="strength"><span>Strength</span></label>
+          <label><input type="radio" name="woType" value="bike"><span>Bike</span></label>
+          <label><input type="radio" name="woType" value="swim"><span>Swim</span></label>
+          <label><input type="radio" name="woType" value="other"><span>Other</span></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="woMin">Minutes</label>
+          <input type="number" id="woMin" inputmode="numeric" min="1" max="1440" step="1">
+        </div>
+        <div class="field">
+          <label for="woTime">Time</label>
+          <input type="time" id="woTime">
+        </div>
+      </div>
+      <div class="field">
+        <label for="woNotes">Notes <span class="opt">(optional)</span></label>
+        <textarea id="woNotes" rows="2" autocapitalize="sentences" placeholder="e.g. 2 miles, felt strong"></textarea>
+      </div>
+      <p class="err" id="woErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit">Save workout</button>
+    </form>
+    <div class="card">
+      <div class="list-head"><h2 id="woListTitle">Today</h2><span class="muted small" id="woTotals"></span></div>
+      <ul class="list" id="woList"></ul>
+    </div>
+  </section>
+
+  <section class="view" id="view-water">
+    <div class="card">
+      <div class="water-total">
+        <div class="big" id="waterBig">0 oz</div>
+        <div class="of" id="waterOf">of 64 oz goal</div>
+      </div>
+      <div class="bar" role="progressbar" aria-label="Progress toward water goal" aria-valuemin="0" aria-valuemax="100" id="waterBarWrap"><i id="waterBar" style="width:0%"></i></div>
+      <div class="quick" role="group" aria-label="Quick add water">
+        <button type="button" data-oz="8" aria-label="Add 8 ounces">+8 oz</button>
+        <button type="button" data-oz="12" aria-label="Add 12 ounces">+12 oz</button>
+        <button type="button" data-oz="16" aria-label="Add 16 ounces">+16 oz</button>
+      </div>
+      <form class="inline-form" id="waterForm" novalidate>
+        <label for="waterCustom" class="sr-only">Custom amount in ounces</label>
+        <input type="number" id="waterCustom" inputmode="decimal" min="1" max="200" step="any" placeholder="Custom amount (oz)">
+        <button class="btn btn-secondary" type="submit">Add</button>
+      </form>
+      <p class="err" id="waterErr" role="alert" style="margin:10px 0 0"></p>
+    </div>
+    <div class="card">
+      <form id="goalForm" novalidate>
+        <div class="field" style="margin-bottom:0">
+          <label for="goalInput">Daily goal (oz)</label>
+          <div class="inline-form">
+            <input type="number" id="goalInput" inputmode="numeric" min="8" max="300" step="1">
+            <button class="btn btn-ghost" type="submit">Set goal</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="list-head"><h2 id="waterListTitle">Today</h2><span class="muted small" id="waterCount"></span></div>
+      <ul class="list" id="waterList"></ul>
+    </div>
+  </section>
+
+  <section class="view" id="view-bp">
+    <div class="card" id="bpLatest"></div>
+    <form class="card" id="bpForm" novalidate>
+      <h2>Log a reading</h2>
+      <div class="row">
+        <div class="field">
+          <label for="bpSys">Systolic <span class="opt">(top)</span></label>
+          <input type="number" id="bpSys" inputmode="numeric" min="70" max="250" step="1">
+        </div>
+        <div class="field">
+          <label for="bpDia">Diastolic <span class="opt">(bottom)</span></label>
+          <input type="number" id="bpDia" inputmode="numeric" min="40" max="150" step="1">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="bpPulse">Pulse <span class="opt">(optional)</span></label>
+          <input type="number" id="bpPulse" inputmode="numeric" min="30" max="220" step="1">
+        </div>
+        <div class="field">
+          <label for="bpTime">Time</label>
+          <input type="time" id="bpTime">
+        </div>
+      </div>
+      <div class="field">
+        <label for="bpNotes">Notes <span class="opt">(optional)</span></label>
+        <textarea id="bpNotes" rows="2" autocapitalize="sentences" placeholder="e.g. Left arm, seated, after coffee"></textarea>
+      </div>
+      <p class="err" id="bpErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit">Save reading</button>
+    </form>
+    <div class="card">
+      <div class="list-head"><h2 id="bpListTitle">Today</h2><span class="muted small" id="bpCount"></span></div>
+      <ul class="list" id="bpList"></ul>
+    </div>
+    <p class="footer-note">Categories follow American Heart Association ranges for adults. They are not a diagnosis; talk with your doctor about your numbers.</p>
+  </section>
+
+  <section class="view" id="view-sleep">
+    <form class="card" id="sleepForm" novalidate>
+      <h2>Log sleep</h2>
+      <div class="field">
+        <label for="sleepDate">Night ending on (the morning you woke up)</label>
+        <input type="date" id="sleepDate">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="sleepBed">Bedtime</label>
+          <input type="time" id="sleepBed">
+        </div>
+        <div class="field">
+          <label for="sleepWake">Wake time</label>
+          <input type="time" id="sleepWake">
+        </div>
+      </div>
+      <p class="dur-preview" id="sleepPreview" aria-live="polite"></p>
+      <div class="field">
+        <span class="label" id="qualLabel">Quality <span class="opt">(optional, 1 = poor, 5 = great)</span></span>
+        <div class="qual" role="group" aria-labelledby="qualLabel" id="sleepQual">
+          <button type="button" data-q="1" aria-pressed="false" aria-label="Quality 1 of 5">1</button>
+          <button type="button" data-q="2" aria-pressed="false" aria-label="Quality 2 of 5">2</button>
+          <button type="button" data-q="3" aria-pressed="false" aria-label="Quality 3 of 5">3</button>
+          <button type="button" data-q="4" aria-pressed="false" aria-label="Quality 4 of 5">4</button>
+          <button type="button" data-q="5" aria-pressed="false" aria-label="Quality 5 of 5">5</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="sleepNotes">Notes <span class="opt">(optional)</span></label>
+        <textarea id="sleepNotes" rows="2" autocapitalize="sentences" placeholder="e.g. Woke up once around 3"></textarea>
+      </div>
+      <p class="err" id="sleepErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit">Save sleep</button>
+    </form>
+    <div class="card">
+      <div class="list-head"><h2>Recent nights</h2><span class="muted small" id="sleepAvg"></span></div>
+      <ul class="list" id="sleepList"></ul>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <button data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Today</button>
+  <button data-tab="food"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7.5S15 14 17 14"/></svg>Food</button>
+  <button data-tab="workouts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>Workouts</button>
+  <button data-tab="water"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7S5.5 9.6 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.6 12 2.7 12 2.7z"/></svg>Water</button>
+  <button data-tab="bp" aria-label="Blood pressure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12h5l1.5-3 3 6 1.5-3h6"/></svg>BP</button>
+  <button data-tab="sleep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>Sleep</button>
+</nav>
+
+<div class="overlay" id="settingsOverlay" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="sheet-head">
+      <h2 id="settingsTitle">Settings</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form class="card" id="settingsGoalForm" novalidate>
+      <h2>Water goal</h2>
+      <div class="field" style="margin-bottom:0">
+        <label for="settingsGoal">Daily goal (oz)</label>
+        <div class="inline-form">
+          <input type="number" id="settingsGoal" inputmode="numeric" min="8" max="300" step="1">
+          <button class="btn btn-ghost" type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+    <div class="card">
+      <h2>Back up your data</h2>
+      <p class="muted small" style="margin:-4px 0 12px">Everything lives only on this device. Export a JSON file now and then and keep it somewhere safe, like Files or iCloud Drive.</p>
+      <div class="stack">
+        <button class="btn btn-secondary" id="exportBtn" type="button" style="width:100%">Export data</button>
+        <label class="btn btn-ghost" style="width:100%" for="importFile">Import from file</label>
+        <input type="file" id="importFile" accept="application/json,.json" class="sr-only">
+      </div>
+      <p class="muted small" id="dataStats" style="margin:12px 0 0"></p>
+    </div>
+    <form class="card" id="clearForm" novalidate>
+      <h2>Clear all data</h2>
+      <p class="muted small" style="margin:-4px 0 12px">Permanently removes every entry and setting from this device. Export first if you want a copy.</p>
+      <div class="field">
+        <label for="clearConfirm">Type DELETE to confirm</label>
+        <input type="text" id="clearConfirm" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      </div>
+      <button class="btn btn-danger" type="submit" id="clearBtn" style="width:100%" disabled>Delete everything</button>
+    </form>
+    <p class="footer-note">Health Tracker · works offline · no account, no tracking</p>
+  </div>
+</div>
+
+<div class="overlay center" id="confirmOverlay" aria-hidden="true">
+  <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
+    <h2 id="confirmTitle"></h2>
+    <p id="confirmMsg"></p>
+    <div class="actions" id="confirmActions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Storage ---------- */
+  var KEY = 'healthTracker.v1';
+  var LISTS = ['food', 'workouts', 'water', 'bp', 'sleep'];
+  var DEFAULT_GOAL = 64;
+
+  function blank() {
+    return { version: 1, settings: { waterGoal: DEFAULT_GOAL }, food: [], workouts: [], water: [], bp: [], sleep: [] };
+  }
+  function validEntry(e) {
+    return e && typeof e === 'object' && typeof e.id === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date);
+  }
+  function normalize(o) {
+    if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error('This file is not a Health Tracker backup.');
+    var hasAny = LISTS.some(function (k) { return Array.isArray(o[k]); });
+    if (!hasAny) throw new Error('This file is not a Health Tracker backup.');
+    var out = blank();
+    var g = o.settings && Number(o.settings.waterGoal);
+    if (g && g >= 8 && g <= 300) out.settings.waterGoal = Math.round(g);
+    LISTS.forEach(function (k) { out[k] = Array.isArray(o[k]) ? o[k].filter(validEntry) : []; });
+    return out;
+  }
+  function load() {
+    var raw = null;
+    try {
+      raw = localStorage.getItem(KEY);
+      if (!raw) return blank();
+      return normalize(JSON.parse(raw));
+    } catch (e) {
+      // Keep a copy of unreadable data rather than silently losing it.
+      try { if (raw) localStorage.setItem(KEY + '.unreadable.' + Date.now(), raw); } catch (_) {}
+      return blank();
+    }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
+    catch (e) { toast('Could not save. Storage may be full.'); return false; }
+  }
+  var db = load();
+
+  /* ---------- Helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function keyOf(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function todayKey() { return keyOf(new Date()); }
+  function parseKey(k) { var p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function addDays(k, n) { var d = parseKey(k); d.setDate(d.getDate() + n); return keyOf(d); }
+  function nowTime() { var d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmtTime(t) {
+    if (!t || !/^\d{2}:\d{2}/.test(t)) return '';
+    var p = t.split(':');
+    return new Date(2000, 0, 1, +p[0], +p[1]).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  function fmtDate(k, opts) {
+    return parseKey(k).toLocaleDateString(undefined, opts || { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+  function relDate(k) {
+    var t = todayKey();
+    if (k === t) return 'Today';
+    if (k === addDays(t, -1)) return 'Yesterday';
+    var opts = { weekday: 'short', month: 'short', day: 'numeric' };
+    if (parseKey(k).getFullYear() !== new Date().getFullYear()) opts.year = 'numeric';
+    return fmtDate(k, opts);
+  }
+  function fmtDur(min) {
+    min = Math.round(min);
+    var h = Math.floor(min / 60), m = min % 60;
+    if (!h) return m + 'm';
+    return h + 'h' + (m ? ' ' + m + 'm' : '');
+  }
+  function fmtOz(n) { return (Math.round(n * 10) / 10).toLocaleString() + ' oz'; }
+  function byTimeDesc(a, b) { return (b.time || '').localeCompare(a.time || '') || (b.created || 0) - (a.created || 0); }
+  function byDateTimeDesc(a, b) { return (b.date + (b.time || '')).localeCompare(a.date + (a.time || '')) || (b.created || 0) - (a.created || 0); }
+  function forDate(list, k) { return db[list].filter(function (e) { return e.date === k; }).sort(byTimeDesc); }
+  function numVal(id) { var v = $(id).value.trim(); if (v === '') return null; var n = Number(v); return isFinite(n) ? n : NaN; }
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+  function sumOf(items, field) { return items.reduce(function (s, e) { return s + (Number(e[field]) || 0); }, 0); }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+  function sleepMinutes(bed, wake) {
+    if (!bed || !wake) return null;
+    var b = bed.split(':'), w = wake.split(':');
+    var diff = (+w[0] * 60 + +w[1]) - (+b[0] * 60 + +b[1]);
+    if (diff <= 0) diff += 1440;
+    return diff;
+  }
+  // American Heart Association adult categories.
+  function bpCategory(s, d) {
+    if (s > 180 || d > 120) return { label: 'Very high', cls: 'danger', crisis: true };
+    if (s >= 140 || d >= 90) return { label: 'High, stage 2', cls: 'danger' };
+    if (s >= 130 || d >= 80) return { label: 'High, stage 1', cls: 'warn' };
+    if (s >= 120) return { label: 'Elevated', cls: 'warn' };
+    return { label: 'Normal', cls: '' };
+  }
+  var TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
+  function delBtn(list, id, what) {
+    return '<button class="del" type="button" data-del="' + list + '" data-id="' + esc(id) + '" aria-label="Delete ' + esc(what) + '">' + TRASH + '</button>';
+  }
+
+  /* ---------- Toast + dialogs ---------- */
+  var toastTimer;
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2200);
+  }
+  function openOverlay(el) { el.classList.add('open'); el.setAttribute('aria-hidden', 'false'); }
+  function closeOverlay(el) { el.classList.remove('open'); el.setAttribute('aria-hidden', 'true'); }
+  function choiceBox(title, msg, choices) {
+    return new Promise(function (resolve) {
+      var ov = $('confirmOverlay');
+      $('confirmTitle').textContent = title;
+      $('confirmMsg').textContent = msg;
+      var acts = $('confirmActions'); acts.innerHTML = '';
+      function done(v) { closeOverlay(ov); ov.onclick = null; resolve(v); }
+      var focusEl = null;
+      choices.forEach(function (c) {
+        var b = document.createElement('button'); b.type = 'button';
+        b.className = 'btn ' + c.cls; b.textContent = c.label;
+        b.onclick = function () { done(c.value); };
+        acts.appendChild(b);
+        if (c.value === null || c.value === false) focusEl = b;
+      });
+      ov.onclick = function (e) { if (e.target === ov) done(choices[choices.length - 1].value); };
+      openOverlay(ov);
+      setTimeout(function () { if (focusEl) focusEl.focus(); }, 50);
+    });
+  }
+  function confirmBox(title, msg, okLabel, danger) {
+    return choiceBox(title, msg, [
+      { label: okLabel || 'OK', value: true, cls: danger ? 'btn-danger' : 'btn-primary' },
+      { label: 'Cancel', value: false, cls: 'btn-ghost' }
+    ]);
+  }
+
+  /* ---------- Navigation ---------- */
+  var TABS = { today: 'Today', food: 'Food', workouts: 'Workouts', water: 'Water', bp: 'Blood pressure', sleep: 'Sleep' };
+  var current = 'today';
+  var viewDate = todayKey();
+
+  function show(tab) {
+    if (!TABS[tab]) tab = 'today';
+    current = tab;
+    Object.keys(TABS).forEach(function (t) { $('view-' + t).classList.toggle('active', t === tab); });
+    document.querySelectorAll('nav.tabs button').forEach(function (b) {
+      if (b.dataset.tab === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    $('title').textContent = TABS[tab];
+    $('openSettings').hidden = tab !== 'today';
+    $('datebar').hidden = tab === 'today' || tab === 'sleep';
+    if (location.hash.slice(1) !== tab) history.replaceState(null, '', '#' + tab);
+    $('main').scrollTop = 0;
+    resetTimes();
+    render();
+  }
+
+  function setViewDate(k) {
+    var t = todayKey();
+    if (!k || !/^\d{4}-\d{2}-\d{2}$/.test(k) || k > t) k = t;
+    viewDate = k;
+    render();
+  }
+
+  function renderDateBar() {
+    var t = todayKey();
+    $('dateLabel').textContent = relDate(viewDate);
+    $('dateInput').value = viewDate;
+    $('dateInput').max = t;
+    $('nextDay').disabled = viewDate >= t;
+    $('todayBtn').hidden = viewDate === t;
+  }
+
+  // Time fields default to "now" unless the user has set them.
+  function resetTimes() {
+    ['foodTime', 'woTime', 'bpTime'].forEach(function (id) { if (!$(id).dataset.touched) $(id).value = nowTime(); });
+  }
+
+  /* ---------- Render ---------- */
+  function render() {
+    renderDateBar();
+    if (current === 'today') renderToday();
+    if (current === 'food') renderFood();
+    if (current === 'workouts') renderWorkouts();
+    if (current === 'water') renderWater();
+    if (current === 'bp') renderBP();
+    if (current === 'sleep') renderSleep();
+  }
+  function listTitle(k) { return relDate(k); }
+  function emptyWhen(k) { return k === todayKey() ? 'yet today' : 'for this day'; }
+
+  var SVG_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  var ICONS = {
+    water: SVG_OPEN + '<path d="M12 2.7S5.5 9.6 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.6 12 2.7 12 2.7z"/></svg>',
+    food: SVG_OPEN + '<path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7.5S15 14 17 14"/></svg>',
+    workouts: SVG_OPEN + '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>',
+    bp: SVG_OPEN + '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+    sleep: SVG_OPEN + '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>'
+  };
+  function sumCard(go, label, value, detail, isCta, wide, extra) {
+    return '<button type="button" class="sum' + (wide ? ' wide' : '') + '" data-go="' + go + '"><span class="k">' + ICONS[go] + label + '</span>' +
+      '<span class="v">' + value + '</span>' + (extra || '') +
+      '<span class="d' + (isCta ? ' cta' : '') + '">' + detail + '</span></button>';
+  }
+
+  function renderToday() {
+    var t = todayKey(), h = new Date().getHours();
+    $('greet').textContent = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ', Jacob';
+    var water = forDate('water', t), food = forDate('food', t), wo = forDate('workouts', t), bpToday = forDate('bp', t);
+    var sleep = db.sleep.filter(function (e) { return e.date === t; })[0];
+    var logged = [water.length, food.length, wo.length, bpToday.length, sleep ? 1 : 0].filter(Boolean).length;
+    $('todayDate').textContent = fmtDate(t, { weekday: 'long', month: 'long', day: 'numeric' }) + ' · ' +
+      (logged === 0 ? 'Nothing logged yet. Tap any card to start.' : logged === 5 ? 'All five areas logged today. Nice work.' : logged + ' of 5 areas logged so far.');
+
+    var goal = db.settings.waterGoal, oz = sumOf(water, 'oz');
+    var pct = Math.min(100, Math.round(oz / goal * 100));
+    var cards = [];
+    cards.push(sumCard('water', 'Water', fmtOz(oz) + ' <small>of ' + goal + ' oz</small>',
+      oz === 0 ? 'No water yet. Tap to log a glass.' : oz >= goal ? 'Goal reached for today.' : fmtOz(goal - oz) + ' to go.',
+      oz === 0, true, '<span class="bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span>'));
+
+    var cal = sumOf(food, 'calories');
+    cards.push(sumCard('food', 'Meals', String(food.length),
+      food.length ? (cal ? cal.toLocaleString() + ' cal logged' : 'Latest: ' + esc(food[0].name)) : 'Log what you eat.', !food.length));
+
+    var mins = sumOf(wo, 'minutes');
+    cards.push(sumCard('workouts', 'Workouts', wo.length ? fmtDur(mins) : '0',
+      wo.length ? plural(wo.length, 'session', 'sessions') : 'Log a walk, run, or lift.', !wo.length));
+
+    var lb = db.bp.slice().sort(byDateTimeDesc)[0];
+    cards.push(sumCard('bp', 'Blood pressure', lb ? lb.systolic + '/' + lb.diastolic : '--',
+      lb ? (lb.date === t ? 'Today, ' + fmtTime(lb.time) : 'Last: ' + relDate(lb.date)) : 'Add a reading.', !lb));
+
+    cards.push(sumCard('sleep', 'Sleep', sleep ? fmtDur(sleep.minutes) : '--',
+      sleep ? 'Last night' + (sleep.quality ? ', quality ' + sleep.quality + '/5' : '') : 'Log last night.', !sleep));
+
+    $('summary').innerHTML = cards.join('');
+  }
+
+  function renderFood() {
+    var items = forDate('food', viewDate), cal = sumOf(items, 'calories');
+    $('foodListTitle').textContent = listTitle(viewDate);
+    $('foodTotals').textContent = items.length ? plural(items.length, 'meal', 'meals') + (cal ? ' · ' + cal.toLocaleString() + ' cal' : '') : '';
+    $('foodList').innerHTML = items.length ? items.map(function (e) {
+      return '<li class="item"><div class="main"><div class="title">' + esc(e.name) + '</div>' +
+        '<div class="meta">' + esc(cap(e.meal)) + ' · ' + fmtTime(e.time) + (e.calories != null ? ' · ' + Number(e.calories).toLocaleString() + ' cal' : '') + '</div>' +
+        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' + delBtn('food', e.id, e.name) + '</li>';
+    }).join('') : '<li class="empty">No meals logged ' + emptyWhen(viewDate) + '. Use the form above to add one.</li>';
+  }
+
+  function renderWorkouts() {
+    var items = forDate('workouts', viewDate), mins = sumOf(items, 'minutes');
+    $('woListTitle').textContent = listTitle(viewDate);
+    $('woTotals').textContent = items.length ? fmtDur(mins) + ' total' : '';
+    $('woList').innerHTML = items.length ? items.map(function (e) {
+      return '<li class="item"><div class="main"><div class="title">' + esc(cap(e.type)) + '</div>' +
+        '<div class="meta">' + fmtTime(e.time) + '</div>' +
+        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
+        '<span class="val">' + fmtDur(Number(e.minutes) || 0) + '</span>' + delBtn('workouts', e.id, cap(e.type) + ' workout') + '</li>';
+    }).join('') : '<li class="empty">No workouts logged ' + emptyWhen(viewDate) + '. Even a short walk counts.</li>';
+  }
+
+  function renderWater() {
+    var items = forDate('water', viewDate), goal = db.settings.waterGoal, oz = sumOf(items, 'oz');
+    var pct = Math.min(100, Math.round(oz / goal * 100));
+    $('waterBig').textContent = fmtOz(oz);
+    $('waterOf').textContent = oz >= goal ? 'Goal of ' + goal + ' oz reached' : 'of ' + goal + ' oz goal · ' + fmtOz(goal - oz) + ' to go';
+    $('waterBar').style.width = pct + '%';
+    $('waterBarWrap').setAttribute('aria-valuenow', String(pct));
+    if (document.activeElement !== $('goalInput')) $('goalInput').value = goal;
+    $('waterListTitle').textContent = listTitle(viewDate);
+    $('waterCount').textContent = items.length ? plural(items.length, 'entry', 'entries') : '';
+    $('waterList').innerHTML = items.length ? items.map(function (e) {
+      return '<li class="item"><div class="main"><div class="title">' + fmtOz(Number(e.oz) || 0) + '</div><div class="meta">' + fmtTime(e.time) + '</div></div>' +
+        delBtn('water', e.id, fmtOz(Number(e.oz) || 0) + ' of water') + '</li>';
+    }).join('') : '<li class="empty">No water logged ' + emptyWhen(viewDate) + '. Tap a button above to add a glass.</li>';
+  }
+
+  function renderBP() {
+    var items = forDate('bp', viewDate), isToday = viewDate === todayKey();
+    var latest = isToday ? db.bp.slice().sort(byDateTimeDesc)[0] : items[0];
+    var el = $('bpLatest');
+    if (latest) {
+      var c = bpCategory(latest.systolic, latest.diastolic);
+      el.innerHTML = '<h2>' + (isToday ? 'Latest reading' : 'Latest on ' + esc(relDate(viewDate))) + '</h2>' +
+        '<div class="bp-hero"><span class="big">' + latest.systolic + '/' + latest.diastolic + '</span><span class="unit">mmHg</span>' +
+        (latest.pulse ? '<span class="unit">· ' + latest.pulse + ' bpm</span>' : '') + '</div>' +
+        '<div class="muted small" style="margin-top:6px">' + esc(relDate(latest.date)) + ', ' + fmtTime(latest.time) + ' &nbsp;<span class="chip ' + c.cls + '">' + c.label + '</span></div>' +
+        (c.crisis ? '<div class="alert">This reading is very high. Rest a few minutes and measure again. If it stays this high, or you have chest pain, shortness of breath, weakness, or vision changes, call 911.</div>' : '');
+    } else {
+      el.innerHTML = '<h2>Latest reading</h2><p class="empty" style="margin:0">' +
+        (isToday ? 'No readings yet. Sit quietly for 5 minutes, then log your first one below.' : 'No readings on this day.') + '</p>';
+    }
+    $('bpListTitle').textContent = listTitle(viewDate);
+    $('bpCount').textContent = items.length ? plural(items.length, 'reading', 'readings') : '';
+    $('bpList').innerHTML = items.length ? items.map(function (e) {
+      var c = bpCategory(e.systolic, e.diastolic);
+      return '<li class="item"><div class="main"><div class="title">' + e.systolic + '/' + e.diastolic + ' <span class="chip ' + c.cls + '">' + c.label + '</span></div>' +
+        '<div class="meta">' + fmtTime(e.time) + (e.pulse ? ' · pulse ' + e.pulse : '') + '</div>' +
+        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
+        delBtn('bp', e.id, 'reading ' + e.systolic + ' over ' + e.diastolic) + '</li>';
+    }).join('') : '<li class="empty">No readings logged ' + emptyWhen(viewDate) + '.</li>';
+  }
+
+  function renderSleep() {
+    if (!$('sleepDate').value) $('sleepDate').value = todayKey();
+    $('sleepDate').max = todayKey();
+    updateSleepPreview();
+    var recent = db.sleep.slice().sort(function (a, b) { return b.date.localeCompare(a.date); }).slice(0, 7);
+    $('sleepAvg').textContent = recent.length ? 'Avg ' + fmtDur(sumOf(recent, 'minutes') / recent.length) : '';
+    $('sleepList').innerHTML = recent.length ? recent.map(function (e) {
+      return '<li class="item"><div class="main"><div class="title">' + (e.date === todayKey() ? 'Last night' : 'Night before ' + esc(fmtDate(e.date))) + '</div>' +
+        '<div class="meta">' + fmtTime(e.bed) + ' to ' + fmtTime(e.wake) + (e.quality ? ' · quality ' + e.quality + '/5' : '') + '</div>' +
+        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
+        '<span class="val">' + fmtDur(Number(e.minutes) || 0) + '</span>' + delBtn('sleep', e.id, 'sleep for ' + fmtDate(e.date)) + '</li>';
+    }).join('') : '<li class="empty">No sleep logged yet. Enter when you went to bed and when you woke up.</li>';
+  }
+  function updateSleepPreview() {
+    var m = sleepMinutes($('sleepBed').value, $('sleepWake').value);
+    $('sleepPreview').innerHTML = m ? 'Duration: <b>' + fmtDur(m) + '</b>' : '';
+  }
+
+  /* ---------- Adding entries ---------- */
+  function add(list, entry) {
+    entry.id = uid(); entry.created = Date.now();
+    db[list].push(entry);
+    if (save()) return true;
+    db[list].pop();
+    return false;
+  }
+  function err(id, msg) { $(id).textContent = msg || ''; }
+  function defaultMeal() {
+    var d = new Date(), h = d.getHours() + d.getMinutes() / 60;
+    return h < 10.5 ? 'breakfast' : h < 15 ? 'lunch' : (h >= 17 && h < 21.5) ? 'dinner' : 'snack';
+  }
+  function checkRadio(name, value) {
+    var r = document.querySelector('input[name="' + name + '"][value="' + value + '"]'); if (r) r.checked = true;
+  }
+  function radioVal(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : null; }
+  function blurActive() { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); }
+  function resetTime(id) { delete $(id).dataset.touched; $(id).value = nowTime(); }
+  ['foodTime', 'woTime', 'bpTime'].forEach(function (id) {
+    $(id).addEventListener('change', function () { $(id).dataset.touched = '1'; });
+  });
+
+  $('foodForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = $('foodName').value.trim(), meal = radioVal('mealType'), cal = numVal('foodCal'), time = $('foodTime').value;
+    if (!name) { err('foodErr', 'Describe what you ate.'); $('foodName').focus(); return; }
+    if (!meal) { err('foodErr', 'Choose a meal type.'); return; }
+    if (cal !== null && (isNaN(cal) || cal < 0 || cal > 10000)) { err('foodErr', 'Calories should be a number from 0 to 10,000, or left blank.'); return; }
+    if (!time) { err('foodErr', 'Add a time.'); return; }
+    err('foodErr');
+    if (add('food', { date: viewDate, time: time, name: name, meal: meal, calories: cal === null ? null : Math.round(cal), notes: $('foodNotes').value.trim() })) {
+      $('foodName').value = ''; $('foodCal').value = ''; $('foodNotes').value = '';
+      resetTime('foodTime'); checkRadio('mealType', defaultMeal()); blurActive();
+      toast('Meal saved'); render();
+    }
+  });
+
+  $('workoutForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var type = radioVal('woType'), mins = numVal('woMin'), time = $('woTime').value;
+    if (!type) { err('woErr', 'Choose a workout type.'); return; }
+    if (mins === null || isNaN(mins) || mins < 1 || mins > 1440) { err('woErr', 'Enter the duration in minutes (1 to 1440).'); $('woMin').focus(); return; }
+    if (!time) { err('woErr', 'Add a time.'); return; }
+    err('woErr');
+    if (add('workouts', { date: viewDate, time: time, type: type, minutes: Math.round(mins), notes: $('woNotes').value.trim() })) {
+      $('woMin').value = ''; $('woNotes').value = '';
+      resetTime('woTime'); blurActive();
+      toast('Workout saved'); render();
+    }
+  });
+
+  function addWater(oz) {
+    var before = sumOf(forDate('water', viewDate), 'oz');
+    if (add('water', { date: viewDate, time: nowTime(), oz: oz })) {
+      var goal = db.settings.waterGoal;
+      toast('Added ' + fmtOz(oz) + (before < goal && before + oz >= goal ? '. Goal reached.' : ''));
+      render();
+    }
+  }
+  document.querySelectorAll('.quick button').forEach(function (b) {
+    b.addEventListener('click', function () { err('waterErr'); addWater(Number(b.dataset.oz)); });
+  });
+  $('waterForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var oz = numVal('waterCustom');
+    if (oz === null || isNaN(oz) || oz <= 0 || oz > 200) { err('waterErr', 'Enter an amount between 1 and 200 oz.'); return; }
+    err('waterErr'); $('waterCustom').value = ''; blurActive();
+    addWater(Math.round(oz * 10) / 10);
+  });
+  function setGoal(v) {
+    var g = Number(v);
+    if (String(v).trim() === '' || !isFinite(g) || g < 8 || g > 300) { toast('Goal should be between 8 and 300 oz'); return; }
+    db.settings.waterGoal = Math.round(g);
+    if (save()) { blurActive(); toast('Daily goal set to ' + db.settings.waterGoal + ' oz'); render(); }
+  }
+  $('goalForm').addEventListener('submit', function (e) { e.preventDefault(); setGoal($('goalInput').value); });
+  $('settingsGoalForm').addEventListener('submit', function (e) { e.preventDefault(); setGoal($('settingsGoal').value); });
+
+  $('bpForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var s = numVal('bpSys'), d = numVal('bpDia'), p = numVal('bpPulse'), time = $('bpTime').value;
+    if (s === null || isNaN(s) || s < 70 || s > 250) { err('bpErr', 'Systolic (top number) should be between 70 and 250.'); $('bpSys').focus(); return; }
+    if (d === null || isNaN(d) || d < 40 || d > 150) { err('bpErr', 'Diastolic (bottom number) should be between 40 and 150.'); $('bpDia').focus(); return; }
+    if (s <= d) { err('bpErr', 'Systolic should be higher than diastolic. Check the numbers.'); return; }
+    if (p !== null && (isNaN(p) || p < 30 || p > 220)) { err('bpErr', 'Pulse should be between 30 and 220, or left blank.'); return; }
+    if (!time) { err('bpErr', 'Add a time.'); return; }
+    err('bpErr');
+    if (add('bp', { date: viewDate, time: time, systolic: Math.round(s), diastolic: Math.round(d), pulse: p === null ? null : Math.round(p), notes: $('bpNotes').value.trim() })) {
+      $('bpSys').value = ''; $('bpDia').value = ''; $('bpPulse').value = ''; $('bpNotes').value = '';
+      resetTime('bpTime'); blurActive();
+      toast('Reading saved'); render();
+    }
+  });
+
+  var sleepQuality = null;
+  function paintQuality() {
+    $('sleepQual').querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(Number(x.dataset.q) === sleepQuality)); });
+  }
+  $('sleepQual').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-q]'); if (!b) return;
+    var q = Number(b.dataset.q);
+    sleepQuality = sleepQuality === q ? null : q;
+    paintQuality();
+  });
+  ['sleepBed', 'sleepWake'].forEach(function (id) {
+    $(id).addEventListener('input', updateSleepPreview); $(id).addEventListener('change', updateSleepPreview);
+  });
+  $('sleepForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var date = $('sleepDate').value, bed = $('sleepBed').value, wake = $('sleepWake').value;
+    if (!date) { err('sleepErr', 'Choose the date you woke up.'); return; }
+    if (date > todayKey()) { err('sleepErr', 'That date is in the future.'); return; }
+    if (!bed || !wake) { err('sleepErr', 'Enter both bedtime and wake time.'); return; }
+    var mins = sleepMinutes(bed, wake);
+    if (mins > 20 * 60) { err('sleepErr', 'That works out to more than 20 hours. Check the times.'); return; }
+    err('sleepErr');
+    var existing = db.sleep.some(function (x) { return x.date === date; });
+    var proceed = existing
+      ? confirmBox('Replace this night?', 'You already logged sleep for the night before ' + fmtDate(date) + '. Save this one instead?', 'Replace', false)
+      : Promise.resolve(true);
+    proceed.then(function (ok) {
+      if (!ok) return;
+      var backup = db.sleep;
+      db.sleep = db.sleep.filter(function (x) { return x.date !== date; });
+      if (add('sleep', { date: date, bed: bed, wake: wake, minutes: mins, quality: sleepQuality, notes: $('sleepNotes').value.trim() })) {
+        $('sleepBed').value = ''; $('sleepWake').value = ''; $('sleepNotes').value = ''; $('sleepDate').value = todayKey();
+        sleepQuality = null; paintQuality(); blurActive();
+        toast(existing ? 'Sleep updated' : 'Sleep saved'); render();
+      } else {
+        db.sleep = backup;
+      }
+    });
+  });
+
+  /* ---------- Delete + summary navigation ---------- */
+  $('main').addEventListener('click', function (e) {
+    var go = e.target.closest('[data-go]');
+    if (go) { viewDate = todayKey(); show(go.dataset.go); return; }
+    var b = e.target.closest('[data-del]'); if (!b) return;
+    var list = b.dataset.del, id = b.dataset.id;
+    if (LISTS.indexOf(list) < 0) return;
+    confirmBox('Delete this entry?', 'It will be removed from this device. This can\u2019t be undone.', 'Delete', true).then(function (ok) {
+      if (!ok) return;
+      db[list] = db[list].filter(function (x) { return x.id !== id; });
+      if (save()) { toast('Deleted'); render(); }
+    });
+  });
+
+  /* ---------- Date bar ---------- */
+  $('prevDay').addEventListener('click', function () { setViewDate(addDays(viewDate, -1)); });
+  $('nextDay').addEventListener('click', function () { setViewDate(addDays(viewDate, 1)); });
+  $('todayBtn').addEventListener('click', function () { setViewDate(todayKey()); });
+  $('dateInput').addEventListener('change', function () { if ($('dateInput').value) setViewDate($('dateInput').value); });
+
+  /* ---------- Tabs ---------- */
+  document.querySelectorAll('nav.tabs button').forEach(function (b) {
+    b.addEventListener('click', function () { show(b.dataset.tab); });
+  });
+  window.addEventListener('hashchange', function () { var t = location.hash.slice(1); if (t !== current) show(t); });
+
+  /* ---------- Settings ---------- */
+  function dataStats() {
+    var n = LISTS.reduce(function (s, k) { return s + db[k].length; }, 0);
+    $('dataStats').textContent = n ? plural(n, 'entry', 'entries') + ' stored on this device.' : 'No entries stored yet.';
+  }
+  function closeSettings() { closeOverlay($('settingsOverlay')); render(); }
+  $('openSettings').addEventListener('click', function () {
+    $('settingsGoal').value = db.settings.waterGoal; $('clearConfirm').value = ''; $('clearBtn').disabled = true;
+    dataStats(); openOverlay($('settingsOverlay'));
+  });
+  $('closeSettings').addEventListener('click', closeSettings);
+  $('settingsOverlay').addEventListener('click', function (e) { if (e.target === $('settingsOverlay')) closeSettings(); });
+
+  $('exportBtn').addEventListener('click', function () {
+    var payload = Object.assign({ app: 'Health Tracker', exportedAt: new Date().toISOString() }, db);
+    var json = JSON.stringify(payload, null, 2);
+    var name = 'health-tracker-' + todayKey() + '.json';
+    var file = null;
+    try { file = new File([json], name, { type: 'application/json' }); } catch (_) {}
+    function download() {
+      var url = URL.createObjectURL(file || new Blob([json], { type: 'application/json' }));
+      var a = document.createElement('a'); a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      toast('Export ready');
+    }
+    // On iPhone the share sheet is the reliable way to save to Files or AirDrop.
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: 'Health Tracker backup' }).catch(function (e) {
+        if (!e || e.name !== 'AbortError') download();
+      });
+    } else {
+      download();
+    }
+  });
+
+  $('importFile').addEventListener('change', function () {
+    var f = $('importFile').files && $('importFile').files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onerror = function () { toast('Could not read that file.'); };
+    reader.onload = function () {
+      $('importFile').value = '';
+      var incoming;
+      try { incoming = normalize(JSON.parse(reader.result)); }
+      catch (e) { toast(e && /Health Tracker/.test(e.message) ? e.message : 'Could not read that file.'); return; }
+      var count = LISTS.reduce(function (s, k) { return s + incoming[k].length; }, 0);
+      choiceBox('Import ' + plural(count, 'entry', 'entries') + '?', 'Merge adds entries you don\u2019t already have. Replace erases what\u2019s on this device first.', [
+        { label: 'Merge with my data', value: 'merge', cls: 'btn-primary' },
+        { label: 'Replace my data', value: 'replace', cls: 'btn-danger-ghost' },
+        { label: 'Cancel', value: null, cls: 'btn-ghost' }
+      ]).then(function (mode) {
+        if (!mode) return;
+        var before = JSON.stringify(db);
+        if (mode === 'replace') {
+          db = incoming;
+        } else {
+          LISTS.forEach(function (k) {
+            var ids = {}, dates = {};
+            db[k].forEach(function (x) { ids[x.id] = 1; if (k === 'sleep') dates[x.date] = 1; });
+            incoming[k].forEach(function (x) {
+              if (ids[x.id] || (k === 'sleep' && dates[x.date])) return;
+              db[k].push(x);
+              if (k === 'sleep') dates[x.date] = 1;
+            });
+          });
+        }
+        if (save()) {
+          toast(mode === 'replace' ? 'Data replaced' : 'Data merged');
+          $('settingsGoal').value = db.settings.waterGoal; dataStats(); render();
+        } else {
+          db = JSON.parse(before);
+        }
+      });
+    };
+    reader.readAsText(f);
+  });
+
+  $('clearConfirm').addEventListener('input', function () {
+    $('clearBtn').disabled = $('clearConfirm').value.trim().toUpperCase() !== 'DELETE';
+  });
+  $('clearForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if ($('clearConfirm').value.trim().toUpperCase() !== 'DELETE') return;
+    confirmBox('Delete everything?', 'All entries and settings will be erased from this device.', 'Delete everything', true).then(function (ok) {
+      if (!ok) return;
+      db = blank(); save();
+      $('clearConfirm').value = ''; $('clearBtn').disabled = true; $('settingsGoal').value = DEFAULT_GOAL;
+      dataStats(); toast('All data cleared'); render();
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if ($('confirmOverlay').classList.contains('open')) return;
+    if ($('settingsOverlay').classList.contains('open')) closeSettings();
+  });
+
+  /* ---------- Keep "today" fresh across midnight / app resume ---------- */
+  var lastToday = todayKey();
+  function refresh() {
+    var t = todayKey();
+    if (t !== lastToday) {
+      if (viewDate === lastToday) viewDate = t;
+      if ($('sleepDate').value === lastToday) $('sleepDate').value = t;
+      lastToday = t;
+    }
+    resetTimes(); render();
+  }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
+  setInterval(function () { if (!document.hidden && current === 'today') refresh(); }, 60000);
+
+  /* ---------- Init ---------- */
+  checkRadio('mealType', defaultMeal());
+  checkRadio('woType', 'walk');
+  show(location.hash.slice(1) || 'today');
+
+  if (navigator.storage && navigator.storage.persist) { navigator.storage.persist().catch(function () {}); }
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+})();
+</script>
+</body>
+</html>
