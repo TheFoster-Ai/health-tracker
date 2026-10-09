@@ -397,6 +397,30 @@ select{padding-right:42px;
 .ex-last{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 0;padding:8px 10px 8px 12px;border-radius:12px;background:var(--accent-soft);color:var(--ink);font-size:14px}
 .ex-last b{color:var(--accent);font-weight:750;margin-right:4px}
 .ex-last .link-btn{min-height:36px;padding:4px 6px;font-size:14px;flex:none}
+/* ---------- Exercise notes + up/down tags ---------- */
+.ex-note-row{display:flex;gap:6px;margin:10px 0 0;align-items:center}
+.tag-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex:1;background:var(--field);border:1px solid var(--line);padding:3px;border-radius:12px}
+.tag-seg button{min-height:36px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-weight:700;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap}
+.tag-seg button[aria-pressed=true][data-t=up]{background:rgba(200,242,90,.18);color:var(--c-work)}
+.tag-seg button[aria-pressed=true][data-t=stay]{background:rgba(255,255,255,.12);color:var(--ink)}
+.tag-seg button[aria-pressed=true][data-t=down]{background:rgba(255,125,74,.18);color:#FF9D6E}
+.note-btn{flex:none;min-height:42px;padding:0 12px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:var(--muted);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:5px}
+.note-btn[aria-expanded=true],.note-btn.has{color:var(--accent);border-color:rgba(200,242,90,.35)}
+.note-btn svg{width:16px;height:16px}
+.ex-note{width:100%;margin-top:8px;min-height:64px;font-size:15px;resize:vertical}
+.ex-last{flex-wrap:wrap}
+.ex-last .lt-main{flex:1;min-width:0}
+.lt-note{display:block;margin-top:4px;color:var(--ink);font-size:14px;line-height:1.35}
+.lt-tag{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;margin-right:6px;letter-spacing:.02em;vertical-align:1px}
+.lt-tag.up{background:rgba(200,242,90,.18);color:var(--c-work)}
+.lt-tag.stay{background:rgba(255,255,255,.1);color:var(--ink)}
+.lt-tag.down{background:rgba(255,125,74,.18);color:#FF9D6E}
+.ex-sug{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0 0;padding:6px 10px 6px 12px;border-radius:12px;border:1px dashed var(--line2);font-size:14px;color:var(--muted)}
+.ex-sug b{color:var(--ink);font-family:var(--num);font-variant-numeric:tabular-nums}
+.ex-sug .link-btn{min-height:36px;padding:4px 6px;font-size:14px;flex:none}
+.wo-lines li.has-note{flex-wrap:wrap}
+.wo-lines .wn{flex-basis:100%;padding-left:14px;font-size:13.5px;color:var(--muted);margin-top:1px}
+
 .set-grid{display:grid;grid-template-columns:26px minmax(0,1fr) minmax(0,1fr) 36px 36px;gap:8px;align-items:center;margin-top:12px}
 .set-grid.one{grid-template-columns:26px minmax(0,1fr) 36px 36px}
 .set-grid .ex-tool{width:36px;height:40px}
@@ -1296,6 +1320,7 @@ select{padding-right:42px;
   /* Workout constants (needed by normalize() at load). */
   var KG_PER_LB = 0.45359237, KM_PER_MI = 1.609344;
   var WO_TYPES = ['strength', 'run', 'walk', 'bike', 'swim', 'other'];
+  var TAGS = { up: 'Go up', stay: 'Stay', down: 'Go down' };
   var KINDS = [['weight', 'Weight'], ['bodyweight', 'Bodyweight'], ['cardio', 'Time / dist']];
   var EX_LIB = [
     ['Legs', [['Squat', 'weight'], ['Front squat', 'weight'], ['Goblet squat', 'weight'], ['Leg press', 'weight'], ['Romanian deadlift', 'weight'],
@@ -1708,7 +1733,7 @@ select{padding-right:42px;
         (e.exercises.length ? '<ul class="wo-lines">' + e.exercises.map(function (x, xi) {
           var s = setsText(x, woUnit(e)), pr = mk[xi];
           var prHtml = pr ? '<span class="pr-mark" role="img" aria-label="Personal record: ' + esc(pr.map(function (m) { return REC_META[m.type].label.toLowerCase(); }).join(', ')) + '">' + IC_TROPHY + 'PR</span>' : '';
-          return '<li><span>' + esc(x.name) + (s ? ' <span class="x">' + esc(s) + '</span>' : '') + prHtml + '</span></li>';
+          return '<li' + (x.tag || x.note ? ' class="has-note"' : '') + '><span>' + esc(x.name) + (s ? ' <span class="x">' + esc(s) + '</span>' : '') + prHtml + '</span>' + exNoteLine(x) + '</li>';
         }).join('') + '</ul>' : '') +
         (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
         '<div class="wo-btns">' + (has(e.minutes) && !e.exercises.length ? '<span class="val">' + fmtDur(e.minutes) + '</span>' : '') +
@@ -3197,8 +3222,12 @@ select{padding-right:42px;
   function cleanExercise(x) {
     if (!x || typeof x !== 'object' || typeof x.name !== 'string' || !x.name.trim()) return null;
     var kind = kindOk(x.kind);
-    return { name: x.name.trim().slice(0, 80), kind: kind,
+    var o = { name: x.name.trim().slice(0, 80), kind: kind,
       sets: (Array.isArray(x.sets) ? x.sets : []).map(function (s) { return cleanSet(s, kind); }).filter(Boolean).slice(0, 100) };
+    var note = typeof x.note === 'string' ? x.note.trim().slice(0, 1000) : '';
+    if (note) o.note = note;
+    if (TAGS[x.tag]) o.tag = x.tag;
+    return o;
   }
   // Older entries were {type, minutes, notes}; they gain an empty exercise list and keep everything else.
   function normWorkout(w) {
@@ -3279,6 +3308,24 @@ select{padding-right:42px;
     return out;
   }
 
+
+  /* Exercise notes: tag chip + suggested next weight (hint only; never applied automatically). */
+  function tagHtml(t) { return TAGS[t] ? '<span class="lt-tag ' + t + '">' + (t === 'up' ? '\u2191 ' : t === 'down' ? '\u2193 ' : '') + TAGS[t] + '</span>' : ''; }
+  var LOWER_RX = /squat|deadlift|lunge|leg press|hip thrust|calf|step-up|good morning|clean|snatch|thruster|swing|sled|carry/i;
+  function isLowerBody(name) { var l = LIB[name.toLowerCase()]; return (l && l.group === 'Legs') || LOWER_RX.test(name); }
+  function suggestSets(last, unit) {
+    var t = last.ex.tag; if ((t !== 'up' && t !== 'down') || last.ex.kind !== 'weight') return null;
+    var sets = cloneEx([last.ex], woUnit(last.w), unit)[0].sets;
+    if (!sets.some(function (x) { return has(x.weight); })) return null;
+    var lower = isLowerBody(last.ex.name), step = unit === 'kg' ? (lower ? 5 : 2.5) : (lower ? 10 : 5), dir = t === 'up' ? 1 : -1;
+    sets.forEach(function (x) { if (has(x.weight)) x.weight = Math.max(0, Math.round((x.weight + dir * step) * 2) / 2); });
+    return { sets: sets, step: step, dir: dir };
+  }
+  function exNoteLine(ex) {
+    if (!ex.tag && !ex.note) return '';
+    return '<span class="wn">' + tagHtml(ex.tag) + (ex.note ? esc(ex.note) : '') + '</span>';
+  }
+
   /* ---------- Workout editor ---------- */
   var ed = null, edDirty = false;
   var IC_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
@@ -3287,9 +3334,9 @@ select{padding-right:42px;
   var IC_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
   var IC_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 
-  function cloneEx(list, from, to) {
+  function cloneEx(list, from, to, keepNotes) {
     return (list || []).map(function (ex) {
-      return { name: ex.name, kind: ex.kind, sets: ex.sets.map(function (s) {
+      return { name: ex.name, kind: ex.kind, note: keepNotes ? ex.note || '' : '', tag: keepNotes ? ex.tag || '' : '', noteOpen: false, sets: ex.sets.map(function (s) {
         var o = {};
         Object.keys(s).forEach(function (k) {
           var v = s[k];
@@ -3303,7 +3350,7 @@ select{padding-right:42px;
   // mode: 'new' | 'edit' (src = saved entry) | 'copy' (src = workout to start from)
   function openWorkout(mode, src) {
     var isEdit = mode === 'edit' && src;
-    ed = { id: isEdit ? src.id : null, unit: isEdit ? woUnit(src) : units(), exercises: src ? cloneEx(src.exercises, woUnit(src), isEdit ? woUnit(src) : units()) : [] };
+    ed = { id: isEdit ? src.id : null, unit: isEdit ? woUnit(src) : units(), exercises: src ? cloneEx(src.exercises, woUnit(src), isEdit ? woUnit(src) : units(), isEdit) : [] };
     checkRadio('woType', src ? (WO_TYPES.indexOf(src.type) >= 0 ? src.type : 'other') : 'strength');
     $('woName').value = src ? src.name || '' : '';
     $('woDate').value = isEdit ? src.date : viewDate; $('woDate').max = todayKey();
@@ -3346,9 +3393,19 @@ select{padding-right:42px;
           return '<button type="button" data-act="kind" data-k="' + k[0] + '" aria-pressed="' + (ex.kind === k[0]) + '">' + k[1] + '</button>';
         }).join('') + '</div>';
       if (last) {
-        h += '<div class="ex-last"><span><b>Last</b> ' + esc(relDate(last.w.date)) + ' \u00b7 ' + esc(setsText(last.ex, woUnit(last.w))) + '</span>' +
+        h += '<div class="ex-last"><span class="lt-main"><b>Last</b> ' + esc(relDate(last.w.date)) + ' \u00b7 ' + esc(setsText(last.ex, woUnit(last.w))) +
+          (last.ex.tag || last.ex.note ? '<span class="lt-note">' + tagHtml(last.ex.tag) + (last.ex.note ? '\u201c' + esc(last.ex.note) + '\u201d' : '') + '</span>' : '') + '</span>' +
           '<button type="button" class="link-btn" data-act="use-last" aria-label="Use last time\u2019s sets for ' + nm + '">Use</button></div>';
+        var sug = suggestSets(last, ed.unit);
+        if (sug) h += '<div class="ex-sug"><span>Suggested ' + (sug.dir > 0 ? '+' : '\u2212') + fmtG(sug.step) + ' ' + ed.unit + ': <b>' + esc(setsText({ kind: 'weight', sets: sug.sets }, ed.unit)) + '</b></span>' +
+          '<button type="button" class="link-btn" data-act="use-sug" aria-label="Use suggested sets for ' + nm + '">Use</button></div>';
       }
+      var openN = !ex.noteHidden && (ex.noteOpen || !!(ex.note || '').trim());
+      h += '<div class="ex-note-row"><div class="tag-seg" role="group" aria-label="Next time for ' + nm + '">' + ['up', 'stay', 'down'].map(function (t) {
+          return '<button type="button" data-act="tag" data-t="' + t + '" aria-pressed="' + (ex.tag === t) + '">' + (t === 'up' ? '\u2191 ' : t === 'down' ? '\u2193 ' : '') + TAGS[t] + '</button>';
+        }).join('') + '</div>' +
+        '<button type="button" class="note-btn' + (ex.note ? ' has' : '') + '" data-act="note" aria-expanded="' + openN + '" aria-label="' + (openN ? 'Hide' : 'Add') + ' note for ' + nm + '">' + IC_EDIT + 'Note</button></div>' +
+        (openN ? '<textarea class="ex-note" data-note="1" rows="2" maxlength="1000" autocapitalize="sentences" placeholder="How did it feel? e.g. last set fast, go heavier" aria-label="Note for ' + nm + '">' + esc(ex.note || '') + '</textarea>' : '');
       var cur1 = ex.kind === 'weight' ? findLift(ex.name) : null;
       if (cur1) {
         var c1 = convW(cur1.value, cur1.unit, ed.unit);
@@ -3415,6 +3472,10 @@ select{padding-right:42px;
   $('woExList').addEventListener('input', function (e) {
     var t = e.target, i = exAt(t); if (i < 0) return;
     if (t.dataset.f) { ed.exercises[i].sets[Number(t.dataset.s)][t.dataset.f] = readNum(t.value); edDirty = true; updateTotals(); }
+    if (t.dataset.note) {
+      ed.exercises[i].note = t.value; edDirty = true;
+      var nb = t.closest('.ex-card').querySelector('.note-btn'); if (nb) nb.classList.toggle('has', !!t.value.trim());
+    }
   });
   $('woExList').addEventListener('click', function (e) {
     var b = e.target.closest('[data-act]'); if (!b) return;
@@ -3430,6 +3491,19 @@ select{padding-right:42px;
       return;
     }
     if (act === 'kind') { ex.kind = b.dataset.k; renderEx(); return; }
+    if (act === 'tag') { ex.tag = ex.tag === b.dataset.t ? '' : b.dataset.t; renderEx(); return; }
+    if (act === 'note') {
+      if (b.getAttribute('aria-expanded') === 'true') { ex.noteOpen = false; ex.noteHidden = true; }
+      else { ex.noteOpen = true; ex.noteHidden = false; }
+      renderEx();
+      if (ex.noteOpen) { var ta = $('woExList').querySelector('.ex-card[data-i="' + i + '"] .ex-note'); if (ta) { ta.focus({ preventScroll: true }); ta.setSelectionRange(ta.value.length, ta.value.length); } }
+      return;
+    }
+    if (act === 'use-sug') {
+      var ls = lastTimeFor(ex.name, edStamp(), ed.id), sg = ls ? suggestSets(ls, ed.unit) : null;
+      if (sg) { ex.kind = 'weight'; ex.sets = sg.sets; renderEx(); toast('Filled ' + setsText({ kind: 'weight', sets: sg.sets }, ed.unit)); }
+      return;
+    }
     if (act === 'set-up' && j > 0) { ex.sets.splice(j - 1, 0, ex.sets.splice(j, 1)[0]); renderEx(); return; }
     if (act === 'del-set') { ex.sets.splice(j, 1); renderEx(); return; }
     if (act === 'add-set') {
@@ -3568,7 +3642,7 @@ select{padding-right:42px;
     var html = '', shown = {}, exact = false;
     var sub = function (name, group) {
       var l = lastTimeFor(name, null, ed && ed.id);
-      return [group, l ? 'Last: ' + setsText(l.ex, woUnit(l.w)) : ''].filter(Boolean).join(' \u00b7 ');
+      return [group, l ? 'Last: ' + setsText(l.ex, woUnit(l.w)) + (TAGS[l.ex.tag] ? ' \u2014 ' + TAGS[l.ex.tag] : '') + (l.ex.note ? ': \u201c' + (l.ex.note.length > 60 ? l.ex.note.slice(0, 57) + '\u2026' : l.ex.note) + '\u201d' : '') : ''].filter(Boolean).join(' \u00b7 ');
     };
     function section(title, rows) {
       rows = rows.filter(function (r) { var k = r.name.toLowerCase(); if (shown[k] || !match(r.name + ' ' + (r.group || ''))) return false; if (k === q) exact = true; shown[k] = 1; return true; });
@@ -3590,7 +3664,7 @@ select{padding-right:42px;
     var lib = LIB[name.toLowerCase()], custom = (db.customExercises || []).filter(function (c) { return c.name.toLowerCase() === name.toLowerCase(); })[0];
     var lt = lastTimeFor(name, edStamp(), ed.id);
     kind = lt ? lt.ex.kind : custom ? custom.kind : lib ? lib.kind : kindOk(kind);
-    ed.exercises.push({ name: lib ? lib.name : name, kind: kind, sets: [{}] });
+    ed.exercises.push({ name: lib ? lib.name : name, kind: kind, note: '', tag: '', noteOpen: false, sets: [{}] });
     edDirty = true; closePicker(); renderEx();
     var i = ed.exercises.length - 1;
     setTimeout(function () {
@@ -3620,7 +3694,8 @@ select{padding-right:42px;
     var list = db.workouts.filter(function (w) { return w.exercises && w.exercises.length; }).sort(byDateTimeDesc).slice(0, 30);
     $('woHistList').innerHTML = list.length ? list.map(function (w) {
       return '<li><button type="button" class="food-row pick-row" data-wid="' + esc(w.id) + '"><span class="fr-main"><span class="fr-name">' + esc(woTitle(w)) + '</span>' +
-        '<span class="fr-sub">' + esc(relDate(w.date)) + ' \u00b7 ' + esc(w.exercises.map(function (x) { return x.name; }).join(', ')) + '</span></span><span class="plus">' + IC_PLUS + '</span></button></li>';
+        '<span class="fr-sub">' + esc(relDate(w.date)) + ' \u00b7 ' + esc(w.exercises.map(function (x) { return x.name + (TAGS[x.tag] ? ' (' + TAGS[x.tag] + ')' : ''); }).join(', ')) + '</span>' +
+        (w.exercises.some(function (x) { return x.note; }) ? '<span class="fr-sub">' + esc(w.exercises.filter(function (x) { return x.note; }).map(function (x) { return x.name + ': \u201c' + x.note + '\u201d'; }).join(' \u00b7 ')) + '</span>' : '') + '</span><span class="plus">' + IC_PLUS + '</span></button></li>';
     }).join('') : '<li class="empty">No workouts with exercises yet.</li>';
     openOverlay($('woHistOverlay'));
   }
@@ -4352,7 +4427,7 @@ select{padding-right:42px;
   $('stClose').addEventListener('click', closeStat);
   $('statOverlay').addEventListener('click', function (e) { if (e.target === $('statOverlay')) closeStat(); });
   // Exposed for automated tests only (no effect on normal use).
-  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout, recordSweep: recordSweep, fmtClock: fmtClock, parseClock: parseClock, riegel: riegel, normStat: normStat, recipeFood: recipeFood, recipeTotals: recipeTotals, normRecipe: normRecipe };
+  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout, recordSweep: recordSweep, fmtClock: fmtClock, parseClock: parseClock, riegel: riegel, normStat: normStat, suggestSets: suggestSets, cleanExercise: cleanExercise, recipeFood: recipeFood, recipeTotals: recipeTotals, normRecipe: normRecipe };
 
   /* ---------- Init ---------- */
   checkRadio('mealType', defaultMeal());
