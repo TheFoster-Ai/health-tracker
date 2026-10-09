@@ -518,6 +518,48 @@ select{padding-right:42px;
 .pct-chip{min-height:32px;padding:0 10px;border-radius:9px;border:1px solid var(--line2);background:var(--field);color:var(--ink);font-size:13px;font-weight:700;font-family:var(--num)}
 .pct-chip:active{transform:scale(.94)}
 #woPickOverlay{z-index:36}
+/* ---------- Recipes ---------- */
+#foodSheetOverlay{z-index:37}
+.tabs-mini.three{grid-template-columns:repeat(3,1fr)}
+.tag.recipe{background:var(--accent-soft);color:var(--accent)}
+.rb-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--accent-soft);border:1px solid rgba(255,125,74,.25);border-radius:14px;padding:4px 6px 4px 14px;margin:0 0 12px;font-size:14px;color:var(--ink)}
+.rb-banner b{color:var(--accent)}
+.rb-new{width:100%;margin:10px 0 4px;display:flex;align-items:center;justify-content:center;gap:8px}
+.rb-new svg{width:20px;height:20px;flex:none}
+.rb-addrow .btn{white-space:nowrap;padding:0 10px;font-size:15px}
+.rec-edit{width:44px;height:44px;flex:none;border:0;border-radius:14px;background:transparent;color:var(--faint);display:inline-flex;align-items:center;justify-content:center}
+.rec-edit svg{width:20px;height:20px}
+.rb-ings{list-style:none;margin:0;padding:0}
+.rb-ing{display:flex;align-items:center;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.rb-ing:first-child{border-top:0}
+.rb-ing .main{flex:1;min-width:0}
+.rb-ing .title{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rb-ing .meta{font-size:13px;color:var(--muted);margin-top:2px}
+.rb-ing .kc{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:750;color:var(--ink)}
+.rb-ib{display:flex;gap:0;flex:none}
+.rb-ib button{width:36px;height:40px;border:0;border-radius:10px;background:transparent;color:var(--faint);display:inline-flex;align-items:center;justify-content:center}
+.rb-ib button:disabled{opacity:.3}
+.rb-ib button svg{width:18px;height:18px}
+.rb-ib button:active{background:rgba(255,255,255,.06)}
+.rb-addrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.rb-manual{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.rb-tot{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr 1fr;gap:6px;align-items:baseline;font-variant-numeric:tabular-nums}
+.rb-tot .h{font-size:11px;font-weight:750;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.rb-tot .rl{font-size:13px;font-weight:700;color:var(--muted)}
+.rb-tot .v{font-family:var(--num);font-weight:800;font-size:17px}
+.rb-tot .v small{font-size:11px;color:var(--muted);font-weight:650}
+.rb-tot .big{color:var(--accent);font-size:22px}
+.rb-tot>div{padding:4px 0}
+.rb-more{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.sel-chk{width:30px;height:30px;flex:none;border:2px solid var(--line2);border-radius:9px;background:transparent;margin-top:2px;display:inline-flex;align-items:center;justify-content:center;color:var(--on-accent)}
+.sel-chk[aria-pressed=true]{background:var(--accent);border-color:var(--accent)}
+.sel-chk svg{width:18px;height:18px}
+.item.selectable{cursor:pointer}
+.sel-bar{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:8px 8px 8px 14px;border-radius:14px;background:var(--s2);border:1px solid var(--line)}
+.sel-bar span{flex:1;font-size:14px;color:var(--muted)}
+.sel-bar .btn{min-height:40px;padding:0 14px}
+.list-head .link-btn{min-height:32px;padding:4px}
+
 </style>
 </head>
 <body>
@@ -561,6 +603,7 @@ select{padding-right:42px;
 
   <section class="view" id="view-food">
     <div class="card" id="foodSearchCard">
+      <div class="rb-banner" id="rbBanner" hidden><span>Pick an ingredient for <b id="rbBannerName"></b></span><button type="button" class="link-btn" id="rbBannerBack">Back to recipe</button></div>
       <h2>Add food</h2>
       <div class="search-row">
         <div class="search-box">
@@ -578,9 +621,10 @@ select{padding-right:42px;
       <p class="search-status" id="searchStatus" role="status" aria-live="polite"></p>
       <div id="searchResults"></div>
       <div id="foodBrowse">
-        <div class="tabs-mini" role="tablist" aria-label="Saved foods">
+        <div class="tabs-mini three" role="tablist" aria-label="Saved foods">
           <button type="button" role="tab" id="browseRecentTab" aria-selected="true" aria-controls="browseList">Recent</button>
           <button type="button" role="tab" id="browseFavTab" aria-selected="false" aria-controls="browseList">Favorites</button>
+          <button type="button" role="tab" id="browseRecipeTab" aria-selected="false" aria-controls="browseList">Recipes</button>
         </div>
         <ul class="food-rows" id="browseList" role="tabpanel"></ul>
       </div>
@@ -634,7 +678,8 @@ select{padding-right:42px;
       <button class="btn btn-primary" type="submit">Save meal</button>
     </form>
     <div class="card">
-      <div class="list-head"><h2 id="foodListTitle">Today</h2><span class="muted small" id="foodTotals"></span></div>
+      <div class="list-head"><h2 id="foodListTitle">Today</h2><span class="muted small"><span id="foodTotals"></span> <button type="button" class="link-btn" id="foodSelectBtn" hidden>Select</button></span></div>
+      <div class="sel-bar" id="foodSelBar" hidden><span id="foodSelCount">Select foods</span><button type="button" class="btn btn-ghost" id="foodSelCancel">Cancel</button><button type="button" class="btn btn-primary" id="foodSelSave" disabled>Save as recipe</button></div>
       <div class="day-total" id="foodDayTotal" aria-label="Day totals" hidden></div>
       <ul class="list" id="foodList"></ul>
     </div>
@@ -1097,6 +1142,71 @@ select{padding-right:42px;
   </div>
 </div>
 
+
+<div class="overlay" id="rbOverlay" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rbTitle">
+    <div class="sheet-head">
+      <h2 id="rbTitle">New recipe</h2>
+      <button type="button" class="icon-btn" id="rbClose" aria-label="Close recipe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <form id="rbForm" novalidate>
+      <div class="card">
+        <div class="field">
+          <label for="rbName">Recipe name</label>
+          <input type="text" id="rbName" autocomplete="off" autocapitalize="sentences" placeholder="e.g. Chicken chili" maxlength="80">
+        </div>
+        <div class="row" style="margin-bottom:0">
+          <div class="field" style="margin-bottom:0">
+            <label for="rbServings">Servings it makes</label>
+            <input type="number" id="rbServings" inputmode="decimal" min="0" step="any" value="1">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label for="rbCooked">Cooked weight <span class="opt">(g, optional)</span></label>
+            <input type="number" id="rbCooked" inputmode="decimal" min="0" step="any" placeholder="g">
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="list-head"><h2>Ingredients</h2><span class="muted small" id="rbCount"></span></div>
+        <ul class="rb-ings" id="rbIngs"></ul>
+        <div class="rb-addrow">
+          <button type="button" class="btn btn-secondary" id="rbAddSearch">Search or scan</button>
+          <button type="button" class="btn btn-ghost" id="rbAddManual" aria-expanded="false" aria-controls="rbManual">Enter manually</button>
+        </div>
+        <div class="rb-manual" id="rbManual" hidden>
+          <div class="field">
+            <label for="rbmName">Ingredient</label>
+            <input type="text" id="rbmName" autocomplete="off" autocapitalize="sentences" placeholder="e.g. Olive oil">
+          </div>
+          <div class="row">
+            <div class="field"><label for="rbmGrams">Amount <span class="opt">(g)</span></label><input type="number" id="rbmGrams" inputmode="decimal" min="0" step="any" placeholder="optional"></div>
+            <div class="field"><label for="rbmCal">Calories</label><input type="number" id="rbmCal" inputmode="numeric" min="0" step="1"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="rbmP">Protein</label><input type="number" id="rbmP" inputmode="decimal" min="0" step="any" placeholder="g"></div>
+            <div class="field"><label for="rbmC">Carbs</label><input type="number" id="rbmC" inputmode="decimal" min="0" step="any" placeholder="g"></div>
+            <div class="field"><label for="rbmF">Fat</label><input type="number" id="rbmF" inputmode="decimal" min="0" step="any" placeholder="g"></div>
+          </div>
+          <p class="err" id="rbmErr" role="alert"></p>
+          <button type="button" class="btn btn-secondary" id="rbmAdd" style="width:100%">Add ingredient</button>
+        </div>
+      </div>
+      <div class="card" id="rbTotals" aria-live="polite"></div>
+      <div class="card">
+        <div class="field" style="margin-bottom:0">
+          <label for="rbNotes">Notes <span class="opt">(optional)</span></label>
+          <textarea id="rbNotes" rows="3" autocapitalize="sentences" placeholder="Steps, swaps, cook time"></textarea>
+        </div>
+      </div>
+      <div class="rb-more" id="rbMore" hidden>
+        <button type="button" class="btn btn-ghost" id="rbDup">Duplicate</button>
+        <button type="button" class="btn btn-danger-ghost" id="rbDelete">Delete recipe</button>
+      </div>
+      <p class="err" id="rbErr" role="alert"></p>
+      <div class="sheet-foot"><button class="btn btn-primary" type="submit" id="rbSave">Save recipe</button></div>
+    </form>
+  </div>
+</div>
 <div class="overlay" id="foodSheetOverlay" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fsName">
     <div class="sheet-head">
@@ -1125,7 +1235,7 @@ select{padding-right:42px;
         <p class="fs-note" id="fsNote"></p>
       </div>
       <div class="card" id="fsNut" aria-live="polite"></div>
-      <div class="card">
+      <div class="card" id="fsWhen">
         <div class="field">
           <span class="label" id="fsMealLabel">Meal</span>
           <div class="seg" role="radiogroup" aria-labelledby="fsMealLabel" style="--cols:4">
@@ -1181,6 +1291,7 @@ select{padding-right:42px;
   var KEY = 'healthTracker.v1';
   var LISTS = ['food', 'workouts', 'water', 'bp', 'sleep', 'records'];
   var DEFAULT_GOAL = 64;
+  var ingMode = false, selMode = false, selIds = {}; // recipe ingredient picking + food-log selection
   var RACES = [['1mi', '1 mile', 1.609344], ['5k', '5K', 5], ['10k', '10K', 10], ['half', 'Half marathon', 21.0975], ['marathon', 'Marathon', 42.195]];
   /* Workout constants (needed by normalize() at load). */
   var KG_PER_LB = 0.45359237, KM_PER_MI = 1.609344;
@@ -1210,7 +1321,7 @@ select{padding-right:42px;
 
 
   function blank() {
-    return { version: 1, settings: { waterGoal: DEFAULT_GOAL, units: 'lb' }, food: [], workouts: [], water: [], bp: [], sleep: [], recentFoods: [], favorites: [], customExercises: [], records: [], stats: [] };
+    return { version: 1, settings: { waterGoal: DEFAULT_GOAL, units: 'lb' }, food: [], workouts: [], water: [], bp: [], sleep: [], recentFoods: [], favorites: [], customExercises: [], records: [], stats: [], recipes: [] };
   }
   function validFood(f) {
     if (!f || typeof f !== 'object' || typeof f.key !== 'string' || typeof f.name !== 'string') return false;
@@ -1238,6 +1349,7 @@ select{padding-right:42px;
     out.customExercises = cleanCustom(o.customExercises);
     out.records = out.records.map(normRecord).filter(Boolean);
     out.stats = Array.isArray(o.stats) ? o.stats.map(normStat).filter(Boolean) : [];
+    out.recipes = Array.isArray(o.recipes) ? o.recipes.map(normRecipe).filter(Boolean) : [];
     return out;
   }
   function load() {
@@ -1552,6 +1664,12 @@ select{padding-right:42px;
     var items = forDate('food', viewDate), n = nutritionTotals(items);
     $('foodListTitle').textContent = listTitle(viewDate);
     $('foodTotals').textContent = items.length ? plural(items.length, 'entry', 'entries') : '';
+    if (selMode && !items.length) selMode = false;
+    $('foodSelectBtn').hidden = items.length < 1 || selMode;
+    $('foodSelBar').hidden = !selMode;
+    var nSel = items.filter(function (e) { return selIds[e.id]; }).length;
+    $('foodSelCount').textContent = nSel ? plural(nSel, 'food', 'foods') + ' selected' : 'Tap foods to include';
+    $('foodSelSave').disabled = !nSel;
     var dt = $('foodDayTotal');
     dt.hidden = !items.length;
     dt.innerHTML = items.length ? '<div><span class="ml">Calories</span><span class="mv">' + (n.anyCal ? Math.round(n.calories).toLocaleString() : '--') + '</span></div>' +
@@ -1562,11 +1680,12 @@ select{padding-right:42px;
       var nut = [];
       if (has(e.calories)) nut.push(Math.round(Number(e.calories)).toLocaleString() + ' cal');
       MACROS.forEach(function (m) { if (has(e[m[0]])) nut.push(m[2] + ' ' + fmtG(e[m[0]]) + 'g'); });
-      return '<li class="item"><div class="main"><div class="title">' + esc(e.name) + '</div>' +
+      var sel = selMode ? '<button type="button" class="sel-chk" data-sel="' + esc(e.id) + '" aria-pressed="' + !!selIds[e.id] + '" aria-label="Select ' + esc(e.name) + '">' + (selIds[e.id] ? CHECK_SVG : '') + '</button>' : '';
+      return '<li class="item' + (selMode ? ' selectable" data-sel="' + esc(e.id) : '') + '">' + sel + '<div class="main"><div class="title">' + esc(e.name) + '</div>' +
         '<div class="meta">' + esc(cap(e.meal)) + ' · ' + fmtTime(e.time) + '</div>' +
-        ((e.brand || e.serving) ? '<div class="meta">' + esc([e.brand, e.serving].filter(Boolean).join(' · ')) + '</div>' : '') +
+        ((e.brand || e.serving || e.source === 'recipe') ? '<div class="meta">' + esc([e.source === 'recipe' ? 'Recipe' : '', e.brand, e.serving].filter(Boolean).join(' · ')) + '</div>' : '') +
         (nut.length ? '<div class="meta">' + nut.join(' · ') + '</div>' : '') +
-        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' + delBtn('food', e.id, e.name) + '</li>';
+        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' + (selMode ? '' : delBtn('food', e.id, e.name)) + '</li>';
     }).join('') : '<li class="empty">No meals logged ' + emptyWhen(viewDate) + '. Use the form above to add one.</li>';
   }
 
@@ -1880,7 +1999,7 @@ select{padding-right:42px;
       var incoming;
       try { incoming = normalize(JSON.parse(reader.result)); }
       catch (e) { toast(e && /Health Tracker/.test(e.message) ? e.message : 'Could not read that file.'); return; }
-      var count = LISTS.reduce(function (s, k) { return s + incoming[k].length; }, 0);
+      var count = LISTS.reduce(function (s, k) { return s + incoming[k].length; }, 0) + incoming.recipes.length;
       choiceBox('Import ' + plural(count, 'entry', 'entries') + '?', 'Merge adds entries you don\u2019t already have. Replace erases what\u2019s on this device first.', [
         { label: 'Merge with my data', value: 'merge', cls: 'btn-primary' },
         { label: 'Replace my data', value: 'replace', cls: 'btn-danger-ghost' },
@@ -1903,6 +2022,7 @@ select{padding-right:42px;
           mergeSavedFoods(db, incoming);
           mergeCustom(db, incoming);
           mergeStats(db, incoming);
+          mergeRecipes(db, incoming);
         }
         if (save()) {
           toast(mode === 'replace' ? 'Data replaced' : 'Data merged');
@@ -1941,6 +2061,7 @@ select{padding-right:42px;
     if ($('woHistOverlay').classList.contains('open')) { closeHistory(); return; }
     if ($('woOverlay').classList.contains('open')) { closeWorkout(); return; }
     if ($('foodSheetOverlay').classList.contains('open')) { closeFoodSheet(); return; }
+    if ($('rbOverlay').classList.contains('open')) { closeBuilder(); return; }
     if ($('settingsOverlay').classList.contains('open')) closeSettings();
   });
 
@@ -2122,6 +2243,7 @@ select{padding-right:42px;
   function srcTag(food) {
     if (food.src === 'usda') return '<span class="tag">USDA</span>';
     if (food.src === 'off') return '<span class="tag off">Open Food Facts</span>';
+    if (food.src === 'recipe') return '<span class="tag recipe">My recipe</span>';
     return '<span class="tag manual">Your entry</span>';
   }
   function snapshot(food) {
@@ -2241,17 +2363,22 @@ select{padding-right:42px;
       '<span class="fr-num"><b>' + (n.kcal == null ? '--' : n.kcal.toLocaleString()) + '</b><small>cal</small></span></button>';
   }
   function renderSearchResults(q, st, pending) {
-    var m = mergeResults(q, st.usda, st.off);
-    shown.results = m.generic.concat(m.branded);
+    var m = mergeResults(q, st.usda, st.off), mine = recipeMatches(q), off0 = mine.length;
+    shown.results = mine.concat(m.generic, m.branded);
     var html = '';
+    if (mine.length) {
+      html += '<p class="res-head">My recipes</p><ul class="food-rows">' + mine.map(function (f, i) {
+        return '<li>' + foodRowHtml(f, 'data-pick="' + i + '"') + '</li>';
+      }).join('') + '</ul>';
+    }
     if (m.generic.length) {
       html += '<p class="res-head">Common foods</p><ul class="food-rows">' + m.generic.map(function (f, i) {
-        return '<li>' + foodRowHtml(f, 'data-pick="' + i + '"') + '</li>';
+        return '<li>' + foodRowHtml(f, 'data-pick="' + (off0 + i) + '"') + '</li>';
       }).join('') + '</ul>';
     }
     if (m.branded.length) {
       html += '<p class="res-head">Brands and packaged</p><ul class="food-rows">' + m.branded.map(function (f, i) {
-        return '<li>' + foodRowHtml(f, 'data-pick="' + (m.generic.length + i) + '"') + '</li>';
+        return '<li>' + foodRowHtml(f, 'data-pick="' + (off0 + m.generic.length + i) + '"') + '</li>';
       }).join('') + '</ul>';
     }
     $('searchResults').innerHTML = html;
@@ -2331,10 +2458,12 @@ select{padding-right:42px;
 
   /* ---------- Recent / favorites ---------- */
   function renderBrowse() {
-    var list = browseTab === 'fav' ? db.favorites : db.recentFoods;
-    shown.browse = list;
     $('browseRecentTab').setAttribute('aria-selected', String(browseTab === 'recent'));
     $('browseFavTab').setAttribute('aria-selected', String(browseTab === 'fav'));
+    $('browseRecipeTab').setAttribute('aria-selected', String(browseTab === 'recipes'));
+    if (browseTab === 'recipes') { renderRecipeList(); return; }
+    var list = (browseTab === 'fav' ? db.favorites : db.recentFoods).map(freshFood);
+    shown.browse = list;
     if (!list.length) {
       $('browseList').innerHTML = '<li class="empty">' + (browseTab === 'fav'
         ? 'Tap the star on any food to keep it here.'
@@ -2352,8 +2481,11 @@ select{padding-right:42px;
   function setBrowseTab(t) { browseTab = t; renderBrowse(); }
   $('browseRecentTab').addEventListener('click', function () { setBrowseTab('recent'); });
   $('browseFavTab').addEventListener('click', function () { setBrowseTab('fav'); });
+  $('browseRecipeTab').addEventListener('click', function () { setBrowseTab('recipes'); });
   $('browseList').addEventListener('click', function (e) {
     var b;
+    if (e.target.closest('[data-newrec]')) { openBuilder(null); return; }
+    if ((b = e.target.closest('[data-redit]'))) { var rr = recipeById(b.dataset.redit); if (rr) openBuilder(rr); return; }
     if ((b = e.target.closest('[data-fav]'))) {
       var f1 = shown.browse[Number(b.dataset.fav)]; if (!f1) return;
       var on = toggleFav(f1); toast(on ? 'Added to favorites' : 'Removed from favorites'); renderBrowse(); return;
@@ -2374,6 +2506,7 @@ select{padding-right:42px;
       source: food.src, sourceId: food.id || '', serving: servingText(food, opt, qty), quantity: qty,
       grams: g == null ? null : r1(g), unit: food.unit || 'g'
     };
+    if (food.src === 'recipe') entry.recipeId = food.id;
     if (!add('food', entry)) return false;
     touchRecent(food, opt.label, qty);
     save();
@@ -2384,6 +2517,7 @@ select{padding-right:42px;
     var idx = opts.findIndex(function (o) { return o.label === f.lastOpt; });
     var qty = idx >= 0 ? (f.lastQty || 1) : 1;
     if (idx < 0) idx = defaultOptIndex(opts);
+    if (ingMode) { addIngredient(f, opts[idx], qty, null); return; }
     var meal = defaultMeal();
     if (logFood(f, opts[idx], qty, meal, nowTime())) { toast('Added ' + f.name + ' to ' + cap(meal)); render(); }
   }
@@ -2395,7 +2529,10 @@ select{padding-right:42px;
     var f = sheet.food, opt = sheet.opts[sheet.idx];
     if (!f || !opt) return;
     if (f.needsPortions) return; // "Loading serving sizes" stays until done
-    if (opt.type === 'fixed') setNote('Only per-serving values are available for this item.', true);
+    if (opt.type === 'fixed' && f.src === 'recipe') setNote('Add a cooked weight to this recipe to log it by grams.', true);
+    else if (f.src === 'recipe' && f.cookedG) setNote('Based on ' + fmtG(f.cookedG) + ' g cooked weight.', true);
+    else if (f.src === 'recipe') setNote('');
+    else if (opt.type === 'fixed') setNote('Only per-serving values are available for this item.', true);
     else if (!(f.portions || []).length) setNote('No serving size is listed for this item, so it starts at 100 ' + f.unit + '. Switch to ' + (f.unit === 'ml' ? 'milliliters' : 'grams') + ' to enter an exact amount.');
     else if (f.unit === 'ml') setNote('Values are based on 100 ml.', true);
     else setNote('');
@@ -2454,9 +2591,13 @@ select{padding-right:42px;
       return true;
     }).catch(function (e) { if (e.status === 429) setUsdaLimited(); return false; });
   }
-  function openFoodSheet(food, pref) {
+  function openFoodSheet(food, pref, ingIdx) {
     food = Object.assign({}, food, { portions: (food.portions || []).slice() });
     sheet.food = food; sheet.touched = false;
+    sheet.ingEdit = ingIdx == null ? null : ingIdx;
+    sheet.forRecipe = ingMode || sheet.ingEdit !== null;
+    $('fsWhen').hidden = sheet.forRecipe;
+    $('fsSave').textContent = sheet.ingEdit !== null ? 'Update ingredient' : sheet.forRecipe ? 'Add to recipe' : 'Add to food log';
     $('fsName').textContent = food.name;
     $('fsSub').innerHTML = srcTag(food) + esc(food.brand || '');
     err('fsErr'); paintFav();
@@ -2477,7 +2618,7 @@ select{padding-right:42px;
       });
     }
   }
-  function closeFoodSheet() { closeOverlay($('foodSheetOverlay')); sheet.food = null; }
+  function closeFoodSheet() { closeOverlay($('foodSheetOverlay')); sheet.food = null; sheet.ingEdit = null; sheet.forRecipe = false; }
   $('fsServing').addEventListener('change', function () {
     if (!sheet.food) return;
     var prev = sheet.opts[sheet.idx], q = sheetQty();
@@ -2510,6 +2651,7 @@ select{padding-right:42px;
     if (!sheet.food) return;
     var opt = sheet.opts[sheet.idx], qty = sheetQty(), meal = radioVal('fsMeal'), time = $('fsTime').value;
     if (qty === null || qty <= 0) { err('fsErr', 'Enter an amount greater than zero.'); $('fsQty').focus(); return; }
+    if (sheet.forRecipe) { var ie = sheet.ingEdit, ff = sheet.food; closeFoodSheet(); addIngredient(ff, opt, qty, ie); return; }
     if (!meal) { err('fsErr', 'Choose a meal.'); return; }
     if (!time) { err('fsErr', 'Add a time.'); return; }
     err('fsErr');
@@ -2518,6 +2660,303 @@ select{padding-right:42px;
       closeFoodSheet(); blurActive();
       toast('Added ' + name + ' to ' + cap(meal)); render();
     }
+  });
+
+  /* ---------- Recipes ---------- */
+  var CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var IC_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
+  var IC_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var IC_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+  var rb = null; // builder draft: { id, name, servings, cookedG, ings, notes, dirty }
+
+  function numOrNull(v) { var n = Number(v); return v === null || v === undefined || v === '' || !isFinite(n) ? null : n; }
+  function ingFoodFrom(i) {
+    // Fallback food for an ingredient whose stored food copy is missing: fixed values as recorded.
+    return { key: 'manual:' + String(i.name).toLowerCase(), src: 'manual', id: '', name: String(i.name), brand: i.brand || '', unit: 'g',
+      per100: null, fixed: { kcal: i.kcal, p: i.p, c: i.c, f: i.f, label: i.serving || '1 serving' }, portions: [], upc: '', generic: false, needsPortions: false };
+  }
+  function normRecipe(r) {
+    if (!r || typeof r !== 'object' || typeof r.id !== 'string' || !r.id || typeof r.name !== 'string' || !r.name.trim()) return null;
+    var sv = Number(r.servings);
+    var ings = (Array.isArray(r.ings) ? r.ings : []).filter(function (i) { return i && typeof i.name === 'string' && i.name.trim(); }).map(function (i) {
+      var o = { name: i.name, brand: typeof i.brand === 'string' ? i.brand : '', serving: typeof i.serving === 'string' ? i.serving : '',
+        opt: typeof i.opt === 'string' ? i.opt : '', qty: Number(i.qty) > 0 ? Number(i.qty) : 1, grams: numOrNull(i.grams),
+        kcal: numOrNull(i.kcal), p: numOrNull(i.p), c: numOrNull(i.c), f: numOrNull(i.f) };
+      o.food = i.food && validFood(i.food) ? i.food : ingFoodFrom(o);
+      if (!i.food || !validFood(i.food)) { o.opt = o.food.fixed.label; o.qty = 1; }
+      return o;
+    });
+    var cg = Number(r.cookedG);
+    return { id: r.id, name: r.name.trim().slice(0, 80), servings: sv > 0 && sv <= 1000 ? sv : 1, cookedG: cg > 0 && cg <= 100000 ? cg : null,
+      ings: ings, notes: typeof r.notes === 'string' ? r.notes : '', created: Number(r.created) || 0, updated: Number(r.updated) || 0 };
+  }
+  function mergeRecipes(target, incoming) {
+    (incoming.recipes || []).forEach(function (r) {
+      var i = target.recipes.findIndex(function (x) { return x.id === r.id; });
+      if (i < 0) target.recipes.push(r);
+      else if ((r.updated || 0) > (target.recipes[i].updated || 0)) target.recipes[i] = r;
+    });
+    target.recipes.forEach(syncRecipeCopies);
+  }
+  function recipeById(id) { return db.recipes.filter(function (r) { return r.id === id; })[0] || null; }
+  function recipeTotals(r) {
+    var t = { kcal: null, p: null, c: null, f: null };
+    (r.ings || []).forEach(function (i) {
+      ['kcal', 'p', 'c', 'f'].forEach(function (k) { if (i[k] != null && isFinite(i[k])) t[k] = (t[k] || 0) + Number(i[k]); });
+    });
+    return t;
+  }
+  function recipeFood(r) {
+    var t = recipeTotals(r), s = r.servings > 0 ? r.servings : 1;
+    function k(v, m) { return v == null ? null : v * m; }
+    var f = { key: 'recipe:' + r.id, src: 'recipe', id: r.id, name: r.name, brand: '', unit: 'g', per100: null, fixed: null, portions: [],
+      upc: '', generic: false, needsPortions: false, cookedG: r.cookedG || null };
+    if (r.cookedG > 0) {
+      var m = 100 / r.cookedG;
+      f.per100 = { kcal: k(t.kcal, m), p: k(t.p, m), c: k(t.c, m), f: k(t.f, m) };
+      f.portions = [{ label: 'Serving (' + fmtG(r.cookedG / s) + ' g)', g: r.cookedG / s }];
+    } else {
+      f.fixed = { kcal: k(t.kcal, 1 / s), p: k(t.p, 1 / s), c: k(t.c, 1 / s), f: k(t.f, 1 / s), label: 'Serving' };
+    }
+    return f;
+  }
+  function freshFood(f) {
+    if (!f || f.src !== 'recipe') return f;
+    var r = recipeById(f.id);
+    return r ? Object.assign(recipeFood(r), { lastOpt: f.lastOpt, lastQty: f.lastQty, lastUsed: f.lastUsed, addedAt: f.addedAt }) : f;
+  }
+  function syncRecipeCopies(r) {
+    var key = 'recipe:' + r.id, fresh = snapshot(recipeFood(r));
+    ['recentFoods', 'favorites'].forEach(function (k) {
+      db[k] = db[k].map(function (f) { return f.key === key ? Object.assign({}, f, fresh) : f; });
+    });
+  }
+  function recipeMatches(q) {
+    var words = q.toLowerCase().split(/[\s,]+/).filter(Boolean);
+    return db.recipes.filter(function (r) {
+      if (ingMode && rb && r.id === rb.id) return false;
+      var n = r.name.toLowerCase();
+      return words.length && words.every(function (w) { return n.indexOf(w) >= 0; });
+    }).sort(function (a, b) { return a.name.localeCompare(b.name); }).slice(0, 10).map(recipeFood);
+  }
+  function renderRecipeList() {
+    var list = db.recipes.filter(function (r) { return !(ingMode && rb && r.id === rb.id); }).slice()
+      .sort(function (a, b) { return a.name.localeCompare(b.name); });
+    shown.browse = list.map(recipeFood);
+    var head = ingMode ? '' : '<li><button type="button" class="btn btn-secondary rb-new" data-newrec="1">' + PLUS_SVG + ' New recipe</button></li>';
+    if (!list.length) {
+      $('browseList').innerHTML = head + '<li class="empty">' + (ingMode ? 'No other recipes yet.' : 'Save meals you make often. Build a recipe from foods you search, scan or enter, then log it by the serving or by the gram.') + '</li>';
+      return;
+    }
+    $('browseList').innerHTML = head + list.map(function (r, i) {
+      return '<li>' + foodRowHtml(shown.browse[i], 'data-browse="' + i + '"') +
+        (ingMode ? '' : '<button type="button" class="rec-edit" data-redit="' + esc(r.id) + '" aria-label="Edit recipe ' + esc(r.name) + '">' + IC_EDIT + '</button>') + '</li>';
+    }).join('');
+  }
+
+  /* Builder */
+  function makeIng(food, opt, qty) {
+    var n = computeNut(food, opt, qty), g = gramsFor(opt, qty);
+    return { food: snapshot(food), opt: opt.label, qty: qty, name: food.name, brand: food.brand || '', serving: servingText(food, opt, qty),
+      grams: g == null ? null : r1(g), kcal: n.kcal, p: n.p, c: n.c, f: n.f };
+  }
+  function addIngredient(food, opt, qty, editIdx) {
+    if (!rb) return;
+    var ing = makeIng(food, opt, qty);
+    if (editIdx != null && rb.ings[editIdx]) rb.ings[editIdx] = ing; else rb.ings.push(ing);
+    rb.dirty = true;
+    if (ingMode) endIngMode();
+    openOverlay($('rbOverlay'));
+    renderBuilder();
+    toast(editIdx != null ? 'Ingredient updated' : 'Added ' + food.name);
+  }
+  function readBuilderFields() {
+    if (!rb) return;
+    rb.name = $('rbName').value;
+    rb.servings = numVal('rbServings');
+    rb.cookedG = numVal('rbCooked');
+    rb.notes = $('rbNotes').value;
+  }
+  function rbNum(v, whole) { return v == null ? '--' : whole ? Math.round(v).toLocaleString() : fmtG(v); }
+  function renderBuilderTotals() {
+    var t = recipeTotals(rb), s = rb.servings, cg = rb.cookedG;
+    var okS = s != null && !isNaN(s) && s > 0;
+    function row(label, m, cls) {
+      return '<div class="rl">' + label + '</div>' +
+        '<div class="v' + (cls || '') + '">' + rbNum(t.kcal == null || m == null ? null : t.kcal * m, true) + '</div>' +
+        ['p', 'c', 'f'].map(function (k) { return '<div class="v">' + rbNum(t[k] == null || m == null ? null : t[k] * m) + '<small> g</small></div>'; }).join('');
+    }
+    $('rbTotals').innerHTML = '<div class="rb-tot"><div></div><div class="h">Cal</div><div class="h">Protein</div><div class="h">Carbs</div><div class="h">Fat</div>' +
+      row('Per serving', okS ? 1 / s : null, ' big') + row('Total', 1) +
+      (cg > 0 ? row('Per 100 g', 100 / cg) : '') + '</div>' +
+      '<p class="muted small" style="margin:10px 0 0">' + (okS ? 'Makes ' + fmtQty(s) + (s === 1 ? ' serving' : ' servings') : 'Enter how many servings it makes') +
+      (cg > 0 && okS ? ' \u00b7 ' + fmtG(cg / s) + ' g each' : '') + '</p>';
+  }
+  function renderBuilder() {
+    if (!rb) return;
+    var n = rb.ings.length;
+    $('rbCount').textContent = n ? plural(n, 'item', 'items') : '';
+    $('rbIngs').innerHTML = n ? rb.ings.map(function (i, k) {
+      var mac = [i.p, i.c, i.f].some(function (v) { return v != null; }) ? ' \u00b7 P ' + rbNum(i.p) + ' C ' + rbNum(i.c) + ' F ' + rbNum(i.f) : '';
+      return '<li class="rb-ing"><div class="main"><div class="title">' + esc(i.name) + '</div>' +
+        '<div class="meta">' + esc(i.serving || '') + ' \u00b7 <span class="kc">' + rbNum(i.kcal, true) + '</span> cal' + mac + '</div></div>' +
+        '<div class="rb-ib">' +
+        '<button type="button" data-iup="' + k + '" aria-label="Move ' + esc(i.name) + ' up"' + (k === 0 ? ' disabled' : '') + '>' + IC_UP + '</button>' +
+        '<button type="button" data-idown="' + k + '" aria-label="Move ' + esc(i.name) + ' down"' + (k === n - 1 ? ' disabled' : '') + '>' + IC_DOWN + '</button>' +
+        '<button type="button" data-iedit="' + k + '" aria-label="Edit amount of ' + esc(i.name) + '">' + IC_EDIT + '</button>' +
+        '<button type="button" data-irm="' + k + '" aria-label="Remove ' + esc(i.name) + '">' + IC_X + '</button></div></li>';
+    }).join('') : '<li class="empty" style="border:0;padding:4px 0">No ingredients yet. Search, scan, pick from recents, or enter one manually.</li>';
+    renderBuilderTotals();
+  }
+  function openBuilder(r, seedIngs) {
+    rb = r ? JSON.parse(JSON.stringify(r)) : { id: null, name: '', servings: 1, cookedG: null, ings: seedIngs || [], notes: '' };
+    rb.dirty = !!(seedIngs && seedIngs.length);
+    $('rbTitle').textContent = r ? 'Edit recipe' : 'New recipe';
+    $('rbName').value = rb.name; $('rbServings').value = String(rb.servings); $('rbCooked').value = rb.cookedG ? String(rb.cookedG) : '';
+    $('rbNotes').value = rb.notes || '';
+    $('rbMore').hidden = !r;
+    $('rbManual').hidden = true; $('rbAddManual').setAttribute('aria-expanded', 'false');
+    err('rbErr'); err('rbmErr');
+    renderBuilder();
+    openOverlay($('rbOverlay'));
+    $('rbOverlay').querySelector('.sheet').scrollTop = 0;
+  }
+  function closeBuilder(force) {
+    if (!force && rb && rb.dirty) {
+      confirmBox('Discard this recipe?', 'Your changes to this recipe haven\u2019t been saved.', 'Discard', true).then(function (ok) { if (ok) closeBuilder(true); });
+      return;
+    }
+    closeOverlay($('rbOverlay')); rb = null; if (ingMode) endIngMode();
+  }
+  function startIngMode() {
+    readBuilderFields();
+    ingMode = true;
+    closeOverlay($('rbOverlay'));
+    $('rbBannerName').textContent = (rb.name || '').trim() || 'your recipe';
+    $('rbBanner').hidden = false;
+    if (current !== 'food') show('food');
+    if (browseTab === 'recipes') browseTab = 'recent';
+    renderBrowse();
+    $('main').scrollTop = 0;
+    $('foodSearch').focus();
+  }
+  function endIngMode() {
+    ingMode = false; $('rbBanner').hidden = true;
+    if ($('foodSearch').value) { $('foodSearch').value = ''; $('foodSearchClear').hidden = true; clearSearch(); } else if (current === 'food') renderBrowse();
+  }
+  $('rbBannerBack').addEventListener('click', function () { endIngMode(); openOverlay($('rbOverlay')); renderBuilder(); });
+  $('rbAddSearch').addEventListener('click', startIngMode);
+  $('rbAddManual').addEventListener('click', function () {
+    var open = $('rbManual').hidden;
+    $('rbManual').hidden = !open; $('rbAddManual').setAttribute('aria-expanded', String(open));
+    if (open) $('rbmName').focus();
+  });
+  $('rbmAdd').addEventListener('click', function () {
+    var name = $('rbmName').value.trim(), g = numVal('rbmGrams'), cal = numVal('rbmCal');
+    var p = numVal('rbmP'), c = numVal('rbmC'), f = numVal('rbmF');
+    if (!name) { err('rbmErr', 'Name the ingredient.'); $('rbmName').focus(); return; }
+    var vals = [g, cal, p, c, f];
+    if (vals.some(function (v) { return v !== null && (isNaN(v) || v < 0); })) { err('rbmErr', 'Use numbers of zero or more.'); return; }
+    if (cal === null && p === null && c === null && f === null) { err('rbmErr', 'Add calories or at least one macro.'); return; }
+    err('rbmErr');
+    var food = { key: 'manual:' + name.toLowerCase(), src: 'manual', id: '', name: name, brand: '', unit: 'g', per100: null, fixed: null, portions: [], upc: '', generic: false, needsPortions: false };
+    var opt, qty;
+    if (g > 0) {
+      var m = 100 / g;
+      food.per100 = { kcal: cal == null ? null : cal * m, p: p == null ? null : p * m, c: c == null ? null : c * m, f: f == null ? null : f * m };
+      opt = { type: 'grams', label: 'Grams (g)' }; qty = g;
+    } else {
+      food.fixed = { kcal: cal, p: p, c: c, f: f, label: '1 serving' };
+      opt = { type: 'fixed', label: '1 serving' }; qty = 1;
+    }
+    rb.ings.push(makeIng(food, opt, qty)); rb.dirty = true;
+    ['rbmName', 'rbmGrams', 'rbmCal', 'rbmP', 'rbmC', 'rbmF'].forEach(function (id) { $(id).value = ''; });
+    renderBuilder(); toast('Added ' + name); $('rbmName').focus();
+  });
+  $('rbIngs').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || !rb) return;
+    var d = b.dataset, k;
+    if (d.iup != null) { k = +d.iup; if (k > 0) { rb.ings.splice(k - 1, 0, rb.ings.splice(k, 1)[0]); rb.dirty = true; renderBuilder(); } }
+    else if (d.idown != null) { k = +d.idown; if (k < rb.ings.length - 1) { rb.ings.splice(k + 1, 0, rb.ings.splice(k, 1)[0]); rb.dirty = true; renderBuilder(); } }
+    else if (d.irm != null) { rb.ings.splice(+d.irm, 1); rb.dirty = true; renderBuilder(); }
+    else if (d.iedit != null) { k = +d.iedit; var i = rb.ings[k]; if (i) { readBuilderFields(); openFoodSheet(i.food, { opt: i.opt, qty: i.qty }, k); } }
+  });
+  ['rbName', 'rbServings', 'rbCooked', 'rbNotes'].forEach(function (id) {
+    $(id).addEventListener('input', function () { if (!rb) return; readBuilderFields(); rb.dirty = true; renderBuilderTotals(); });
+  });
+  $('rbClose').addEventListener('click', function () { closeBuilder(); });
+  $('rbOverlay').addEventListener('click', function (e) { if (e.target === $('rbOverlay')) closeBuilder(); });
+  $('rbForm').addEventListener('submit', function (e) {
+    e.preventDefault(); if (!rb) return;
+    readBuilderFields();
+    var name = (rb.name || '').trim(), s = rb.servings, cg = rb.cookedG;
+    if (!name) { err('rbErr', 'Give the recipe a name.'); $('rbName').focus(); return; }
+    if (s === null || isNaN(s) || s <= 0 || s > 1000) { err('rbErr', 'Servings must be more than 0.'); $('rbServings').focus(); return; }
+    if (cg !== null && (isNaN(cg) || cg <= 0 || cg > 100000)) { err('rbErr', 'Cooked weight must be more than 0 g, or leave it blank.'); $('rbCooked').focus(); return; }
+    if (!rb.ings.length) { err('rbErr', 'Add at least one ingredient.'); return; }
+    err('rbErr');
+    var now = Date.now(), old = rb.id ? recipeById(rb.id) : null;
+    var r = { id: rb.id || uid(), name: name.slice(0, 80), servings: s, cookedG: cg || null, ings: rb.ings, notes: rb.notes || '', created: old ? old.created : now, updated: now };
+    var before = db.recipes.slice();
+    if (old) db.recipes = db.recipes.map(function (x) { return x.id === r.id ? r : x; }); else db.recipes.push(r);
+    syncRecipeCopies(r);
+    if (!save()) { db.recipes = before; return; }
+    closeBuilder(true); blurActive();
+    browseTab = 'recipes';
+    toast(old ? 'Recipe updated' : 'Recipe saved'); render();
+  });
+  $('rbDup').addEventListener('click', function () {
+    var src = rb && rb.id ? recipeById(rb.id) : null; if (!src) return;
+    var now = Date.now(), copy = JSON.parse(JSON.stringify(src));
+    copy.id = uid(); copy.name = (src.name + ' (copy)').slice(0, 80); copy.created = now; copy.updated = now;
+    db.recipes.push(copy);
+    if (!save()) { db.recipes.pop(); return; }
+    closeBuilder(true); openBuilder(copy); toast('Recipe duplicated'); render();
+  });
+  $('rbDelete').addEventListener('click', function () {
+    var id = rb && rb.id; if (!id) return;
+    confirmBox('Delete this recipe?', 'Meals you already logged from it stay in your log.', 'Delete', true).then(function (ok) {
+      if (!ok) return;
+      db.recipes = db.recipes.filter(function (x) { return x.id !== id; });
+      db.favorites = db.favorites.filter(function (f) { return f.key !== 'recipe:' + id; });
+      db.recentFoods = db.recentFoods.filter(function (f) { return f.key !== 'recipe:' + id; });
+      if (save()) { closeBuilder(true); toast('Recipe deleted'); render(); }
+    });
+  });
+
+  /* Save selected log entries as a recipe */
+  $('foodSelectBtn').addEventListener('click', function () { selMode = true; selIds = {}; renderFood(); });
+  $('foodSelCancel').addEventListener('click', function () { selMode = false; selIds = {}; renderFood(); });
+  $('foodList').addEventListener('click', function (e) {
+    if (!selMode) return;
+    var b = e.target.closest('[data-sel]'); if (!b) return;
+    var id = b.dataset.sel;
+    if (selIds[id]) delete selIds[id]; else selIds[id] = 1;
+    renderFood();
+  });
+  function entryIng(e) {
+    var unit = e.unit === 'ml' ? 'ml' : 'g', g = Number(e.grams);
+    var food = { key: e.source && e.source !== 'manual' && e.sourceId ? e.source + ':' + e.sourceId : 'manual:' + String(e.name).toLowerCase(),
+      src: e.source === 'usda' || e.source === 'off' || e.source === 'recipe' ? e.source : 'manual', id: e.sourceId || '', name: e.name, brand: e.brand || '', unit: unit,
+      per100: null, fixed: null, portions: [], upc: '', generic: false, needsPortions: false };
+    var cal = numOrNull(e.calories), p = numOrNull(e.protein), c = numOrNull(e.carbs), f = numOrNull(e.fat), opt, qty;
+    if (g > 0) {
+      var m = 100 / g;
+      food.per100 = { kcal: cal == null ? null : cal * m, p: p == null ? null : p * m, c: c == null ? null : c * m, f: f == null ? null : f * m };
+      opt = { type: 'grams', label: unit === 'ml' ? 'Milliliters (ml)' : 'Grams (g)' }; qty = g;
+    } else {
+      food.fixed = { kcal: cal, p: p, c: c, f: f, label: e.serving || 'As logged' };
+      opt = { type: 'fixed', label: food.fixed.label }; qty = 1;
+    }
+    return makeIng(food, opt, qty);
+  }
+  $('foodSelSave').addEventListener('click', function () {
+    var items = forDate('food', viewDate).filter(function (e) { return selIds[e.id]; })
+      .sort(function (a, b) { return (a.time || '').localeCompare(b.time || ''); });
+    if (!items.length) return;
+    selMode = false; selIds = {}; renderFood();
+    openBuilder(null, items.map(entryIng));
+    $('rbName').focus();
   });
 
   /* ---------- Barcode lookup ---------- */
@@ -3913,7 +4352,7 @@ select{padding-right:42px;
   $('stClose').addEventListener('click', closeStat);
   $('statOverlay').addEventListener('click', function (e) { if (e.target === $('statOverlay')) closeStat(); });
   // Exposed for automated tests only (no effect on normal use).
-  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout, recordSweep: recordSweep, fmtClock: fmtClock, parseClock: parseClock, riegel: riegel, normStat: normStat };
+  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout, recordSweep: recordSweep, fmtClock: fmtClock, parseClock: parseClock, riegel: riegel, normStat: normStat, recipeFood: recipeFood, recipeTotals: recipeTotals, normRecipe: normRecipe };
 
   /* ---------- Init ---------- */
   checkRadio('mealType', defaultMeal());
