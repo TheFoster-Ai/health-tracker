@@ -359,6 +359,76 @@ select{padding-right:42px;
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
+
+/* ===== Workouts: detailed logging ===== */
+.overlay.center{z-index:45}
+.toast{z-index:50}
+.wo-sheet{--accent:var(--c-work);--accent-soft:rgba(200,242,90,.13);--glow:rgba(200,242,90,.09);padding-bottom:0}
+.wo-start{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.wo-start .btn{width:100%}
+.btn .ic{width:20px;height:20px;flex:none}
+.repeat-btn{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;text-align:left}
+.repeat-btn .rb-t{display:flex;align-items:center;gap:8px}
+.repeat-btn .rb-s{font-size:13px;font-weight:550;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.wo-item{cursor:pointer}
+.wo-item .title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wo-lines{list-style:none;margin:8px 0 0;padding:0}
+.wo-lines li{font-size:15px;color:var(--ink);padding:3px 0;display:flex;gap:8px;align-items:baseline}
+.wo-lines li::before{content:"";width:6px;height:6px;border-radius:2px;background:var(--c-work);flex:none;transform:translateY(-2px)}
+.wo-lines .x{color:var(--muted);font-family:var(--num);font-variant-numeric:tabular-nums}
+.wo-btns{display:flex;flex-direction:column;align-items:flex-end}
+.edit-btn{width:44px;height:44px;flex:none;border:0;border-radius:12px;background:transparent;color:var(--faint);display:inline-flex;align-items:center;justify-content:center;margin:-10px -10px 0 0;transition:transform .16s var(--ease)}
+.edit-btn:active{transform:scale(.9);background:var(--accent-soft);color:var(--accent)}
+.edit-btn svg{width:19px;height:19px}
+.chip.vol{background:rgba(255,255,255,.07);color:var(--muted);font-family:var(--num);font-variant-numeric:tabular-nums}
+
+.ex-card{background:var(--s2);border:1px solid var(--line);border-radius:20px;padding:14px;margin-bottom:12px;animation:exIn .35s var(--ease-out)}
+@keyframes exIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ex-head{display:flex;align-items:flex-start;gap:4px}
+.ex-name{flex:1;min-width:0;font-size:17px;font-weight:750;letter-spacing:-.01em;overflow-wrap:anywhere;padding-top:9px}
+.ex-tool{width:40px;height:40px;flex:none;border:0;border-radius:12px;background:transparent;color:var(--faint);display:inline-flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),background .2s}
+.ex-tool:active{transform:scale(.88);background:rgba(255,255,255,.06)}
+.ex-tool:disabled{opacity:.3}
+.ex-tool svg{width:19px;height:19px}
+.ex-tool.danger:active{background:var(--danger-soft);color:var(--danger)}
+.kind-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--field);border:1px solid var(--line);padding:3px;border-radius:12px;margin:10px 0 0}
+.kind-seg button{min-height:36px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:13px;font-weight:650}
+.kind-seg button[aria-pressed=true]{background:var(--s3);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.ex-last{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 0;padding:8px 10px 8px 12px;border-radius:12px;background:var(--accent-soft);color:var(--ink);font-size:14px}
+.ex-last b{color:var(--accent);font-weight:750;margin-right:4px}
+.ex-last .link-btn{min-height:36px;padding:4px 6px;font-size:14px;flex:none}
+.set-grid{display:grid;grid-template-columns:26px minmax(0,1fr) minmax(0,1fr) 36px 36px;gap:8px;align-items:center;margin-top:12px}
+.set-grid.one{grid-template-columns:26px minmax(0,1fr) 36px 36px}
+.set-grid .ex-tool{width:36px;height:40px}
+.set-h{font-size:11px;font-weight:750;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;text-align:center}
+.set-n{font-family:var(--num);font-weight:750;color:var(--muted);text-align:center;font-size:15px}
+.set-grid input{min-height:46px;padding:10px 8px;text-align:center;font-family:var(--num);font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.ex-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.ex-foot .btn{min-height:44px;padding:0 14px;font-size:15px;border-radius:13px}
+.ex-vol{margin-left:auto;font-size:13px;color:var(--muted);font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:650}
+.qsets{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:12px;border-top:1px solid var(--line)}
+.qsets input{min-height:44px;padding:8px 4px;text-align:center;font-family:var(--num);font-weight:700;font-size:17px;flex:1;min-width:0}
+.qsets .qs-x{color:var(--faint);font-weight:700;flex:none}
+.qsets .btn{min-height:44px;padding:0 14px;font-size:15px;border-radius:13px;flex:none}
+.qs-label{font-size:12px;color:var(--faint);font-weight:650;margin:10px 0 -4px}
+.add-ex{width:100%;min-height:56px;border:1.5px dashed rgba(200,242,90,.35);border-radius:18px;background:rgba(200,242,90,.05);color:var(--c-work);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .16s var(--ease)}
+.add-ex:active{transform:scale(.98)}
+.add-ex svg{width:20px;height:20px}
+.wo-total{display:flex;gap:10px;margin:14px 0}
+.wo-total>div{flex:1;background:var(--s2);border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.wo-total .tk{display:block;font-size:11px;font-weight:750;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.wo-total .tv{display:block;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:21px;font-weight:800;letter-spacing:-.03em;margin-top:2px}
+.wo-total .tv small{font-size:13px;color:var(--muted);font-weight:650;letter-spacing:0}
+.sheet-foot{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(18,20,24,0),var(--s1) 22%);padding:18px 0 calc(14px + var(--sab));margin-top:4px;display:flex;gap:10px;z-index:2}
+.sheet-foot .btn-primary{flex:1}
+.rest-btn{flex:none;min-width:96px}
+.rest-btn.on{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-family:var(--num);font-variant-numeric:tabular-nums}
+.pick-sheet{--accent:var(--c-work);--accent-soft:rgba(200,242,90,.13)}
+.pick-sheet .search-box{margin-bottom:6px}
+.pick-row .fr-name{font-weight:600}
+.pick-row .plus{width:32px;height:32px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+.pick-row .plus svg{width:18px;height:18px}
+@media (prefers-reduced-motion:reduce){.ex-card{animation:none}}
 </style>
 </head>
 <body>
@@ -474,36 +544,14 @@ select{padding-right:42px;
   </section>
 
   <section class="view" id="view-workouts">
-    <form class="card" id="workoutForm" novalidate>
+    <div class="card">
       <h2>Log a workout</h2>
-      <div class="field">
-        <span class="label" id="woTypeLabel">Type</span>
-        <div class="seg" role="radiogroup" aria-labelledby="woTypeLabel" style="--cols:3">
-          <label><input type="radio" name="woType" value="walk"><span>Walk</span></label>
-          <label><input type="radio" name="woType" value="run"><span>Run</span></label>
-          <label><input type="radio" name="woType" value="strength"><span>Strength</span></label>
-          <label><input type="radio" name="woType" value="bike"><span>Bike</span></label>
-          <label><input type="radio" name="woType" value="swim"><span>Swim</span></label>
-          <label><input type="radio" name="woType" value="other"><span>Other</span></label>
-        </div>
+      <div class="wo-start">
+        <button class="btn btn-primary" type="button" id="woStart"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Start a workout</button>
+        <button class="btn btn-ghost repeat-btn" type="button" id="woRepeat" hidden><span class="rb-t"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>Repeat last workout</span><span class="rb-s" id="woRepeatSub"></span></button>
+        <button class="btn btn-ghost" type="button" id="woFromHistory" hidden>Start from a previous workout</button>
       </div>
-      <div class="row">
-        <div class="field">
-          <label for="woMin">Minutes</label>
-          <input type="number" id="woMin" inputmode="numeric" min="1" max="1440" step="1">
-        </div>
-        <div class="field">
-          <label for="woTime">Time</label>
-          <input type="time" id="woTime">
-        </div>
-      </div>
-      <div class="field">
-        <label for="woNotes">Notes <span class="opt">(optional)</span></label>
-        <textarea id="woNotes" rows="2" autocapitalize="sentences" placeholder="e.g. 2 miles, felt strong"></textarea>
-      </div>
-      <p class="err" id="woErr" role="alert"></p>
-      <button class="btn btn-primary" type="submit">Save workout</button>
-    </form>
+    </div>
     <div class="card">
       <div class="list-head"><h2 id="woListTitle">Today</h2><span class="muted small" id="woTotals"></span></div>
       <ul class="list" id="woList"></ul>
@@ -656,6 +704,14 @@ select{padding-right:42px;
       </div>
     </form>
     <div class="card">
+      <h2>Workout units</h2>
+      <div class="seg" role="radiogroup" aria-label="Workout units" style="--cols:2">
+        <label><input type="radio" name="unitPref" value="lb"><span>Pounds &amp; miles</span></label>
+        <label><input type="radio" name="unitPref" value="kg"><span>Kilograms &amp; km</span></label>
+      </div>
+      <p class="muted small" style="margin:10px 0 0">Saved workouts keep the units they were logged in and are converted for display.</p>
+    </div>
+    <div class="card">
       <h2>Back up your data</h2>
       <p class="muted small" style="margin:-4px 0 12px">Everything lives only on this device. Export a JSON file now and then and keep it somewhere safe, like Files or iCloud Drive.</p>
       <div class="stack">
@@ -675,6 +731,94 @@ select{padding-right:42px;
       <button class="btn btn-danger" type="submit" id="clearBtn" style="width:100%" disabled>Delete everything</button>
     </form>
     <p class="footer-note">Health Tracker · works offline · no account, no tracking</p>
+  </div>
+</div>
+
+<div class="overlay" id="woOverlay" aria-hidden="true">
+  <div class="sheet wo-sheet" role="dialog" aria-modal="true" aria-labelledby="woEdTitle">
+    <div class="sheet-head">
+      <h2 id="woEdTitle">New workout</h2>
+      <button type="button" class="icon-btn" id="woClose" aria-label="Close workout without saving">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="woForm" novalidate>
+      <div class="card">
+        <div class="field">
+          <span class="label" id="woTypeLabel">Type</span>
+          <div class="seg" role="radiogroup" aria-labelledby="woTypeLabel" style="--cols:3">
+            <label><input type="radio" name="woType" value="strength"><span>Strength</span></label>
+            <label><input type="radio" name="woType" value="run"><span>Run</span></label>
+            <label><input type="radio" name="woType" value="walk"><span>Walk</span></label>
+            <label><input type="radio" name="woType" value="bike"><span>Bike</span></label>
+            <label><input type="radio" name="woType" value="swim"><span>Swim</span></label>
+            <label><input type="radio" name="woType" value="other"><span>Other</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="woName">Name <span class="opt">(optional)</span></label>
+          <input type="text" id="woName" autocapitalize="words" maxlength="60" placeholder="e.g. Leg day">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="woDate">Date</label>
+            <input type="date" id="woDate">
+          </div>
+          <div class="field">
+            <label for="woTime">Time</label>
+            <input type="time" id="woTime">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="woMin">Duration in minutes <span class="opt">(optional)</span></label>
+          <input type="number" id="woMin" inputmode="numeric" min="1" max="1440" step="1">
+        </div>
+      </div>
+      <div id="woExList" aria-live="polite"></div>
+      <button type="button" class="add-ex" id="woAddEx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add exercise</button>
+      <div class="wo-total" id="woTotal" aria-live="polite"></div>
+      <div class="card">
+        <div class="field" style="margin-bottom:0">
+          <label for="woNotes">Notes <span class="opt">(optional)</span></label>
+          <textarea id="woNotes" rows="2" autocapitalize="sentences" placeholder="e.g. Felt strong, new squat PR"></textarea>
+        </div>
+      </div>
+      <button type="button" class="btn btn-danger-ghost" id="woDelete" style="width:100%" hidden>Delete workout</button>
+      <p class="err" id="woErr" role="alert"></p>
+      <div class="sheet-foot">
+        <button type="button" class="btn btn-ghost rest-btn" id="woRest" aria-label="Start a 90 second rest timer">Rest 1:30</button>
+        <button class="btn btn-primary" type="submit" id="woSave">Save workout</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="woPickOverlay" aria-hidden="true">
+  <div class="sheet pick-sheet" role="dialog" aria-modal="true" aria-labelledby="woPickTitle">
+    <div class="sheet-head">
+      <h2 id="woPickTitle">Add exercise</h2>
+      <button type="button" class="icon-btn" id="woPickClose" aria-label="Close exercise list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <label for="woPickSearch" class="sr-only">Search exercises</label>
+      <input type="search" id="woPickSearch" autocomplete="off" autocapitalize="words" enterkeyhint="done" placeholder="Search or type a new exercise">
+    </div>
+    <div id="woPickList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="woHistOverlay" aria-hidden="true">
+  <div class="sheet pick-sheet" role="dialog" aria-modal="true" aria-labelledby="woHistTitle">
+    <div class="sheet-head">
+      <h2 id="woHistTitle">Start from a previous workout</h2>
+      <button type="button" class="icon-btn" id="woHistClose" aria-label="Close previous workouts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <ul class="food-rows" id="woHistList"></ul>
   </div>
 </div>
 
@@ -770,9 +914,35 @@ select{padding-right:42px;
   var KEY = 'healthTracker.v1';
   var LISTS = ['food', 'workouts', 'water', 'bp', 'sleep'];
   var DEFAULT_GOAL = 64;
+  /* Workout constants (needed by normalize() at load). */
+  var KG_PER_LB = 0.45359237, KM_PER_MI = 1.609344;
+  var WO_TYPES = ['strength', 'run', 'walk', 'bike', 'swim', 'other'];
+  var KINDS = [['weight', 'Weight'], ['bodyweight', 'Bodyweight'], ['cardio', 'Time / dist']];
+  var EX_LIB = [
+    ['Legs', [['Squat', 'weight'], ['Front squat', 'weight'], ['Goblet squat', 'weight'], ['Leg press', 'weight'], ['Romanian deadlift', 'weight'],
+      ['Lunge', 'weight'], ['Walking lunge', 'weight'], ['Bulgarian split squat', 'weight'], ['Hip thrust', 'weight'], ['Leg extension', 'weight'],
+      ['Leg curl', 'weight'], ['Calf raise', 'weight'], ['Step-up', 'weight'], ['Hack squat', 'weight'], ['Bodyweight squat', 'bodyweight']]],
+    ['Chest', [['Bench press', 'weight'], ['Incline bench press', 'weight'], ['Dumbbell bench press', 'weight'], ['Incline dumbbell press', 'weight'],
+      ['Chest fly', 'weight'], ['Cable crossover', 'weight'], ['Machine chest press', 'weight'], ['Push-up', 'bodyweight'], ['Dip', 'bodyweight']]],
+    ['Back', [['Deadlift', 'weight'], ['Barbell row', 'weight'], ['Dumbbell row', 'weight'], ['Pull-up', 'bodyweight'], ['Chin-up', 'bodyweight'],
+      ['Lat pulldown', 'weight'], ['Seated cable row', 'weight'], ['T-bar row', 'weight'], ['Face pull', 'weight'], ['Back extension', 'bodyweight'], ['Inverted row', 'bodyweight']]],
+    ['Shoulders', [['Overhead press', 'weight'], ['Dumbbell shoulder press', 'weight'], ['Arnold press', 'weight'], ['Lateral raise', 'weight'],
+      ['Front raise', 'weight'], ['Rear delt fly', 'weight'], ['Upright row', 'weight'], ['Shrug', 'weight']]],
+    ['Arms', [['Barbell curl', 'weight'], ['Dumbbell curl', 'weight'], ['Hammer curl', 'weight'], ['Preacher curl', 'weight'], ['Cable curl', 'weight'],
+      ['Tricep pushdown', 'weight'], ['Skull crusher', 'weight'], ['Overhead tricep extension', 'weight'], ['Close-grip bench press', 'weight'], ['Bench dip', 'bodyweight']]],
+    ['Core', [['Plank', 'cardio'], ['Side plank', 'cardio'], ['Crunch', 'bodyweight'], ['Sit-up', 'bodyweight'], ['Hanging leg raise', 'bodyweight'],
+      ['Russian twist', 'bodyweight'], ['Ab wheel rollout', 'bodyweight'], ['Cable crunch', 'weight'], ['Dead bug', 'bodyweight'], ['Mountain climber', 'bodyweight']]],
+    ['Full body', [['Kettlebell swing', 'weight'], ['Power clean', 'weight'], ['Clean and jerk', 'weight'], ['Snatch', 'weight'], ['Thruster', 'weight'],
+      ["Farmer's carry", 'weight'], ['Burpee', 'bodyweight'], ['Box jump', 'bodyweight']]],
+    ['Cardio', [['Running', 'cardio'], ['Treadmill', 'cardio'], ['Walking', 'cardio'], ['Cycling', 'cardio'], ['Stationary bike', 'cardio'],
+      ['Rowing machine', 'cardio'], ['Elliptical', 'cardio'], ['Stair climber', 'cardio'], ['Swimming', 'cardio'], ['Jump rope', 'cardio'], ['Hiking', 'cardio']]]
+  ];
+  var LIB = {};
+  EX_LIB.forEach(function (g) { g[1].forEach(function (e) { LIB[e[0].toLowerCase()] = { name: e[0], kind: e[1], group: g[0] }; }); });
+
 
   function blank() {
-    return { version: 1, settings: { waterGoal: DEFAULT_GOAL }, food: [], workouts: [], water: [], bp: [], sleep: [], recentFoods: [], favorites: [] };
+    return { version: 1, settings: { waterGoal: DEFAULT_GOAL, units: 'lb' }, food: [], workouts: [], water: [], bp: [], sleep: [], recentFoods: [], favorites: [], customExercises: [] };
   }
   function validFood(f) {
     if (!f || typeof f !== 'object' || typeof f.key !== 'string' || typeof f.name !== 'string') return false;
@@ -795,6 +965,9 @@ select{padding-right:42px;
     LISTS.forEach(function (k) { out[k] = Array.isArray(o[k]) ? o[k].filter(validEntry) : []; });
     out.recentFoods = Array.isArray(o.recentFoods) ? o.recentFoods.filter(validFood).slice(0, 20) : [];
     out.favorites = Array.isArray(o.favorites) ? o.favorites.filter(validFood) : [];
+    if (o.settings && o.settings.units === 'kg') out.settings.units = 'kg';
+    out.workouts = out.workouts.map(normWorkout);
+    out.customExercises = cleanCustom(o.customExercises);
     return out;
   }
   function load() {
@@ -964,7 +1137,7 @@ select{padding-right:42px;
 
   // Time fields default to "now" unless the user has set them.
   function resetTimes() {
-    ['foodTime', 'woTime', 'bpTime'].forEach(function (id) { if (!$(id).dataset.touched) $(id).value = nowTime(); });
+    ['foodTime', 'bpTime'].forEach(function (id) { if (!$(id).dataset.touched) $(id).value = nowTime(); });
   }
 
   /* ---------- Render ---------- */
@@ -1080,9 +1253,12 @@ select{padding-right:42px;
       '<span class="ring-wrap">' + ringSvg('waterMini', 58, 7, [{ pct: oz / goal, color: 'var(--c-water)' }]) +
       '<span class="ring-center"><span class="pct">' + pct + '%</span></span></span>'));
 
-    var mins = sumOf(wo, 'minutes');
-    cards.push(sumCard('workouts', 'Workouts', wo.length ? fmtDur(mins) : '0<small> min</small>',
-      wo.length ? plural(wo.length, 'session', 'sessions') : 'Log a walk, run, or lift.', !wo.length));
+    var mins = sumOf(wo, 'minutes'), exN = wo.reduce(function (s, w) { return s + w.exercises.length; }, 0);
+    var vol = wo.reduce(function (s, w) { return s + woVolume(w); }, 0);
+    var woDetail = [mins && exN ? plural(exN, 'exercise', 'exercises') : '', vol ? fmtVol(vol) + ' volume' : '',
+      !exN || (!mins && !vol) ? plural(wo.length, 'session', 'sessions') : ''].filter(Boolean).join(' \u00b7 ');
+    cards.push(sumCard('workouts', 'Workouts', mins ? fmtDur(mins) : exN ? exN + '<small> ' + (exN === 1 ? 'exercise' : 'exercises') + '</small>' : wo.length ? wo.length + '<small> logged</small>' : '0<small> min</small>',
+      wo.length ? woDetail : 'Log a lift, run, or walk.', !wo.length));
 
     var qd = '';
     if (sleep && sleep.quality) {
@@ -1126,14 +1302,28 @@ select{padding-right:42px;
 
   function renderWorkouts() {
     var items = forDate('workouts', viewDate), mins = sumOf(items, 'minutes');
+    var vol = items.reduce(function (s, w) { return s + woVolume(w); }, 0);
     $('woListTitle').textContent = listTitle(viewDate);
-    $('woTotals').textContent = items.length ? fmtDur(mins) + ' total' : '';
+    $('woTotals').textContent = items.length ? [mins ? fmtDur(mins) : '', vol ? fmtVol(vol) : '', !mins && !vol ? plural(items.length, 'workout', 'workouts') : ''].filter(Boolean).join(' \u00b7 ') : '';
+    var last = lastWorkout();
+    $('woRepeat').hidden = !last;
+    if (last) $('woRepeatSub').textContent = woTitle(last) + ' \u00b7 ' + relDate(last.date) + (last.exercises.length ? ' \u00b7 ' + last.exercises.map(function (x) { return x.name; }).slice(0, 4).join(', ') : '');
+    $('woFromHistory').hidden = db.workouts.filter(function (w) { return w.exercises.length; }).length < 2;
     $('woList').innerHTML = items.length ? items.map(function (e) {
-      return '<li class="item"><div class="main"><div class="title">' + esc(cap(e.type)) + '</div>' +
-        '<div class="meta">' + fmtTime(e.time) + '</div>' +
+      var v = woVolume(e), sets = woSetCount(e), t = woTitle(e);
+      var meta = [fmtTime(e.time), e.name ? cap(e.type) : '', has(e.minutes) && e.exercises.length ? fmtDur(e.minutes) : '', e.exercises.length ? plural(sets, 'set', 'sets') : ''].filter(Boolean).join(' \u00b7 ');
+      return '<li class="item wo-item" data-edit="' + esc(e.id) + '"><div class="main"><div class="title">' + esc(t) +
+        (v ? '<span class="chip vol">' + fmtVol(v) + '</span>' : '') + '</div>' +
+        '<div class="meta">' + esc(meta) + '</div>' +
+        (e.exercises.length ? '<ul class="wo-lines">' + e.exercises.map(function (x) {
+          var s = setsText(x, woUnit(e));
+          return '<li><span>' + esc(x.name) + (s ? ' <span class="x">' + esc(s) + '</span>' : '') + '</span></li>';
+        }).join('') + '</ul>' : '') +
         (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
-        '<span class="val">' + fmtDur(Number(e.minutes) || 0) + '</span>' + delBtn('workouts', e.id, cap(e.type) + ' workout') + '</li>';
-    }).join('') : '<li class="empty">No workouts logged ' + emptyWhen(viewDate) + '. Even a short walk counts.</li>';
+        '<div class="wo-btns">' + (has(e.minutes) && !e.exercises.length ? '<span class="val">' + fmtDur(e.minutes) + '</span>' : '') +
+        '<button class="edit-btn" type="button" data-edit="' + esc(e.id) + '" aria-label="Edit ' + esc(t) + ' workout">' + IC_EDIT + '</button>' +
+        delBtn('workouts', e.id, t + ' workout') + '</div></li>';
+    }).join('') : '<li class="empty">No workouts logged ' + emptyWhen(viewDate) + '. Tap Start a workout to add exercises and sets, or just log a walk.</li>';
   }
 
   function renderWater() {
@@ -1227,7 +1417,7 @@ select{padding-right:42px;
   function radioVal(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : null; }
   function blurActive() { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); }
   function resetTime(id) { delete $(id).dataset.touched; $(id).value = nowTime(); }
-  ['foodTime', 'woTime', 'bpTime'].forEach(function (id) {
+  ['foodTime', 'bpTime'].forEach(function (id) {
     $(id).addEventListener('change', function () { $(id).dataset.touched = '1'; });
   });
 
@@ -1254,20 +1444,6 @@ select{padding-right:42px;
       save();
       resetTime('foodTime'); checkRadio('mealType', defaultMeal()); blurActive(); closeManual();
       toast('Meal saved'); render();
-    }
-  });
-
-  $('workoutForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var type = radioVal('woType'), mins = numVal('woMin'), time = $('woTime').value;
-    if (!type) { err('woErr', 'Choose a workout type.'); return; }
-    if (mins === null || isNaN(mins) || mins < 1 || mins > 1440) { err('woErr', 'Enter the duration in minutes (1 to 1440).'); $('woMin').focus(); return; }
-    if (!time) { err('woErr', 'Add a time.'); return; }
-    err('woErr');
-    if (add('workouts', { date: viewDate, time: time, type: type, minutes: Math.round(mins), notes: $('woNotes').value.trim() })) {
-      $('woMin').value = ''; $('woNotes').value = '';
-      resetTime('woTime'); blurActive();
-      toast('Workout saved'); render();
     }
   });
 
@@ -1358,7 +1534,12 @@ select{padding-right:42px;
   $('main').addEventListener('click', function (e) {
     var go = e.target.closest('[data-go]');
     if (go) { viewDate = todayKey(); show(go.dataset.go); return; }
-    var b = e.target.closest('[data-del]'); if (!b) return;
+    var b = e.target.closest('[data-del]');
+    if (!b) {
+      var edEl = e.target.closest('[data-edit]');
+      if (edEl) { var w = db.workouts.filter(function (x) { return x.id === edEl.dataset.edit; })[0]; if (w) openWorkout('edit', w); }
+      return;
+    }
     var list = b.dataset.del, id = b.dataset.id;
     if (LISTS.indexOf(list) < 0) return;
     confirmBox('Delete this entry?', 'It will be removed from this device. This can\u2019t be undone.', 'Delete', true).then(function (ok) {
@@ -1388,6 +1569,7 @@ select{padding-right:42px;
   function closeSettings() { closeOverlay($('settingsOverlay')); render(); }
   $('openSettings').addEventListener('click', function () {
     $('settingsGoal').value = db.settings.waterGoal; $('clearConfirm').value = ''; $('clearBtn').disabled = true;
+    checkRadio('unitPref', units());
     dataStats(); openOverlay($('settingsOverlay'));
   });
   $('closeSettings').addEventListener('click', closeSettings);
@@ -1447,6 +1629,7 @@ select{padding-right:42px;
             });
           });
           mergeSavedFoods(db, incoming);
+          mergeCustom(db, incoming);
         }
         if (save()) {
           toast(mode === 'replace' ? 'Data replaced' : 'Data merged');
@@ -1477,6 +1660,9 @@ select{padding-right:42px;
     if (e.key !== 'Escape') return;
     if ($('confirmOverlay').classList.contains('open')) return;
     if ($('scanOverlay').classList.contains('open')) { closeScanner(); return; }
+    if ($('woPickOverlay').classList.contains('open')) { closePicker(); return; }
+    if ($('woHistOverlay').classList.contains('open')) { closeHistory(); return; }
+    if ($('woOverlay').classList.contains('open')) { closeWorkout(); return; }
     if ($('foodSheetOverlay').classList.contains('open')) { closeFoodSheet(); return; }
     if ($('settingsOverlay').classList.contains('open')) closeSettings();
   });
@@ -2275,12 +2461,462 @@ select{padding-right:42px;
   window.addEventListener('online', function () { if (current === 'food' && !$('foodSearch').value.trim()) setSearchStatus(''); });
   window.addEventListener('offline', function () { if (current === 'food') setSearchStatus(offlineNote(), true); });
 
+  function units() { return db.settings.units === 'kg' ? 'kg' : 'lb'; }
+  function distUnit(u) { return u === 'kg' ? 'km' : 'mi'; }
+  function woUnit(w) { return w && w.unit === 'kg' ? 'kg' : 'lb'; }
+  function convW(v, from, to) { if (!has(v) || from === to) return v; return to === 'kg' ? v * KG_PER_LB : v / KG_PER_LB; }
+  function convD(v, from, to) { if (!has(v) || from === to) return v; return to === 'kg' ? v * KM_PER_MI : v / KM_PER_MI; }
+  function cleanNum(v, max, isInt) {
+    if (v === null || v === undefined || v === '') return null;
+    var n = Number(v); if (!isFinite(n) || n < 0 || n > max) return null;
+    return isInt ? Math.round(n) : Math.round(n * 100) / 100;
+  }
+  function kindOk(k) { return k === 'bodyweight' || k === 'cardio' ? k : 'weight'; }
+  function cleanSet(s, kind) {
+    if (!s || typeof s !== 'object') return null;
+    var o = kind === 'cardio' ? { min: cleanNum(s.min, 1440), dist: cleanNum(s.dist, 1000) }
+      : { reps: cleanNum(s.reps, 1000, true), weight: kind === 'weight' ? cleanNum(s.weight, 5000) : null };
+    return Object.keys(o).some(function (k) { return o[k] !== null; }) ? o : null;
+  }
+  function cleanExercise(x) {
+    if (!x || typeof x !== 'object' || typeof x.name !== 'string' || !x.name.trim()) return null;
+    var kind = kindOk(x.kind);
+    return { name: x.name.trim().slice(0, 80), kind: kind,
+      sets: (Array.isArray(x.sets) ? x.sets : []).map(function (s) { return cleanSet(s, kind); }).filter(Boolean).slice(0, 100) };
+  }
+  // Older entries were {type, minutes, notes}; they gain an empty exercise list and keep everything else.
+  function normWorkout(w) {
+    if (typeof w.type !== 'string' || !w.type) w.type = 'other';
+    w.minutes = cleanNum(w.minutes, 1440, true);
+    if (w.minutes === 0) w.minutes = null;
+    w.name = typeof w.name === 'string' ? w.name.trim().slice(0, 60) : '';
+    w.unit = woUnit(w);
+    w.notes = typeof w.notes === 'string' ? w.notes : '';
+    w.exercises = (Array.isArray(w.exercises) ? w.exercises : []).map(cleanExercise).filter(Boolean);
+    return w;
+  }
+  function cleanCustom(list) {
+    var seen = {}, out = [];
+    (Array.isArray(list) ? list : []).forEach(function (c) {
+      if (!c || typeof c.name !== 'string' || !c.name.trim()) return;
+      var k = c.name.trim().toLowerCase(); if (seen[k] || LIB[k]) return;
+      seen[k] = 1; out.push({ name: c.name.trim().slice(0, 80), kind: kindOk(c.kind) });
+    });
+    return out.slice(0, 300);
+  }
+  function mergeCustom(target, incoming) {
+    target.customExercises = cleanCustom((target.customExercises || []).concat(incoming.customExercises || []));
+  }
+
+  function woTitle(w) { return w.name || cap(w.type); }
+  function exVolume(ex, w) {
+    if (ex.kind !== 'weight') return 0;
+    return ex.sets.reduce(function (s, x) { return s + (has(x.reps) && has(x.weight) ? x.reps * convW(x.weight, woUnit(w), units()) : 0); }, 0);
+  }
+  function woVolume(w) { return (w.exercises || []).reduce(function (s, ex) { return s + exVolume(ex, w); }, 0); }
+  function woSetCount(w) { return (w.exercises || []).reduce(function (s, ex) { return s + ex.sets.length; }, 0); }
+  function fmtVol(v) { return Math.round(v).toLocaleString() + ' ' + units(); }
+  function setsText(ex, from) {
+    var cu = units(), sets = ex.sets;
+    if (!sets.length) return '';
+    if (ex.kind === 'cardio') {
+      var m = sumOf(sets, 'min'), d = sumOf(sets, 'dist'), parts = [];
+      if (m) parts.push(fmtDur(m));
+      if (d) parts.push(fmtG(convD(d, from, cu)) + ' ' + distUnit(cu));
+      if (sets.length > 1) parts.push(plural(sets.length, 'set', 'sets'));
+      return parts.join(' · ');
+    }
+    var runs = [];
+    sets.forEach(function (s) {
+      var r = runs[runs.length - 1];
+      if (r && r.reps === s.reps && r.weight === s.weight) r.n++; else runs.push({ n: 1, reps: s.reps, weight: s.weight });
+    });
+    var anyW = false;
+    var txt = runs.map(function (r) {
+      var t = r.n + '\u00d7' + (has(r.reps) ? r.reps : '\u2013');
+      if (ex.kind === 'weight' && has(r.weight)) { anyW = true; t += ' @ ' + fmtG(convW(r.weight, from, cu)); }
+      return t;
+    }).join(', ');
+    return txt + (anyW ? ' ' + cu : '');
+  }
+  function exSummary(ex, w) { var s = setsText(ex, woUnit(w)); return ex.name + (s ? ' ' + s : ''); }
+  function stamp(w) { return w.date + 'T' + (w.time || '00:00'); }
+  function lastTimeFor(name, beforeStamp, excludeId) {
+    var key = name.trim().toLowerCase(), best = null;
+    db.workouts.forEach(function (w) {
+      if (w.id === excludeId || (beforeStamp && stamp(w) >= beforeStamp)) return;
+      (w.exercises || []).forEach(function (ex) {
+        if (ex.name.toLowerCase() === key && ex.sets.length && (!best || stamp(w) > stamp(best.w))) best = { ex: ex, w: w };
+      });
+    });
+    return best;
+  }
+  function lastWorkout() {
+    var all = db.workouts.slice().sort(byDateTimeDesc);
+    return all.filter(function (w) { return w.exercises && w.exercises.length; })[0] || all[0] || null;
+  }
+  function recentExerciseNames() {
+    var seen = {}, out = [];
+    db.workouts.slice().sort(byDateTimeDesc).forEach(function (w) {
+      (w.exercises || []).forEach(function (ex) { var k = ex.name.toLowerCase(); if (!seen[k]) { seen[k] = 1; out.push({ name: ex.name, kind: ex.kind }); } });
+    });
+    return out;
+  }
+
+  /* ---------- Workout editor ---------- */
+  var ed = null, edDirty = false;
+  var IC_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
+  var IC_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var IC_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M17 7L7 17M7 7l10 10"/></svg>';
+  var IC_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+  var IC_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+
+  function cloneEx(list, from, to) {
+    return (list || []).map(function (ex) {
+      return { name: ex.name, kind: ex.kind, sets: ex.sets.map(function (s) {
+        var o = {};
+        Object.keys(s).forEach(function (k) {
+          var v = s[k];
+          if (has(v) && from !== to) v = k === 'weight' ? Math.round(convW(v, from, to) * 2) / 2 : k === 'dist' ? Math.round(convD(v, from, to) * 100) / 100 : v;
+          o[k] = v;
+        });
+        return o;
+      }) };
+    });
+  }
+  // mode: 'new' | 'edit' (src = saved entry) | 'copy' (src = workout to start from)
+  function openWorkout(mode, src) {
+    var isEdit = mode === 'edit' && src;
+    ed = { id: isEdit ? src.id : null, unit: isEdit ? woUnit(src) : units(), exercises: src ? cloneEx(src.exercises, woUnit(src), isEdit ? woUnit(src) : units()) : [] };
+    checkRadio('woType', src ? (WO_TYPES.indexOf(src.type) >= 0 ? src.type : 'other') : 'strength');
+    $('woName').value = src ? src.name || '' : '';
+    $('woDate').value = isEdit ? src.date : viewDate; $('woDate').max = todayKey();
+    $('woTime').value = isEdit ? src.time || nowTime() : nowTime();
+    $('woMin').value = isEdit && has(src.minutes) ? src.minutes : '';
+    $('woNotes').value = isEdit ? src.notes || '' : '';
+    $('woEdTitle').textContent = isEdit ? 'Edit workout' : 'New workout';
+    $('woSave').textContent = isEdit ? 'Save changes' : 'Save workout';
+    $('woDelete').hidden = !isEdit;
+    err('woErr'); edDirty = mode === 'copy';
+    renderEx();
+    openOverlay($('woOverlay'));
+    $('woOverlay').querySelector('.sheet').scrollTop = 0;
+  }
+  function closeWorkout(force) {
+    var go = function () { stopRest(); closeOverlay($('woOverlay')); ed = null; edDirty = false; };
+    if (force || !edDirty) { go(); return; }
+    confirmBox('Discard this workout?', 'Your changes haven\u2019t been saved.', 'Discard', true).then(function (ok) { if (ok) go(); });
+  }
+  function edStamp() { return ($('woDate').value || viewDate) + 'T' + ($('woTime').value || '23:59'); }
+  function unitLabel(kind, f) {
+    if (kind === 'cardio') return f === 'min' ? 'Min' : distUnit(ed.unit);
+    return f === 'reps' ? 'Reps' : ed.unit;
+  }
+  function fields(kind) { return kind === 'cardio' ? ['min', 'dist'] : kind === 'bodyweight' ? ['reps'] : ['reps', 'weight']; }
+  function numAttr(f) { return f === 'reps' || f === 'min' ? 'inputmode="numeric" step="1"' : 'inputmode="decimal" step="any"'; }
+  function renderEx() {
+    var stampNow = edStamp();
+    $('woExList').innerHTML = ed.exercises.map(function (ex, i) {
+      var fs = fields(ex.kind), one = fs.length === 1, n = ed.exercises.length;
+      var last = lastTimeFor(ex.name, stampNow, ed.id);
+      var lastSets = last ? cloneEx([last.ex], woUnit(last.w), ed.unit)[0].sets : [];
+      var nm = esc(ex.name);
+      var h = '<div class="ex-card" data-i="' + i + '">' +
+        '<div class="ex-head"><div class="ex-name">' + nm + '</div>' +
+        '<button type="button" class="ex-tool" data-act="up" aria-label="Move ' + nm + ' up"' + (i === 0 ? ' disabled' : '') + '>' + IC_UP + '</button>' +
+        '<button type="button" class="ex-tool" data-act="down" aria-label="Move ' + nm + ' down"' + (i === n - 1 ? ' disabled' : '') + '>' + IC_DOWN + '</button>' +
+        '<button type="button" class="ex-tool danger" data-act="del-ex" aria-label="Remove ' + nm + '">' + TRASH + '</button></div>' +
+        '<div class="kind-seg" role="group" aria-label="How to track ' + nm + '">' + KINDS.map(function (k) {
+          return '<button type="button" data-act="kind" data-k="' + k[0] + '" aria-pressed="' + (ex.kind === k[0]) + '">' + k[1] + '</button>';
+        }).join('') + '</div>';
+      if (last) {
+        h += '<div class="ex-last"><span><b>Last</b> ' + esc(relDate(last.w.date)) + ' \u00b7 ' + esc(setsText(last.ex, woUnit(last.w))) + '</span>' +
+          '<button type="button" class="link-btn" data-act="use-last" aria-label="Use last time\u2019s sets for ' + nm + '">Use</button></div>';
+      }
+      h += '<div class="set-grid' + (one ? ' one' : '') + '"><span class="set-h">Set</span>' + fs.map(function (f) { return '<span class="set-h">' + unitLabel(ex.kind, f) + '</span>'; }).join('') + '<span></span><span></span>';
+      ex.sets.forEach(function (s, j) {
+        var ph = lastSets[j] || lastSets[lastSets.length - 1] || {};
+        h += '<span class="set-n">' + (j + 1) + '</span>' + fs.map(function (f) {
+          return '<input type="number" ' + numAttr(f) + ' min="0" data-s="' + j + '" data-f="' + f + '" value="' + (has(s[f]) ? s[f] : '') + '"' +
+            (has(ph[f]) ? ' placeholder="' + ph[f] + '"' : '') + ' aria-label="' + nm + ' set ' + (j + 1) + ' ' + (f === 'weight' ? 'weight in ' + ed.unit : f === 'dist' ? 'distance in ' + distUnit(ed.unit) : f === 'min' ? 'minutes' : 'reps') + '">';
+        }).join('') +
+          '<button type="button" class="ex-tool" data-act="set-up" data-s="' + j + '" aria-label="Move set ' + (j + 1) + ' up"' + (j === 0 ? ' disabled' : '') + '>' + IC_UP + '</button>' +
+          '<button type="button" class="ex-tool danger" data-act="del-set" data-s="' + j + '" aria-label="Delete set ' + (j + 1) + '">' + IC_X + '</button>';
+      });
+      h += '</div><div class="ex-foot"><button type="button" class="btn btn-secondary" data-act="add-set">' + IC_PLUS.replace('<svg', '<svg class="ic"') + 'Add set</button>' +
+        '<span class="ex-vol" data-vol></span></div>';
+      if (ex.kind !== 'cardio') {
+        h += '<p class="qs-label">Quick add identical sets</p><div class="qsets"><input type="number" inputmode="numeric" min="1" max="20" step="1" data-q="n" value="3" aria-label="Number of sets for ' + nm + '">' +
+          '<span class="qs-x">\u00d7</span><input type="number" inputmode="numeric" min="1" step="1" data-q="reps" placeholder="reps" aria-label="Reps per set for ' + nm + '">' +
+          (ex.kind === 'weight' ? '<span class="qs-x">@</span><input type="number" inputmode="decimal" min="0" step="any" data-q="weight" placeholder="' + ed.unit + '" aria-label="Weight per set in ' + ed.unit + ' for ' + nm + '">' : '') +
+          '<button type="button" class="btn btn-ghost" data-act="qadd">Add</button></div>';
+      }
+      return h + '</div>';
+    }).join('');
+    updateTotals();
+  }
+  function edVolume() {
+    return ed.exercises.reduce(function (s, ex) {
+      return s + (ex.kind !== 'weight' ? 0 : ex.sets.reduce(function (t, x) { return t + (has(x.reps) && has(x.weight) ? x.reps * x.weight : 0); }, 0));
+    }, 0);
+  }
+  function updateTotals() {
+    $('woExList').querySelectorAll('.ex-card').forEach(function (card) {
+      var ex = ed.exercises[Number(card.dataset.i)], el = card.querySelector('[data-vol]');
+      if (!ex || !el) return;
+      if (ex.kind === 'weight') {
+        var v = ex.sets.reduce(function (t, x) { return t + (has(x.reps) && has(x.weight) ? x.reps * x.weight : 0); }, 0);
+        el.textContent = v ? 'Volume ' + Math.round(v).toLocaleString() + ' ' + ed.unit : '';
+      } else if (ex.kind === 'bodyweight') {
+        var r = sumOf(ex.sets, 'reps'); el.textContent = r ? plural(r, 'rep', 'reps') + ' total' : '';
+      } else {
+        var m = sumOf(ex.sets, 'min'), d = sumOf(ex.sets, 'dist');
+        el.textContent = [m ? fmtDur(m) : '', d ? fmtG(d) + ' ' + distUnit(ed.unit) : ''].filter(Boolean).join(' \u00b7 ');
+      }
+    });
+    var sets = ed.exercises.reduce(function (s, ex) { return s + ex.sets.length; }, 0), vol = edVolume();
+    $('woTotal').hidden = !ed.exercises.length;
+    $('woTotal').innerHTML = '<div><span class="tk">Exercises</span><span class="tv">' + ed.exercises.length + '</span></div>' +
+      '<div><span class="tk">Sets</span><span class="tv">' + sets + '</span></div>' +
+      '<div><span class="tk">Volume</span><span class="tv">' + Math.round(vol).toLocaleString() + '<small> ' + ed.unit + '</small></span></div>';
+  }
+  function exAt(el) { var c = el.closest('.ex-card'); return c ? Number(c.dataset.i) : -1; }
+  function readNum(v) { if (v === '' || v === null) return null; var n = Number(v); return isFinite(n) ? n : null; }
+  function focusLastSet(i) {
+    var card = $('woExList').querySelector('.ex-card[data-i="' + i + '"]');
+    var ins = card ? card.querySelectorAll('.set-grid input') : [];
+    if (ins.length) { var f = ins[ins.length - fields(ed.exercises[i].kind).length]; f.focus({ preventScroll: true }); f.scrollIntoView({ block: 'center', behavior: reducedMotion() ? 'auto' : 'smooth' }); }
+  }
+  function reducedMotion() { return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  $('woExList').addEventListener('input', function (e) {
+    var t = e.target, i = exAt(t); if (i < 0) return;
+    if (t.dataset.f) { ed.exercises[i].sets[Number(t.dataset.s)][t.dataset.f] = readNum(t.value); edDirty = true; updateTotals(); }
+  });
+  $('woExList').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    var i = exAt(b), ex = ed.exercises[i], act = b.dataset.act, j = Number(b.dataset.s);
+    if (!ex) return;
+    edDirty = true;
+    if (act === 'up' && i > 0) { ed.exercises.splice(i - 1, 0, ed.exercises.splice(i, 1)[0]); renderEx(); return; }
+    if (act === 'down' && i < ed.exercises.length - 1) { ed.exercises.splice(i + 1, 0, ed.exercises.splice(i, 1)[0]); renderEx(); return; }
+    if (act === 'del-ex') {
+      var drop = function () { ed.exercises.splice(i, 1); renderEx(); };
+      if (!ex.sets.some(function (s) { return Object.keys(s).some(function (k) { return has(s[k]); }); })) { drop(); return; }
+      confirmBox('Remove ' + ex.name + '?', 'Its ' + plural(ex.sets.length, 'set', 'sets') + ' will be removed from this workout.', 'Remove', true).then(function (ok) { if (ok) drop(); });
+      return;
+    }
+    if (act === 'kind') { ex.kind = b.dataset.k; renderEx(); return; }
+    if (act === 'set-up' && j > 0) { ex.sets.splice(j - 1, 0, ex.sets.splice(j, 1)[0]); renderEx(); return; }
+    if (act === 'del-set') { ex.sets.splice(j, 1); renderEx(); return; }
+    if (act === 'add-set') {
+      var prev = ex.sets[ex.sets.length - 1];
+      if (!prev) { var lt = lastTimeFor(ex.name, edStamp(), ed.id); prev = lt ? cloneEx([lt.ex], woUnit(lt.w), ed.unit)[0].sets[0] : null; }
+      ex.sets.push(prev ? JSON.parse(JSON.stringify(prev)) : {});
+      renderEx(); focusLastSet(i); return;
+    }
+    if (act === 'use-last') {
+      var l = lastTimeFor(ex.name, edStamp(), ed.id);
+      if (l) { ex.kind = l.ex.kind; ex.sets = cloneEx([l.ex], woUnit(l.w), ed.unit)[0].sets; renderEx(); toast('Copied last time\u2019s sets'); }
+      return;
+    }
+    if (act === 'qadd') {
+      var card = b.closest('.ex-card'), q = function (k) { var x = card.querySelector('[data-q="' + k + '"]'); return x ? readNum(x.value) : null; };
+      var n = q('n'), reps = q('reps'), w = ex.kind === 'weight' ? q('weight') : null;
+      if (!n || n < 1 || n > 20 || Math.round(n) !== n) { toast('Number of sets should be 1 to 20'); return; }
+      if (!reps || reps < 1 || reps > 1000) { toast('Enter reps per set'); card.querySelector('[data-q="reps"]').focus(); return; }
+      if (w !== null && (w < 0 || w > 5000)) { toast('Check the weight'); return; }
+      // Replace trailing empty sets (like the blank first set) rather than leaving gaps.
+      while (ex.sets.length && !Object.keys(ex.sets[ex.sets.length - 1]).some(function (k) { return has(ex.sets[ex.sets.length - 1][k]); })) ex.sets.pop();
+      for (var k = 0; k < n; k++) ex.sets.push(ex.kind === 'weight' ? { reps: Math.round(reps), weight: w } : { reps: Math.round(reps) });
+      renderEx(); blurActive();
+      toast('Added ' + n + ' \u00d7 ' + Math.round(reps) + (w !== null ? ' @ ' + fmtG(w) + ' ' + ed.unit : ''));
+    }
+  });
+  $('woForm').addEventListener('input', function (e) { if (!e.target.closest('#woExList')) edDirty = true; });
+  $('woForm').addEventListener('change', function () { edDirty = true; });
+
+  function validateSets(ex) {
+    var lim = { reps: [1, 1000], weight: [0, 5000], min: [0, 1440], dist: [0, 1000] };
+    for (var j = 0; j < ex.sets.length; j++) {
+      var s = ex.sets[j];
+      for (var f in lim) {
+        if (has(s[f]) && (s[f] < lim[f][0] || s[f] > lim[f][1])) return ex.name + ', set ' + (j + 1) + ': check the ' + (f === 'dist' ? 'distance' : f === 'min' ? 'minutes' : f) + '.';
+        if (f === 'reps' && has(s[f]) && Math.round(s[f]) !== s[f]) return ex.name + ', set ' + (j + 1) + ': reps should be a whole number.';
+      }
+    }
+    return '';
+  }
+  $('woForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!ed) return;
+    var type = radioVal('woType'), date = $('woDate').value, time = $('woTime').value, mins = numVal('woMin');
+    if (!type) { err('woErr', 'Choose a workout type.'); return; }
+    if (!date || date > todayKey()) { err('woErr', 'Choose a date that isn\u2019t in the future.'); return; }
+    if (!time) { err('woErr', 'Add a time.'); return; }
+    if (mins !== null && (isNaN(mins) || mins < 1 || mins > 1440)) { err('woErr', 'Duration should be 1 to 1440 minutes, or left blank.'); $('woMin').focus(); return; }
+    for (var i = 0; i < ed.exercises.length; i++) { var m = validateSets(ed.exercises[i]); if (m) { err('woErr', m); return; } }
+    var exercises = ed.exercises.map(cleanExercise).filter(Boolean);
+    if (mins === null && !exercises.length) { err('woErr', 'Add at least one exercise, or enter how long you worked out.'); return; }
+    err('woErr');
+    var entry = { date: date, time: time, type: type, name: $('woName').value.trim().slice(0, 60), minutes: mins === null ? null : Math.round(mins),
+      unit: ed.unit, exercises: exercises, notes: $('woNotes').value.trim() };
+    var ok, wasEdit = !!ed.id;
+    if (wasEdit) {
+      var idx = -1; db.workouts.forEach(function (w, k) { if (w.id === ed.id) idx = k; });
+      if (idx < 0) { err('woErr', 'This workout was deleted. Close and start again.'); return; }
+      var backup = db.workouts[idx];
+      db.workouts[idx] = Object.assign({}, backup, entry);
+      ok = save(); if (!ok) db.workouts[idx] = backup;
+    } else {
+      ok = add('workouts', entry);
+    }
+    if (!ok) return;
+    rememberCustom(exercises); save();
+    closeWorkout(true); blurActive();
+    if (date !== viewDate) viewDate = date;
+    toast(wasEdit ? 'Workout updated' : 'Workout saved'); render();
+  });
+  function rememberCustom(exercises) {
+    var list = db.customExercises || (db.customExercises = []);
+    exercises.forEach(function (ex) {
+      var k = ex.name.toLowerCase(); if (LIB[k]) return;
+      var found = list.filter(function (c) { return c.name.toLowerCase() === k; })[0];
+      if (found) found.kind = ex.kind; else list.unshift({ name: ex.name, kind: ex.kind });
+    });
+    db.customExercises = cleanCustom(list);
+  }
+  $('woDelete').addEventListener('click', function () {
+    if (!ed || !ed.id) return;
+    var id = ed.id;
+    confirmBox('Delete this workout?', 'It will be removed from this device. This can\u2019t be undone.', 'Delete', true).then(function (ok) {
+      if (!ok) return;
+      var before = db.workouts;
+      db.workouts = db.workouts.filter(function (w) { return w.id !== id; });
+      if (save()) { closeWorkout(true); toast('Deleted'); render(); } else db.workouts = before;
+    });
+  });
+  $('woClose').addEventListener('click', function () { closeWorkout(); });
+  $('woOverlay').addEventListener('click', function (e) { if (e.target === $('woOverlay')) closeWorkout(); });
+  $('woAddEx').addEventListener('click', openPicker);
+  $('woStart').addEventListener('click', function () { openWorkout('new'); });
+  $('woRepeat').addEventListener('click', function () { var w = lastWorkout(); if (w) openWorkout('copy', w); });
+  $('woFromHistory').addEventListener('click', openHistory);
+
+  /* Rest timer: 90 seconds, tap again to stop. */
+  var restEnd = 0, restTimer = null;
+  function paintRest() {
+    var b = $('woRest'), left = Math.max(0, Math.ceil((restEnd - Date.now()) / 1000));
+    if (!restTimer) { b.textContent = 'Rest 1:30'; b.classList.remove('on'); b.setAttribute('aria-label', 'Start a 90 second rest timer'); return; }
+    b.textContent = Math.floor(left / 60) + ':' + pad(left % 60); b.classList.add('on'); b.setAttribute('aria-label', 'Rest timer, ' + left + ' seconds left. Tap to stop.');
+    if (left <= 0) { stopRest(); toast('Rest over. Next set.'); if (navigator.vibrate) navigator.vibrate([200, 100, 200]); }
+  }
+  function stopRest() { clearInterval(restTimer); restTimer = null; paintRest(); }
+  $('woRest').addEventListener('click', function () {
+    if (restTimer) { stopRest(); return; }
+    restEnd = Date.now() + 90000; restTimer = setInterval(paintRest, 250); paintRest();
+  });
+
+  /* ---------- Exercise picker ---------- */
+  function openPicker() {
+    $('woPickSearch').value = ''; renderPicker();
+    openOverlay($('woPickOverlay'));
+    $('woPickOverlay').querySelector('.sheet').scrollTop = 0;
+    setTimeout(function () { $('woPickSearch').focus({ preventScroll: true }); }, 60);
+  }
+  function closePicker() { closeOverlay($('woPickOverlay')); blurActive(); }
+  function pickRow(name, kind, sub) {
+    return '<li><button type="button" class="food-row pick-row" data-name="' + esc(name) + '" data-kind="' + kind + '"><span class="fr-main"><span class="fr-name">' + esc(name) + '</span>' +
+      (sub ? '<span class="fr-sub">' + esc(sub) + '</span>' : '') + '</span><span class="plus">' + IC_PLUS + '</span></button></li>';
+  }
+  function renderPicker() {
+    var q = $('woPickSearch').value.trim().toLowerCase(), words = q.split(/\s+/).filter(Boolean);
+    var match = function (s) { s = s.toLowerCase(); return words.every(function (w) { return s.indexOf(w) >= 0; }); };
+    var html = '', shown = {}, exact = false;
+    var sub = function (name, group) {
+      var l = lastTimeFor(name, null, ed && ed.id);
+      return [group, l ? 'Last: ' + setsText(l.ex, woUnit(l.w)) : ''].filter(Boolean).join(' \u00b7 ');
+    };
+    function section(title, rows) {
+      rows = rows.filter(function (r) { var k = r.name.toLowerCase(); if (shown[k] || !match(r.name + ' ' + (r.group || ''))) return false; if (k === q) exact = true; shown[k] = 1; return true; });
+      if (rows.length) html += '<p class="res-head">' + title + '</p><ul class="food-rows">' + rows.map(function (r) { return pickRow(r.name, r.kind, sub(r.name, r.group)); }).join('') + '</ul>';
+    }
+    section('Recent', recentExerciseNames().slice(0, q ? 50 : 8).map(function (r) { var l = LIB[r.name.toLowerCase()]; return { name: r.name, kind: r.kind, group: l ? l.group : '' }; }));
+    section('Your exercises', (db.customExercises || []).map(function (c) { return { name: c.name, kind: c.kind, group: 'Custom' }; }));
+    EX_LIB.forEach(function (g) { section(g[0], g[1].map(function (e) { return { name: e[0], kind: e[1], group: g[0] }; })); });
+    var typed = $('woPickSearch').value.trim();
+    if (typed && !exact) {
+      html = '<ul class="food-rows">' + pickRow(typed, 'weight', 'Add as a new exercise').replace('class="food-row pick-row"', 'class="food-row pick-row" data-new="1"') + '</ul>' + html;
+    }
+    $('woPickList').innerHTML = html || '<p class="empty">No exercises match.</p>';
+  }
+  function addExercise(name, kind) {
+    name = name.trim().slice(0, 80); if (!name || !ed) return;
+    var lib = LIB[name.toLowerCase()], custom = (db.customExercises || []).filter(function (c) { return c.name.toLowerCase() === name.toLowerCase(); })[0];
+    var lt = lastTimeFor(name, edStamp(), ed.id);
+    kind = lt ? lt.ex.kind : custom ? custom.kind : lib ? lib.kind : kindOk(kind);
+    ed.exercises.push({ name: lib ? lib.name : name, kind: kind, sets: [{}] });
+    edDirty = true; closePicker(); renderEx();
+    var i = ed.exercises.length - 1;
+    setTimeout(function () {
+      var card = $('woExList').querySelector('.ex-card[data-i="' + i + '"]');
+      if (card) card.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+    }, 80);
+  }
+  $('woPickSearch').addEventListener('input', renderPicker);
+  $('woPickSearch').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    var first = $('woPickList').querySelector('.pick-row');
+    var typed = $('woPickSearch').value.trim();
+    if (!typed) return;
+    if (first) addExercise(first.dataset.name, first.dataset.kind); else addExercise(typed, 'weight');
+  });
+  $('woPickList').addEventListener('click', function (e) {
+    var b = e.target.closest('.pick-row'); if (b) addExercise(b.dataset.name, b.dataset.kind);
+  });
+  $('woPickClose').addEventListener('click', closePicker);
+  $('woPickOverlay').addEventListener('click', function (e) { if (e.target === $('woPickOverlay')) closePicker(); });
+
+  /* ---------- Start from a previous workout ---------- */
+  function openHistory() {
+    var list = db.workouts.filter(function (w) { return w.exercises && w.exercises.length; }).sort(byDateTimeDesc).slice(0, 30);
+    $('woHistList').innerHTML = list.length ? list.map(function (w) {
+      return '<li><button type="button" class="food-row pick-row" data-wid="' + esc(w.id) + '"><span class="fr-main"><span class="fr-name">' + esc(woTitle(w)) + '</span>' +
+        '<span class="fr-sub">' + esc(relDate(w.date)) + ' \u00b7 ' + esc(w.exercises.map(function (x) { return x.name; }).join(', ')) + '</span></span><span class="plus">' + IC_PLUS + '</span></button></li>';
+    }).join('') : '<li class="empty">No workouts with exercises yet.</li>';
+    openOverlay($('woHistOverlay'));
+  }
+  function closeHistory() { closeOverlay($('woHistOverlay')); }
+  $('woHistList').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-wid]'); if (!b) return;
+    var w = db.workouts.filter(function (x) { return x.id === b.dataset.wid; })[0];
+    closeHistory(); if (w) openWorkout('copy', w);
+  });
+  $('woHistClose').addEventListener('click', closeHistory);
+  $('woHistOverlay').addEventListener('click', function (e) { if (e.target === $('woHistOverlay')) closeHistory(); });
+
+  /* ---------- Units setting ---------- */
+  document.querySelectorAll('input[name="unitPref"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      db.settings.units = r.value === 'kg' ? 'kg' : 'lb';
+      if (save()) toast(db.settings.units === 'kg' ? 'Using kilograms and kilometers' : 'Using pounds and miles');
+    });
+  });
+
+  // Return in a field shouldn't save a half-finished workout; in quick-add it adds the sets.
+  $('woForm').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+    e.preventDefault();
+    var qs = e.target.closest('.qsets');
+    if (qs) qs.querySelector('[data-act="qadd"]').click(); else blurActive();
+  });
+
   // Exposed for automated tests only (no effect on normal use).
-  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA };
+  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout };
 
   /* ---------- Init ---------- */
   checkRadio('mealType', defaultMeal());
-  checkRadio('woType', 'walk');
   show(location.hash.slice(1) || 'today');
 
   if (navigator.storage && navigator.storage.persist) { navigator.storage.persist().catch(function () {}); }

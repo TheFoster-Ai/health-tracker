@@ -2,6 +2,8 @@
 
 ## Done
 - [x] Food database: search (USDA + Open Food Facts), barcode scanning, serving sizes, recent and favorite foods
+- [x] Dark, modern redesign (progress rings, per-metric colors, new app icon)
+- [x] Detailed workout logging (exercises, sets, reps, weight)
 
 ## Up next
 - [ ] Weight tracking with trends
