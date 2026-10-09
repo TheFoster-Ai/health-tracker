@@ -8,6 +8,7 @@
 - [x] Current stats (1RM reference)
 - [x] Saved recipes (build from search/scan/manual, log by serving or gram, save from log)
 - [x] Per-exercise notes with up/down tags
+- [x] Workout autosave / crash-proof drafts
 
 ## Up next
 - [ ] Smart reminders that learn your habits (e.g. if breakfast is usually logged by 8:30, remind you when it isn't) - needs push notifications

@@ -397,6 +397,18 @@ select{padding-right:42px;
 .ex-last{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 0;padding:8px 10px 8px 12px;border-radius:12px;background:var(--accent-soft);color:var(--ink);font-size:14px}
 .ex-last b{color:var(--accent);font-weight:750;margin-right:4px}
 .ex-last .link-btn{min-height:36px;padding:4px 6px;font-size:14px;flex:none}
+
+/* ---------- Workout drafts ---------- */
+.wip-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;padding:8px 8px 8px 14px;border-radius:14px;background:rgba(200,242,90,.12);border:1px solid rgba(200,242,90,.3);color:var(--ink);font-size:14px;font-weight:600}
+.wip-banner .link-btn{min-height:36px;padding:4px 8px;font-size:14px;color:#FF9D6E}
+.wip-banner.old{background:rgba(255,125,74,.12);border-color:rgba(255,125,74,.35)}
+.wip-card{border:1px solid rgba(200,242,90,.35);background:linear-gradient(135deg,rgba(200,242,90,.10),var(--s1) 60%)}
+.wip-card .wk{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--c-work);display:flex;align-items:center;gap:6px}
+.wip-card .wk::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c-work);box-shadow:0 0 0 4px rgba(200,242,90,.18)}
+.wip-card h3{margin:6px 0 2px;font-size:19px}
+.wip-card .wm{color:var(--muted);font-size:14px}
+.wip-card .wb{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:12px}
+.wip-card .wb .btn-primary{background:var(--c-work);color:#0A0B0D}
 /* ---------- Exercise notes + up/down tags ---------- */
 .ex-note-row{display:flex;gap:6px;margin:10px 0 0;align-items:center}
 .tag-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex:1;background:var(--field);border:1px solid var(--line);padding:3px;border-radius:12px}
@@ -618,6 +630,7 @@ select{padding-right:42px;
 <main id="main">
 
   <section class="view" id="view-today" aria-labelledby="title">
+    <div id="wipToday"></div>
     <p class="greet" id="greet"></p>
     <p class="lead" id="todayDate"></p>
     <div class="status-dots" id="todayDots" aria-hidden="true"></div>
@@ -710,6 +723,7 @@ select{padding-right:42px;
   </section>
 
   <section class="view" id="view-workouts">
+    <div id="wipWo"></div>
     <div class="card">
       <h2>Log a workout</h2>
       <div class="wo-start">
@@ -909,6 +923,7 @@ select{padding-right:42px;
       </button>
     </div>
     <form id="woForm" novalidate>
+      <div class="wip-banner" id="woRestored" role="status" hidden></div>
       <div class="card">
         <div class="field">
           <span class="label" id="woTypeLabel">Type</span>
@@ -1550,6 +1565,7 @@ select{padding-right:42px;
   /* ---------- Render ---------- */
   function render() {
     renderDateBar();
+    renderWip();
     if (current === 'today') renderToday();
     if (current === 'food') renderFood();
     if (current === 'workouts') renderWorkouts();
@@ -2068,7 +2084,7 @@ select{padding-right:42px;
     if ($('clearConfirm').value.trim().toUpperCase() !== 'DELETE') return;
     confirmBox('Delete everything?', 'All entries and settings will be erased from this device.', 'Delete everything', true).then(function (ok) {
       if (!ok) return;
-      db = blank(); save();
+      db = blank(); save(); writeDrafts({});
       $('clearConfirm').value = ''; $('clearBtn').disabled = true; $('settingsGoal').value = DEFAULT_GOAL;
       dataStats(); toast('All data cleared'); render();
     });
@@ -3348,9 +3364,23 @@ select{padding-right:42px;
     });
   }
   // mode: 'new' | 'edit' (src = saved entry) | 'copy' (src = workout to start from)
-  function openWorkout(mode, src) {
+  function openWorkout(mode, src, force) {
     var isEdit = mode === 'edit' && src;
-    ed = { id: isEdit ? src.id : null, unit: isEdit ? woUnit(src) : units(), exercises: src ? cloneEx(src.exercises, woUnit(src), isEdit ? woUnit(src) : units(), isEdit) : [] };
+    var dk = isEdit ? 'edit:' + src.id : 'new', dr = readDrafts()[dk];
+    if (dr && !force) {
+      if (isEdit) { restoreDraft(dr, true); return; }
+      choiceBox('Workout in progress', 'You have an unsaved workout started ' + draftWhen(dr) + '. Resume it, or discard it and start a new one?', [
+        { label: 'Resume workout', value: 'resume', cls: 'btn-primary' },
+        { label: 'Discard and start new', value: 'new', cls: 'btn-danger-ghost' },
+        { label: 'Cancel', value: null, cls: 'btn-ghost' }
+      ]).then(function (v) {
+        if (v === 'resume') restoreDraft(dr, true);
+        else if (v === 'new') { clearDraft('new'); openWorkout(mode, src, true); }
+      });
+      return;
+    }
+    $('woRestored').hidden = true;
+    ed = { id: isEdit ? src.id : null, startedAt: Date.now(), unit: isEdit ? woUnit(src) : units(), exercises: src ? cloneEx(src.exercises, woUnit(src), isEdit ? woUnit(src) : units(), isEdit) : [] };
     checkRadio('woType', src ? (WO_TYPES.indexOf(src.type) >= 0 ? src.type : 'other') : 'strength');
     $('woName').value = src ? src.name || '' : '';
     $('woDate').value = isEdit ? src.date : viewDate; $('woDate').max = todayKey();
@@ -3358,15 +3388,16 @@ select{padding-right:42px;
     $('woMin').value = isEdit && has(src.minutes) ? src.minutes : '';
     $('woNotes').value = isEdit ? src.notes || '' : '';
     $('woEdTitle').textContent = isEdit ? 'Edit workout' : 'New workout';
-    $('woSave').textContent = isEdit ? 'Save changes' : 'Save workout';
+    $('woSave').textContent = isEdit ? 'Save changes' : 'Finish workout';
     $('woDelete').hidden = !isEdit;
     err('woErr'); edDirty = mode === 'copy';
     renderEx();
     openOverlay($('woOverlay'));
     $('woOverlay').querySelector('.sheet').scrollTop = 0;
+    saveDraft();
   }
   function closeWorkout(force) {
-    var go = function () { stopRest(); closeOverlay($('woOverlay')); ed = null; edDirty = false; };
+    var go = function () { stopRestQuiet(); paintRest(); if (ed) clearDraft(draftKey()); closeOverlay($('woOverlay')); ed = null; edDirty = false; $('woRestored').hidden = true; render(); };
     if (force || !edDirty) { go(); return; }
     confirmBox('Discard this workout?', 'Your changes haven\u2019t been saved.', 'Discard', true).then(function (ok) { if (ok) go(); });
   }
@@ -3426,14 +3457,15 @@ select{padding-right:42px;
       h += '</div><div class="ex-foot"><button type="button" class="btn btn-secondary" data-act="add-set">' + IC_PLUS.replace('<svg', '<svg class="ic"') + 'Add set</button>' +
         '<span class="ex-vol" data-vol></span></div>';
       if (ex.kind !== 'cardio') {
-        h += '<p class="qs-label">Quick add identical sets</p><div class="qsets"><input type="number" inputmode="numeric" min="1" max="20" step="1" data-q="n" value="3" aria-label="Number of sets for ' + nm + '">' +
-          '<span class="qs-x">\u00d7</span><input type="number" inputmode="numeric" min="1" step="1" data-q="reps" placeholder="reps" aria-label="Reps per set for ' + nm + '">' +
-          (ex.kind === 'weight' ? '<span class="qs-x">@</span><input type="number" inputmode="decimal" min="0" step="any" data-q="weight" placeholder="' + ed.unit + '" aria-label="Weight per set in ' + ed.unit + ' for ' + nm + '">' : '') +
+        h += '<p class="qs-label">Quick add identical sets</p><div class="qsets"><input type="number" inputmode="numeric" min="1" max="20" step="1" data-q="n" value="' + esc(qaVal(ex, 'n', '3')) + '" aria-label="Number of sets for ' + nm + '">' +
+          '<span class="qs-x">\u00d7</span><input type="number" inputmode="numeric" min="1" step="1" data-q="reps" value="' + esc(qaVal(ex, 'reps', '')) + '" placeholder="reps" aria-label="Reps per set for ' + nm + '">' +
+          (ex.kind === 'weight' ? '<span class="qs-x">@</span><input type="number" inputmode="decimal" min="0" step="any" data-q="weight" value="' + esc(qaVal(ex, 'weight', '')) + '" placeholder="' + ed.unit + '" aria-label="Weight per set in ' + ed.unit + ' for ' + nm + '">' : '') +
           '<button type="button" class="btn btn-ghost" data-act="qadd">Add</button></div>';
       }
       return h + '</div>';
     }).join('');
     updateTotals();
+    saveDraft();
   }
   function edVolume() {
     return ed.exercises.reduce(function (s, ex) {
@@ -3472,6 +3504,7 @@ select{padding-right:42px;
   $('woExList').addEventListener('input', function (e) {
     var t = e.target, i = exAt(t); if (i < 0) return;
     if (t.dataset.f) { ed.exercises[i].sets[Number(t.dataset.s)][t.dataset.f] = readNum(t.value); edDirty = true; updateTotals(); }
+    if (t.dataset.q) { var qx = ed.exercises[i]; qx.qa = qx.qa || {}; qx.qa[t.dataset.q] = t.value; edDirty = true; }
     if (t.dataset.note) {
       ed.exercises[i].note = t.value; edDirty = true;
       var nb = t.closest('.ex-card').querySelector('.note-btn'); if (nb) nb.classList.toggle('has', !!t.value.trim());
@@ -3521,6 +3554,7 @@ select{padding-right:42px;
       var lf = findLift(ex.name), wIn = b.closest('.ex-card').querySelector('[data-q="weight"]');
       if (lf && wIn) {
         wIn.value = plate(convW(lf.value, lf.unit, ed.unit) * Number(b.dataset.p) / 100, ed.unit);
+        ex.qa = ex.qa || {}; ex.qa.weight = wIn.value; saveDraft();
         var rIn = b.closest('.ex-card').querySelector('[data-q="reps"]'); if (rIn && !rIn.value) rIn.focus({ preventScroll: true });
       }
       return;
@@ -3534,6 +3568,7 @@ select{padding-right:42px;
       // Replace trailing empty sets (like the blank first set) rather than leaving gaps.
       while (ex.sets.length && !Object.keys(ex.sets[ex.sets.length - 1]).some(function (k) { return has(ex.sets[ex.sets.length - 1][k]); })) ex.sets.pop();
       for (var k = 0; k < n; k++) ex.sets.push(ex.kind === 'weight' ? { reps: Math.round(reps), weight: w } : { reps: Math.round(reps) });
+      ex.qa = { n: String(n) };
       renderEx(); blurActive();
       toast('Added ' + n + ' \u00d7 ' + Math.round(reps) + (w !== null ? ' @ ' + fmtG(w) + ' ' + ed.unit : ''));
     }
@@ -3618,11 +3653,116 @@ select{padding-right:42px;
     b.textContent = Math.floor(left / 60) + ':' + pad(left % 60); b.classList.add('on'); b.setAttribute('aria-label', 'Rest timer, ' + left + ' seconds left. Tap to stop.');
     if (left <= 0) { stopRest(); toast('Rest over. Next set.'); if (navigator.vibrate) navigator.vibrate([200, 100, 200]); }
   }
-  function stopRest() { clearInterval(restTimer); restTimer = null; paintRest(); }
+  function stopRest() { clearInterval(restTimer); restTimer = null; restEnd = 0; paintRest(); saveDraft(); }
   $('woRest').addEventListener('click', function () {
     if (restTimer) { stopRest(); return; }
-    restEnd = Date.now() + 90000; restTimer = setInterval(paintRest, 250); paintRest();
+    restEnd = Date.now() + 90000; restTimer = setInterval(paintRest, 250); paintRest(); saveDraft();
   });
+
+  /* ---------- In-progress workout drafts (crash-proof) ----------
+     iOS can kill a backgrounded home-screen app at any time, so the open workout is written to
+     localStorage synchronously on every change and again when the app is hidden. Save clears it. */
+  var DRAFT_KEY = 'healthTracker.drafts.v1';
+  function draftKey() { return ed && ed.id ? 'edit:' + ed.id : 'new'; }
+  function readDrafts() {
+    try { var o = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}'); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch (e) { return {}; }
+  }
+  function writeDrafts(o) {
+    try { if (Object.keys(o).length) localStorage.setItem(DRAFT_KEY, JSON.stringify(o)); else localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+  }
+  function clearDraft(k) { var o = readDrafts(); if (o[k]) { delete o[k]; writeDrafts(o); } }
+  function qaVal(ex, k, dflt) { return ex.qa && ex.qa[k] != null ? String(ex.qa[k]) : dflt; }
+  function saveDraft() {
+    if (!ed) return;
+    var sh = $('woOverlay').querySelector('.sheet');
+    var d = { key: draftKey(), id: ed.id || null, unit: ed.unit, startedAt: ed.startedAt || Date.now(), savedAt: Date.now(),
+      exercises: ed.exercises,
+      form: { type: radioVal('woType') || 'strength', name: $('woName').value, date: $('woDate').value, time: $('woTime').value, min: $('woMin').value, notes: $('woNotes').value },
+      restEnd: restTimer ? restEnd : 0, scroll: sh ? sh.scrollTop : 0, picker: $('woPickOverlay').classList.contains('open') && !pickCb };
+    var o = readDrafts(); o[d.key] = d; writeDrafts(o);
+  }
+  function draftWhen(d) {
+    var t = new Date(d.startedAt || d.savedAt || Date.now());
+    return (keyOf(t) === todayKey() ? 'today' : relDate(keyOf(t))) + ' at ' + fmtTime(pad(t.getHours()) + ':' + pad(t.getMinutes()));
+  }
+  function draftOld(d) { return Date.now() - (d.startedAt || d.savedAt || 0) > 24 * 3600 * 1000; }
+  function restoreDraft(d, banner) {
+    if (!d || !Array.isArray(d.exercises)) return false;
+    var id = d.id && db.workouts.some(function (w) { return w.id === d.id; }) ? d.id : null;
+    if (d.id && !id) clearDraft('edit:' + d.id); // that saved workout was deleted; keep the work as a new one
+    ed = { id: id, startedAt: d.startedAt || Date.now(), unit: d.unit === 'kg' ? 'kg' : 'lb',
+      exercises: d.exercises.filter(function (x) { return x && typeof x.name === 'string'; }).map(function (x) {
+        return { name: x.name, kind: kindOk(x.kind), note: typeof x.note === 'string' ? x.note : '', tag: TAGS[x.tag] ? x.tag : '', noteOpen: !!x.noteOpen, noteHidden: !!x.noteHidden,
+          qa: x.qa && typeof x.qa === 'object' ? x.qa : null, sets: (Array.isArray(x.sets) ? x.sets : []).filter(function (z) { return z && typeof z === 'object'; }) };
+      }) };
+    var f = d.form || {};
+    checkRadio('woType', WO_TYPES.indexOf(f.type) >= 0 ? f.type : 'strength');
+    $('woName').value = f.name || ''; $('woDate').value = f.date || todayKey(); $('woDate').max = todayKey();
+    $('woTime').value = f.time || nowTime(); $('woMin').value = f.min || ''; $('woNotes').value = f.notes || '';
+    $('woEdTitle').textContent = id ? 'Edit workout' : 'Workout';
+    $('woSave').textContent = id ? 'Save changes' : 'Finish workout';
+    $('woDelete').hidden = !id; err('woErr');
+    edDirty = true;
+    var old = draftOld(d), rb2 = $('woRestored');
+    rb2.hidden = !banner; rb2.classList.toggle('old', old);
+    rb2.innerHTML = '<span>' + (old ? 'Unsaved workout from ' + esc(draftWhen(d)) + '. Save it or discard it.' : 'Workout in progress \u2014 restored') + '</span>' +
+      '<button type="button" class="link-btn" id="woRestoredDiscard">Discard</button>';
+    stopRestQuiet();
+    if (d.restEnd && d.restEnd > Date.now()) { restEnd = d.restEnd; restTimer = setInterval(paintRest, 250); }
+    paintRest();
+    renderEx();
+    openOverlay($('woOverlay'));
+    var sh = $('woOverlay').querySelector('.sheet'), sc = Number(d.scroll) || 0;
+    sh.scrollTop = sc; requestAnimationFrame(function () { sh.scrollTop = sc; saveDraft(); });
+    if (d.picker) openPicker();
+    if (banner) toast(old ? 'Unsaved workout restored' : 'Workout in progress \u2014 restored');
+    return true;
+  }
+  function stopRestQuiet() { clearInterval(restTimer); restTimer = null; restEnd = 0; }
+  function discardDraftConfirm(k) {
+    confirmBox('Discard this workout?', 'Everything in this unsaved workout will be lost. This can\u2019t be undone.', 'Discard', true).then(function (ok) {
+      if (!ok) return;
+      if (ed && draftKey() === k) closeWorkout(true); else clearDraft(k);
+      toast('Workout discarded'); render();
+    });
+  }
+  $('woOverlay').addEventListener('click', function (e) {
+    if (e.target.closest('#woRestoredDiscard')) { discardDraftConfirm(draftKey()); return; }
+  });
+  function renderWip() {
+    var o = readDrafts(), keys = Object.keys(o).filter(function (k) { return o[k] && Array.isArray(o[k].exercises); })
+      .sort(function (a, b) { return (o[b].savedAt || 0) - (o[a].savedAt || 0); });
+    var html = keys.map(function (k) {
+      var d = o[k], f = d.form || {}, sets = d.exercises.reduce(function (s, x) { return s + (x.sets || []).filter(function (z) { return Object.keys(z).some(function (q) { return has(z[q]); }); }).length; }, 0);
+      var title = (f.name || '').trim() || (d.id ? 'Edits to a saved workout' : cap(f.type || 'Workout'));
+      var meta = [plural(d.exercises.length, 'exercise', 'exercises'), plural(sets, 'set', 'sets'), 'started ' + draftWhen(d)].join(' \u00b7 ');
+      return '<div class="card wip-card"><div class="wk">' + (draftOld(d) ? 'Unsaved workout' : 'In progress') + '</div><h3>' + esc(title) + '</h3><div class="wm">' + esc(meta) + '</div>' +
+        '<div class="wb"><button type="button" class="btn btn-primary" data-wip-resume="' + esc(k) + '">Resume</button>' +
+        '<button type="button" class="btn btn-ghost" data-wip-discard="' + esc(k) + '">Discard</button></div></div>';
+    }).join('');
+    if (ed && $('woOverlay').classList.contains('open')) html = '';
+    $('wipToday').innerHTML = html; $('wipWo').innerHTML = html;
+  }
+  ['wipToday', 'wipWo'].forEach(function (id) {
+    $(id).addEventListener('click', function (e) {
+      var b = e.target.closest('[data-wip-resume],[data-wip-discard]'); if (!b) return;
+      if (b.dataset.wipDiscard) { discardDraftConfirm(b.dataset.wipDiscard); return; }
+      var d = readDrafts()[b.dataset.wipResume]; if (d) restoreDraft(d, false);
+    });
+  });
+  // Every edit in the editor form is persisted immediately (listeners above have already updated `ed`).
+  $('woForm').addEventListener('input', saveDraft);
+  $('woForm').addEventListener('change', saveDraft);
+  function flushDraft() { if (ed) saveDraft(); }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushDraft(); else if (restTimer) paintRest(); });
+  window.addEventListener('pagehide', flushDraft);
+  window.addEventListener('blur', flushDraft);
+  document.addEventListener('freeze', flushDraft);
+  function restoreOnLaunch() {
+    var o = readDrafts(), keys = Object.keys(o).filter(function (k) { return o[k] && Array.isArray(o[k].exercises); })
+      .sort(function (a, b) { return (o[b].savedAt || 0) - (o[a].savedAt || 0); });
+    if (keys.length) restoreDraft(o[keys[0]], true);
+  }
 
   /* ---------- Exercise picker ---------- */
   function openPicker() {
@@ -4432,6 +4572,7 @@ select{padding-right:42px;
   /* ---------- Init ---------- */
   checkRadio('mealType', defaultMeal());
   show(location.hash.slice(1) || 'today');
+  restoreOnLaunch();
 
   if (navigator.storage && navigator.storage.persist) { navigator.storage.persist().catch(function () {}); }
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
