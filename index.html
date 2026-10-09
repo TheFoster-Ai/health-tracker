@@ -429,6 +429,95 @@ select{padding-right:42px;
 .pick-row .plus{width:32px;height:32px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
 .pick-row .plus svg{width:18px;height:18px}
 @media (prefers-reduced-motion:reduce){.ex-card{animation:none}}
+
+/* ===== Personal records ===== */
+:root{--c-pr:#F7C948;--pr-soft:rgba(247,201,72,.13)}
+.head-actions{display:flex;gap:8px}
+.head-row #openRecords{color:var(--c-pr)}
+.rec-sheet{--accent:var(--c-pr);--accent-soft:var(--pr-soft);--on-accent:#140F02;min-height:70vh}
+.rec-sheet .sheet-head .btn{min-height:40px;padding:0 14px;font-size:15px;border-radius:12px;width:auto;box-shadow:none}
+.rec-head-btns{display:flex;gap:8px;align-items:center}
+.rec-tabs{grid-template-columns:repeat(4,1fr);margin:12px 0 6px}
+.rec-tabs button{font-size:14px}
+.rec-recent{display:flex;gap:10px;overflow-x:auto;margin:6px -16px 4px;padding:6px 16px 10px;scrollbar-width:none}
+.rec-recent::-webkit-scrollbar{display:none}
+.rec-chip{flex:none;min-width:150px;max-width:220px;text-align:left;border:1px solid rgba(247,201,72,.28);background:linear-gradient(160deg,rgba(247,201,72,.16),rgba(247,201,72,.03) 70%),var(--s2);
+  border-radius:18px;padding:12px 14px;color:var(--ink);transition:transform .16s var(--ease)}
+.rec-chip:active{transform:scale(.97)}
+.rec-chip .k{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--c-pr)}
+.rec-chip .k svg{width:14px;height:14px}
+.rec-chip .n{display:block;font-weight:650;font-size:14px;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-chip .v{display:block;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:22px;font-weight:800;letter-spacing:-.03em;margin-top:2px}
+.rec-chip .d{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.rec-card{background:var(--s2);border:1px solid var(--line);border-radius:20px;padding:6px 14px;margin-bottom:10px}
+.rec-name{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:16px;font-weight:750;letter-spacing:-.01em;padding:10px 0 4px}
+.rec-name small{font-size:12px;font-weight:650;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+.rec-rows{list-style:none;margin:0;padding:0}
+.rec-row{width:100%;display:flex;align-items:center;gap:12px;padding:10px 0;border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);text-align:left;min-height:56px;transition:transform .16s var(--ease)}
+.rec-rows li:first-child .rec-row{border-top:0}
+.rec-row:active{transform:scale(.985)}
+.rec-row .rl{flex:1;min-width:0}
+.rec-row .rl b{display:block;font-size:15px;font-weight:600}
+.rec-row .rl span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.rec-row .rl b .tag{display:inline-block;margin:0 0 0 6px;vertical-align:2px}
+.rec-chip .v small{font-size:13px;color:var(--muted);font-weight:650;margin-left:3px;letter-spacing:0}
+.st-row .sl .delta{display:inline;margin:0 0 0 8px}
+.rec-row .rv{flex:none;text-align:right;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:19px;font-weight:800;letter-spacing:-.03em}
+.rec-row .rv small{font-size:13px;color:var(--muted);font-weight:650;letter-spacing:0;margin-left:2px}
+.tag.man{background:rgba(160,145,255,.15);color:#C4BAFF}
+.tag.est{background:rgba(255,255,255,.08);color:var(--muted)}
+.rec-empty{text-align:center;color:var(--muted);padding:34px 10px}
+.rec-empty svg{width:44px;height:44px;color:var(--c-pr);opacity:.8;display:block;margin:0 auto 10px}
+.rec-foot{font-size:12.5px;color:var(--faint);margin:14px 2px 4px;line-height:1.45}
+.pr-mark{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:1px 7px 1px 5px;border-radius:999px;background:var(--pr-soft);color:var(--c-pr);font-size:11px;font-weight:800;letter-spacing:.04em;vertical-align:1px}
+.pr-mark svg{width:12px;height:12px}
+.toast.pr{background:linear-gradient(135deg,rgba(78,62,14,.95),rgba(40,36,24,.95));border-color:rgba(247,201,72,.45);color:#FFF4D6;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.toast.pr svg{width:22px;height:22px;color:var(--c-pr);flex:none}
+.toast.pr.show svg{animation:prPop .6s var(--ease-out)}
+@keyframes prPop{0%{transform:scale(.4) rotate(-18deg)}60%{transform:scale(1.2) rotate(6deg)}100%{transform:none}}
+.wo-item.flash{animation:flash 1.6s var(--ease-out)}
+@keyframes flash{0%,30%{background:var(--pr-soft)}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){.toast.pr.show svg,.wo-item.flash{animation:none}}
+
+/* ===== Current stats (1RM reference) ===== */
+:root{--c-stat:#7FD4FF}
+.head-row #openStats{color:var(--c-stat)}
+.st-sheet{--accent:var(--c-stat);--accent-soft:rgba(127,212,255,.13);--on-accent:#04121A;min-height:70vh}
+.st-sheet .sheet-head .btn{min-height:40px;padding:0 14px;font-size:15px;border-radius:12px;width:auto;box-shadow:none}
+.st-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:4px 0 6px}
+.st-actions .btn{min-height:46px;font-size:15px;width:100%}
+.st-row{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--line);border-radius:18px;background:var(--s2);color:var(--ink);text-align:left;min-height:68px;transition:transform .16s var(--ease)}
+.st-row:active{transform:scale(.985)}
+.st-row .sl{flex:1;min-width:0}
+.st-row .sl b{display:block;font-size:16px;font-weight:700;overflow-wrap:anywhere}
+.st-row .sl span{display:block;font-size:13px;color:var(--muted);margin-top:3px}
+.st-row .sv{flex:none;text-align:right;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:24px;font-weight:800;letter-spacing:-.035em}
+.st-row .sv small{font-size:13px;color:var(--muted);font-weight:650;letter-spacing:0;margin-left:3px}
+.delta{font-size:12px;font-weight:750;font-family:var(--num);margin-left:6px}
+.delta.up{color:var(--brand)}.delta.down{color:#FF9B8A}
+.st-hero{display:flex;align-items:baseline;gap:8px;margin:2px 0 4px}
+.st-hero .big{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:52px;font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--c-stat)}
+.st-hero .unit{color:var(--muted);font-weight:650;font-size:17px}
+.st-hint{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 0;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:14px;color:var(--muted)}
+.st-hint b{color:var(--ink)}
+.st-hint .btn{min-height:38px;padding:0 12px;font-size:14px;border-radius:11px;flex:none;width:auto}
+.pct-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.pct-table th{font-size:11px;font-weight:750;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;text-align:left;padding:4px 6px 8px}
+.pct-table th:last-child,.pct-table td:last-child{text-align:right}
+.pct-table td{padding:9px 6px;border-top:1px solid var(--line);font-family:var(--num);font-size:16px;font-weight:650}
+.pct-table td:last-child{font-weight:800;font-size:17px}
+.pct-table tr.hl td{color:var(--c-stat)}
+.pct-table td small{color:var(--muted);font-weight:600;font-size:12px;margin-left:3px}
+.st-hist{list-style:none;margin:0;padding:0}
+.st-hist li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.st-hist li:first-child{border-top:0}
+.st-hist .hv{font-family:var(--num);font-weight:750;font-variant-numeric:tabular-nums}
+.st-hist .hd{color:var(--muted);font-size:13px}
+.cur-1rm{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 0;font-size:13.5px;color:var(--muted)}
+.cur-1rm b{color:var(--c-stat);font-family:var(--num);font-weight:800}
+.pct-chip{min-height:32px;padding:0 10px;border-radius:9px;border:1px solid var(--line2);background:var(--field);color:var(--ink);font-size:13px;font-weight:700;font-family:var(--num)}
+.pct-chip:active{transform:scale(.94)}
+#woPickOverlay{z-index:36}
 </style>
 </head>
 <body>
@@ -436,9 +525,17 @@ select{padding-right:42px;
 <header class="app">
   <div class="head-row">
     <h1 id="title">Today</h1>
+    <div class="head-actions" id="headActions">
+    <button class="icon-btn" id="openRecords" aria-label="Personal records">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5.5h2.5a.5.5 0 0 1 .5.5v1a4 4 0 0 1-3.2 3.9M7 5.5H4.5a.5.5 0 0 0-.5.5v1a4 4 0 0 0 3.2 3.9"/></svg>
+    </button>
+    <button class="icon-btn" id="openStats" aria-label="Current stats">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.6 17.5a9 9 0 1 1 16.8 0"/><path d="M12 14l4.2-4.2"/><circle cx="12" cy="14" r="1.6"/><path d="M6.2 9.6l1 .7M12 5.8v1.2M17.8 9.6l-1 .7"/></svg>
+    </button>
     <button class="icon-btn" id="openSettings" aria-label="Settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
+    </div>
   </div>
   <div class="datebar" id="datebar" hidden>
     <button class="icon-btn" id="prevDay" aria-label="Previous day">
@@ -822,6 +919,176 @@ select{padding-right:42px;
   </div>
 </div>
 
+<div class="overlay" id="recOverlay" aria-hidden="true">
+  <div class="sheet rec-sheet" role="dialog" aria-modal="true" aria-labelledby="recTitle">
+    <div class="sheet-head">
+      <h2 id="recTitle">Personal records</h2>
+      <div class="rec-head-btns">
+        <button type="button" class="btn btn-secondary" id="recAdd">Add</button>
+        <button type="button" class="icon-btn" id="recClose" aria-label="Close personal records">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="recRecent"></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <label for="recSearch" class="sr-only">Search records</label>
+      <input type="search" id="recSearch" autocomplete="off" enterkeyhint="search" placeholder="Search exercises">
+    </div>
+    <div class="tabs-mini rec-tabs" role="tablist" aria-label="Record category" id="recTabs">
+      <button type="button" role="tab" data-cat="all" aria-selected="true">All</button>
+      <button type="button" role="tab" data-cat="strength" aria-selected="false">Strength</button>
+      <button type="button" role="tab" data-cat="cardio" aria-selected="false">Cardio</button>
+      <button type="button" role="tab" data-cat="overall" aria-selected="false">Overall</button>
+    </div>
+    <div id="recList" aria-live="polite"></div>
+    <p class="rec-foot">Records update automatically from your logs. Est. 1-rep max uses the Epley formula on sets of 1 to 12 reps. Race times use the average pace of an effort within 5% of that distance; longer runs aren't counted.</p>
+  </div>
+</div>
+
+<div class="overlay" id="recFormOverlay" aria-hidden="true">
+  <div class="sheet rec-sheet" role="dialog" aria-modal="true" aria-labelledby="rfTitle" style="min-height:0">
+    <div class="sheet-head">
+      <h2 id="rfTitle">Add a record</h2>
+      <button type="button" class="icon-btn" id="rfClose" aria-label="Close without saving">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="rfForm" novalidate>
+      <div class="card">
+        <div class="field">
+          <label for="rfName">Exercise or activity</label>
+          <input type="text" id="rfName" list="rfNames" autocapitalize="words" maxlength="80" placeholder="e.g. Squat, Running">
+          <datalist id="rfNames"></datalist>
+        </div>
+        <div class="field">
+          <label for="rfMetric">Record</label>
+          <select id="rfMetric">
+            <option value="weight">Heaviest weight</option>
+            <option value="reps">Most reps in a set</option>
+            <option value="dist">Longest distance</option>
+            <option value="time">Longest duration</option>
+            <option value="race">Best time for a distance</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+        <div class="field" id="rfRaceWrap" hidden>
+          <label for="rfRace">Distance</label>
+          <select id="rfRace"></select>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="rfValue" id="rfValueLabel">Weight</label>
+            <input type="text" id="rfValue" inputmode="decimal" autocomplete="off">
+          </div>
+          <div class="field" id="rfUnitWrap">
+            <label for="rfUnit">Unit</label>
+            <select id="rfUnit"></select>
+          </div>
+          <div class="field" id="rfUnitTextWrap" hidden>
+            <label for="rfUnitText">Unit <span class="opt">(optional)</span></label>
+            <input type="text" id="rfUnitText" maxlength="20" placeholder="e.g. sec">
+          </div>
+        </div>
+        <div class="field" id="rfRepsWrap">
+          <label for="rfReps">Reps <span class="opt">(optional)</span></label>
+          <input type="number" id="rfReps" inputmode="numeric" min="1" max="1000" step="1">
+        </div>
+        <div class="field">
+          <label for="rfDate">Date</label>
+          <input type="date" id="rfDate">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="rfNote">Note <span class="opt">(optional)</span></label>
+          <textarea id="rfNote" rows="2" maxlength="300" placeholder="e.g. College meet, belt only"></textarea>
+        </div>
+      </div>
+      <p class="err" id="rfErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit" id="rfSave">Save record</button>
+      <button type="button" class="btn btn-danger-ghost" id="rfDelete" style="width:100%;margin-top:10px" hidden>Delete record</button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="statsOverlay" aria-hidden="true">
+  <div class="sheet st-sheet" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+    <div class="sheet-head">
+      <h2 id="statsTitle">Current stats</h2>
+      <button type="button" class="icon-btn" id="statsClose" aria-label="Close current stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="muted small" style="margin:-4px 0 12px">Your current numbers, set by you and never changed automatically. Adjust them any time, up or down. Tap one for its reference guide.</p>
+    <div class="st-actions">
+      <button type="button" class="btn btn-secondary" id="statsAddLift">Add lift</button>
+      <button type="button" class="btn btn-secondary" id="statsAddRun">Add run</button>
+      <button type="button" class="btn btn-ghost" id="statsAddOther">Other</button>
+    </div>
+    <div id="statsList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="statOverlay" aria-hidden="true">
+  <div class="sheet st-sheet" role="dialog" aria-modal="true" aria-labelledby="stTitle" style="min-height:0">
+    <div class="sheet-head">
+      <h2 id="stTitle"></h2>
+      <button type="button" class="icon-btn" id="stClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="card" id="stCurrent"></div>
+    <form class="card" id="stForm" novalidate>
+      <h2 id="stFormTitle">Update</h2>
+      <div class="field" id="stNameWrap">
+        <label for="stName">Name</label>
+        <input type="text" id="stName" autocapitalize="words" maxlength="60" placeholder="e.g. Bodyweight, Mile time">
+      </div>
+      <div class="field" id="stRaceWrap" hidden>
+        <label for="stRace">Distance</label>
+        <select id="stRace"></select>
+      </div>
+      <div class="row" id="stCustomWrap" hidden>
+        <div class="field">
+          <label for="stDist">Custom distance</label>
+          <input type="number" id="stDist" inputmode="decimal" step="any" min="0">
+        </div>
+        <div class="field" style="flex:0 0 96px">
+          <label for="stDistUnit">Unit</label>
+          <select id="stDistUnit"><option value="mi">mi</option><option value="km">km</option></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="stValue" id="stValueLabel">Current 1-rep max</label>
+          <input type="text" id="stValue" inputmode="decimal" autocomplete="off">
+        </div>
+        <div class="field" id="stUnitWrap" style="flex:0 0 96px">
+          <label for="stUnit">Unit</label>
+          <select id="stUnit"><option value="lb">lb</option><option value="kg">kg</option></select>
+        </div>
+        <div class="field" id="stUnitTextWrap" hidden>
+          <label for="stUnitText">Unit <span class="opt">(optional)</span></label>
+          <input type="text" id="stUnitText" maxlength="16" placeholder="e.g. lb, min/mi">
+        </div>
+      </div>
+      <div class="field">
+        <label for="stDate">As of</label>
+        <input type="date" id="stDate">
+      </div>
+      <div class="field">
+        <label for="stNote">Note <span class="opt">(optional)</span></label>
+        <input type="text" id="stNote" maxlength="200" placeholder="e.g. Tested with belt">
+      </div>
+      <p class="err" id="stErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit" id="stSave">Save</button>
+    </form>
+    <div class="card" id="stGuide"></div>
+    <div class="card" id="stHistCard"><h2>History</h2><ul class="st-hist" id="stHist"></ul></div>
+    <button type="button" class="btn btn-danger-ghost" id="stDelete" style="width:100%">Remove</button>
+  </div>
+</div>
+
 <div class="overlay center" id="confirmOverlay" aria-hidden="true">
   <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
     <h2 id="confirmTitle"></h2>
@@ -912,8 +1179,9 @@ select{padding-right:42px;
 
   /* ---------- Storage ---------- */
   var KEY = 'healthTracker.v1';
-  var LISTS = ['food', 'workouts', 'water', 'bp', 'sleep'];
+  var LISTS = ['food', 'workouts', 'water', 'bp', 'sleep', 'records'];
   var DEFAULT_GOAL = 64;
+  var RACES = [['1mi', '1 mile', 1.609344], ['5k', '5K', 5], ['10k', '10K', 10], ['half', 'Half marathon', 21.0975], ['marathon', 'Marathon', 42.195]];
   /* Workout constants (needed by normalize() at load). */
   var KG_PER_LB = 0.45359237, KM_PER_MI = 1.609344;
   var WO_TYPES = ['strength', 'run', 'walk', 'bike', 'swim', 'other'];
@@ -942,7 +1210,7 @@ select{padding-right:42px;
 
 
   function blank() {
-    return { version: 1, settings: { waterGoal: DEFAULT_GOAL, units: 'lb' }, food: [], workouts: [], water: [], bp: [], sleep: [], recentFoods: [], favorites: [], customExercises: [] };
+    return { version: 1, settings: { waterGoal: DEFAULT_GOAL, units: 'lb' }, food: [], workouts: [], water: [], bp: [], sleep: [], recentFoods: [], favorites: [], customExercises: [], records: [], stats: [] };
   }
   function validFood(f) {
     if (!f || typeof f !== 'object' || typeof f.key !== 'string' || typeof f.name !== 'string') return false;
@@ -968,6 +1236,8 @@ select{padding-right:42px;
     if (o.settings && o.settings.units === 'kg') out.settings.units = 'kg';
     out.workouts = out.workouts.map(normWorkout);
     out.customExercises = cleanCustom(o.customExercises);
+    out.records = out.records.map(normRecord).filter(Boolean);
+    out.stats = Array.isArray(o.stats) ? o.stats.map(normStat).filter(Boolean) : [];
     return out;
   }
   function load() {
@@ -1065,7 +1335,7 @@ select{padding-right:42px;
   /* ---------- Toast + dialogs ---------- */
   var toastTimer;
   function toast(msg) {
-    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    var t = $('toast'); t.classList.remove('pr'); t.textContent = msg; t.classList.add('show');
     clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2200);
   }
   function openOverlay(el) { el.classList.add('open'); el.setAttribute('aria-hidden', 'false'); }
@@ -1111,7 +1381,7 @@ select{padding-right:42px;
       if (b.dataset.tab === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     });
     $('title').textContent = TABS[tab];
-    $('openSettings').hidden = tab !== 'today';
+    $('headActions').hidden = tab !== 'today';
     $('datebar').hidden = tab === 'today' || tab === 'sleep';
     if (location.hash.slice(1) !== tab) history.replaceState(null, '', '#' + tab);
     $('main').scrollTop = 0;
@@ -1309,15 +1579,17 @@ select{padding-right:42px;
     $('woRepeat').hidden = !last;
     if (last) $('woRepeatSub').textContent = woTitle(last) + ' \u00b7 ' + relDate(last.date) + (last.exercises.length ? ' \u00b7 ' + last.exercises.map(function (x) { return x.name; }).slice(0, 4).join(', ') : '');
     $('woFromHistory').hidden = db.workouts.filter(function (w) { return w.exercises.length; }).length < 2;
+    var allMarks = items.length ? recordSweep().marks : {};
     $('woList').innerHTML = items.length ? items.map(function (e) {
-      var v = woVolume(e), sets = woSetCount(e), t = woTitle(e);
+      var v = woVolume(e), sets = woSetCount(e), t = woTitle(e), mk = allMarks[e.id] || {};
       var meta = [fmtTime(e.time), e.name ? cap(e.type) : '', has(e.minutes) && e.exercises.length ? fmtDur(e.minutes) : '', e.exercises.length ? plural(sets, 'set', 'sets') : ''].filter(Boolean).join(' \u00b7 ');
       return '<li class="item wo-item" data-edit="' + esc(e.id) + '"><div class="main"><div class="title">' + esc(t) +
         (v ? '<span class="chip vol">' + fmtVol(v) + '</span>' : '') + '</div>' +
         '<div class="meta">' + esc(meta) + '</div>' +
-        (e.exercises.length ? '<ul class="wo-lines">' + e.exercises.map(function (x) {
-          var s = setsText(x, woUnit(e));
-          return '<li><span>' + esc(x.name) + (s ? ' <span class="x">' + esc(s) + '</span>' : '') + '</span></li>';
+        (e.exercises.length ? '<ul class="wo-lines">' + e.exercises.map(function (x, xi) {
+          var s = setsText(x, woUnit(e)), pr = mk[xi];
+          var prHtml = pr ? '<span class="pr-mark" role="img" aria-label="Personal record: ' + esc(pr.map(function (m) { return REC_META[m.type].label.toLowerCase(); }).join(', ')) + '">' + IC_TROPHY + 'PR</span>' : '';
+          return '<li><span>' + esc(x.name) + (s ? ' <span class="x">' + esc(s) + '</span>' : '') + prHtml + '</span></li>';
         }).join('') + '</ul>' : '') +
         (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
         '<div class="wo-btns">' + (has(e.minutes) && !e.exercises.length ? '<span class="val">' + fmtDur(e.minutes) + '</span>' : '') +
@@ -1630,6 +1902,7 @@ select{padding-right:42px;
           });
           mergeSavedFoods(db, incoming);
           mergeCustom(db, incoming);
+          mergeStats(db, incoming);
         }
         if (save()) {
           toast(mode === 'replace' ? 'Data replaced' : 'Data merged');
@@ -1660,7 +1933,11 @@ select{padding-right:42px;
     if (e.key !== 'Escape') return;
     if ($('confirmOverlay').classList.contains('open')) return;
     if ($('scanOverlay').classList.contains('open')) { closeScanner(); return; }
+    if ($('recFormOverlay').classList.contains('open')) { closeRecordForm(); return; }
+    if ($('recOverlay').classList.contains('open')) { closeRecords(); return; }
     if ($('woPickOverlay').classList.contains('open')) { closePicker(); return; }
+    if ($('statOverlay').classList.contains('open')) { closeStat(); return; }
+    if ($('statsOverlay').classList.contains('open')) { closeStats(); return; }
     if ($('woHistOverlay').classList.contains('open')) { closeHistory(); return; }
     if ($('woOverlay').classList.contains('open')) { closeWorkout(); return; }
     if ($('foodSheetOverlay').classList.contains('open')) { closeFoodSheet(); return; }
@@ -2633,6 +2910,13 @@ select{padding-right:42px;
         h += '<div class="ex-last"><span><b>Last</b> ' + esc(relDate(last.w.date)) + ' \u00b7 ' + esc(setsText(last.ex, woUnit(last.w))) + '</span>' +
           '<button type="button" class="link-btn" data-act="use-last" aria-label="Use last time\u2019s sets for ' + nm + '">Use</button></div>';
       }
+      var cur1 = ex.kind === 'weight' ? findLift(ex.name) : null;
+      if (cur1) {
+        var c1 = convW(cur1.value, cur1.unit, ed.unit);
+        h += '<div class="cur-1rm"><span>Current 1RM <b>' + fmtG(c1) + ' ' + ed.unit + '</b></span>' + [60, 70, 75, 80, 85, 90].map(function (pc) {
+          return '<button type="button" class="pct-chip" data-act="pct" data-p="' + pc + '" aria-label="Quick add weight ' + pc + ' percent of 1RM, ' + fmtG(plate(c1 * pc / 100, ed.unit)) + ' ' + ed.unit + '">' + pc + '%</button>';
+        }).join('') + '</div>';
+      }
       h += '<div class="set-grid' + (one ? ' one' : '') + '"><span class="set-h">Set</span>' + fs.map(function (f) { return '<span class="set-h">' + unitLabel(ex.kind, f) + '</span>'; }).join('') + '<span></span><span></span>';
       ex.sets.forEach(function (s, j) {
         var ph = lastSets[j] || lastSets[lastSets.length - 1] || {};
@@ -2720,6 +3004,14 @@ select{padding-right:42px;
       if (l) { ex.kind = l.ex.kind; ex.sets = cloneEx([l.ex], woUnit(l.w), ed.unit)[0].sets; renderEx(); toast('Copied last time\u2019s sets'); }
       return;
     }
+    if (act === 'pct') {
+      var lf = findLift(ex.name), wIn = b.closest('.ex-card').querySelector('[data-q="weight"]');
+      if (lf && wIn) {
+        wIn.value = plate(convW(lf.value, lf.unit, ed.unit) * Number(b.dataset.p) / 100, ed.unit);
+        var rIn = b.closest('.ex-card').querySelector('[data-q="reps"]'); if (rIn && !rIn.value) rIn.focus({ preventScroll: true });
+      }
+      return;
+    }
     if (act === 'qadd') {
       var card = b.closest('.ex-card'), q = function (k) { var x = card.querySelector('[data-q="' + k + '"]'); return x ? readNum(x.value) : null; };
       var n = q('n'), reps = q('reps'), w = ex.kind === 'weight' ? q('weight') : null;
@@ -2761,7 +3053,7 @@ select{padding-right:42px;
     err('woErr');
     var entry = { date: date, time: time, type: type, name: $('woName').value.trim().slice(0, 60), minutes: mins === null ? null : Math.round(mins),
       unit: ed.unit, exercises: exercises, notes: $('woNotes').value.trim() };
-    var ok, wasEdit = !!ed.id;
+    var ok, wasEdit = !!ed.id, marksBefore = wasEdit ? (recordSweep().marks[ed.id] || {}) : null;
     if (wasEdit) {
       var idx = -1; db.workouts.forEach(function (w, k) { if (w.id === ed.id) idx = k; });
       if (idx < 0) { err('woErr', 'This workout was deleted. Close and start again.'); return; }
@@ -2772,10 +3064,12 @@ select{padding-right:42px;
       ok = add('workouts', entry);
     }
     if (!ok) return;
+    var savedId = wasEdit ? ed.id : entry.id;
     rememberCustom(exercises); save();
     closeWorkout(true); blurActive();
     if (date !== viewDate) viewDate = date;
-    toast(wasEdit ? 'Workout updated' : 'Workout saved'); render();
+    render();
+    if (!celebrate(newPRsFor(savedId, marksBefore))) toast(wasEdit ? 'Workout updated' : 'Workout saved');
   });
   function rememberCustom(exercises) {
     var list = db.customExercises || (db.customExercises = []);
@@ -2798,7 +3092,7 @@ select{padding-right:42px;
   });
   $('woClose').addEventListener('click', function () { closeWorkout(); });
   $('woOverlay').addEventListener('click', function (e) { if (e.target === $('woOverlay')) closeWorkout(); });
-  $('woAddEx').addEventListener('click', openPicker);
+  $('woAddEx').addEventListener('click', function () { pickCb = null; openPicker(); });
   $('woStart').addEventListener('click', function () { openWorkout('new'); });
   $('woRepeat').addEventListener('click', function () { var w = lastWorkout(); if (w) openWorkout('copy', w); });
   $('woFromHistory').addEventListener('click', openHistory);
@@ -2819,12 +3113,12 @@ select{padding-right:42px;
 
   /* ---------- Exercise picker ---------- */
   function openPicker() {
-    $('woPickSearch').value = ''; renderPicker();
+    $('woPickSearch').value = ''; $('woPickTitle').textContent = 'Add exercise'; renderPicker();
     openOverlay($('woPickOverlay'));
     $('woPickOverlay').querySelector('.sheet').scrollTop = 0;
     setTimeout(function () { $('woPickSearch').focus({ preventScroll: true }); }, 60);
   }
-  function closePicker() { closeOverlay($('woPickOverlay')); blurActive(); }
+  function closePicker() { closeOverlay($('woPickOverlay')); blurActive(); pickCb = null; }
   function pickRow(name, kind, sub) {
     return '<li><button type="button" class="food-row pick-row" data-name="' + esc(name) + '" data-kind="' + kind + '"><span class="fr-main"><span class="fr-name">' + esc(name) + '</span>' +
       (sub ? '<span class="fr-sub">' + esc(sub) + '</span>' : '') + '</span><span class="plus">' + IC_PLUS + '</span></button></li>';
@@ -2851,7 +3145,9 @@ select{padding-right:42px;
     $('woPickList').innerHTML = html || '<p class="empty">No exercises match.</p>';
   }
   function addExercise(name, kind) {
-    name = name.trim().slice(0, 80); if (!name || !ed) return;
+    name = name.trim().slice(0, 80);
+    if (pickCb && name) { var cb = pickCb; closePicker(); cb(name, kind); return; }
+    if (!name || !ed) return;
     var lib = LIB[name.toLowerCase()], custom = (db.customExercises || []).filter(function (c) { return c.name.toLowerCase() === name.toLowerCase(); })[0];
     var lt = lastTimeFor(name, edStamp(), ed.id);
     kind = lt ? lt.ex.kind : custom ? custom.kind : lib ? lib.kind : kindOk(kind);
@@ -2870,6 +3166,8 @@ select{padding-right:42px;
     var first = $('woPickList').querySelector('.pick-row');
     var typed = $('woPickSearch').value.trim();
     if (!typed) return;
+    var exact = [].filter.call($('woPickList').querySelectorAll('.pick-row'), function (r) { return r.dataset.name.toLowerCase() === typed.toLowerCase(); })[0];
+    if (exact) first = exact;
     if (first) addExercise(first.dataset.name, first.dataset.kind); else addExercise(typed, 'weight');
   });
   $('woPickList').addEventListener('click', function (e) {
@@ -2912,8 +3210,710 @@ select{padding-right:42px;
     if (qs) qs.querySelector('[data-act="qadd"]').click(); else blurActive();
   });
 
+  /* =====================================================================
+     Personal records: computed from logs + manual entries
+     ===================================================================== */
+  var IC_TROPHY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5.5h2.5a.5.5 0 0 1 .5.5v1a4 4 0 0 1-3.2 3.9M7 5.5H4.5a.5.5 0 0 0-.5.5v1a4 4 0 0 0 3.2 3.9"/></svg>';
+  var LEGACY_CARDIO = { run: 'Running', walk: 'Walking', bike: 'Cycling', swim: 'Swimming' };
+  // Ordering + labels for each record type. lower = smaller is better.
+  var REC_META = {
+    heaviest: { label: 'Heaviest weight', fmt: 'w', pri: 1 },
+    e1rm: { label: 'Est. 1-rep max', fmt: 'w', est: true, pri: 2 },
+    setvol: { label: 'Best set volume', fmt: 'vol', pri: 6 },
+    sessvol: { label: 'Best session volume', fmt: 'vol', pri: 7 },
+    reps: { label: 'Most reps in a set', fmt: 'reps', pri: 3 },
+    sessreps: { label: 'Most reps in a session', fmt: 'reps', pri: 8 },
+    dist: { label: 'Longest distance', fmt: 'd', pri: 4 },
+    dur: { label: 'Longest duration', fmt: 'clock', pri: 5 },
+    pace: { label: 'Fastest pace', fmt: 'pace', lower: true, pri: 3 },
+    wovol: { label: 'Biggest workout volume', fmt: 'vol', pri: 1 },
+    wolen: { label: 'Longest workout', fmt: 'dur', pri: 2 },
+    wosets: { label: 'Most sets in a workout', fmt: 'sets', pri: 3 },
+    week: { label: 'Most workouts in a week', fmt: 'count', pri: 4 },
+    streak: { label: 'Longest workout streak', fmt: 'days', pri: 5 },
+    water: { label: 'Most water in a day', fmt: 'oz', pri: 6 },
+    sleep: { label: 'Longest sleep', fmt: 'dur', pri: 7 },
+    protein: { label: 'Most protein in a day', fmt: 'g', pri: 8 }
+  };
+  RACES.forEach(function (r, i) { REC_META['race:' + r[0]] = { label: 'Best ' + r[1], fmt: 'clock', lower: true, pri: 2.1 + i / 10, race: r[0] }; });
+  function isRunLike(name) { return /\b(run|running|jog|jogging|treadmill|race)\b/i.test(name); }
+  function fmtClock(min) {
+    var s = Math.round(min * 60), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return (h ? h + ':' + pad(m) : m) + ':' + pad(sec);
+  }
+  function parseClock(str) {
+    str = String(str || '').trim(); if (!str) return null;
+    if (/^\d+(\.\d+)?$/.test(str)) return Number(str); // plain minutes
+    var p = str.split(':'); if (p.length < 2 || p.length > 3 || p.some(function (x) { return !/^\d+(\.\d+)?$/.test(x); })) return NaN;
+    p = p.map(Number);
+    var sec = p.length === 3 ? p[0] * 3600 + p[1] * 60 + p[2] : p[0] * 60 + p[1];
+    return sec / 60;
+  }
+  function recValue(r) {
+    var u = units(), v = r.value, f = r.fmt;
+    if (f === 'w') return fmtG(convW(v, 'lb', u)) + '<small>' + u + '</small>';
+    if (f === 'vol') return Math.round(convW(v, 'lb', u)).toLocaleString() + '<small>' + u + '</small>';
+    if (f === 'reps') return v + '<small>reps</small>';
+    if (f === 'd') return (Math.round(convD(v, 'lb', u) * 100) / 100).toLocaleString() + '<small>' + distUnit(u) + '</small>';
+    if (f === 'clock') return fmtClock(v);
+    if (f === 'pace') return fmtClock(u === 'kg' ? v / KM_PER_MI : v) + '<small>/' + distUnit(u) + '</small>';
+    if (f === 'dur') return fmtDur(v);
+    if (f === 'sets') return v + '<small>sets</small>';
+    if (f === 'count') return v + '<small>workouts</small>';
+    if (f === 'days') return v + '<small>' + (v === 1 ? 'day' : 'days') + '</small>';
+    if (f === 'oz') return fmtG(v) + '<small>oz</small>';
+    if (f === 'g') return fmtG(v) + '<small>g</small>';
+    if (f === 'text') return esc(r.text) + (r.unitText ? '<small>' + esc(r.unitText) + '</small>' : '');
+    return esc(String(v));
+  }
+  function recPlain(r) { return recValue(r).replace(/<small>/g, ' ').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&'); }
+
+  function normRecord(r) {
+    var metrics = ['weight', 'reps', 'dist', 'time', 'race', 'other'];
+    if (typeof r.exercise !== 'string' || !r.exercise.trim() || metrics.indexOf(r.metric) < 0) return null;
+    r.exercise = r.exercise.trim().slice(0, 80);
+    r.note = typeof r.note === 'string' ? r.note.slice(0, 300) : '';
+    if (r.metric === 'other') {
+      r.text = typeof r.text === 'string' ? r.text.trim().slice(0, 40) : String(r.value == null ? '' : r.value);
+      if (!r.text) return null;
+      r.unitText = typeof r.unitText === 'string' ? r.unitText.slice(0, 20) : '';
+      return r;
+    }
+    var v = Number(r.value); if (!isFinite(v) || v <= 0 || v > 100000) return null;
+    r.value = v;
+    if (r.metric === 'weight') { r.unit = r.unit === 'kg' ? 'kg' : 'lb'; r.reps = cleanNum(r.reps, 1000, true); }
+    if (r.metric === 'dist') r.unit = r.unit === 'km' ? 'km' : 'mi';
+    if (r.metric === 'race' && !RACES.some(function (x) { return x[0] === r.race; })) return null;
+    if (r.metric === 'reps') r.value = Math.round(v);
+    return r;
+  }
+
+  // One chronological sweep gives all-time bests and which workout exercises set a PR when logged.
+  function recordSweep() {
+    var best = {}, marks = {}, names = {};
+    function exKey(name) { var k = name.trim().toLowerCase(); return k; }
+    function offer(key, type, cat, group, value, ctx, markIdx) {
+      if (!(value > 0) || !isFinite(value)) return;
+      var meta = REC_META[type], cur = best[key];
+      var better = !cur || (meta.lower ? value < cur.value - 1e-9 : value > cur.value + 1e-9);
+      if (!better) return;
+      if (cur && ctx.wid && markIdx !== undefined) {
+        var m = marks[ctx.wid] || (marks[ctx.wid] = {});
+        (m[markIdx] || (m[markIdx] = [])).push({ key: key, type: type, value: value, group: group });
+      }
+      best[key] = Object.assign({ key: key, type: type, cat: cat, group: group, value: value, label: meta.label, fmt: meta.fmt, est: !!meta.est, pri: meta.pri }, ctx);
+    }
+    var events = [];
+    db.workouts.forEach(function (w) { events.push({ s: stamp(w), w: w }); });
+    (db.records || []).forEach(function (r) { events.push({ s: r.date + 'T00:00', r: r }); });
+    events.sort(function (a, b) { return a.s < b.s ? -1 : a.s > b.s ? 1 : (a.r ? -1 : 1); });
+
+    events.forEach(function (ev) {
+      if (ev.r) {
+        var r = ev.r, k = 'ex:' + exKey(r.exercise), ctx = { date: r.date, manual: true, rid: r.id, note: r.note };
+        names[k] = r.exercise;
+        if (r.metric === 'weight') offer(k + '|heaviest', 'heaviest', 'strength', k, convW(r.value, r.unit, 'lb'), Object.assign({ reps: r.reps }, ctx));
+        else if (r.metric === 'reps') offer(k + '|reps', 'reps', 'strength', k, r.value, ctx);
+        else if (r.metric === 'dist') offer(k + '|dist', 'dist', 'cardio', k, r.unit === 'km' ? r.value / KM_PER_MI : r.value, ctx);
+        else if (r.metric === 'time') offer(k + '|dur', 'dur', 'cardio', k, r.value, ctx);
+        else if (r.metric === 'race') offer(k + '|race:' + r.race, 'race:' + r.race, 'cardio', k, r.value, ctx);
+        else best['manual:' + r.id] = Object.assign({ key: 'manual:' + r.id, type: 'other', cat: 'overall', group: k, label: 'Personal best', fmt: 'text', text: r.text, unitText: r.unitText, pri: 9 }, ctx);
+        return;
+      }
+      var w = ev.w, u = woUnit(w), ctx0 = { date: w.date, wid: w.id };
+      var volLb = 0, sets = 0;
+      var exList = w.exercises.length ? w.exercises
+        : (LEGACY_CARDIO[w.type] && has(w.minutes) ? [{ name: LEGACY_CARDIO[w.type], kind: 'cardio', sets: [{ min: w.minutes }], legacy: true }] : []);
+      exList.forEach(function (ex, i) {
+        var k = 'ex:' + exKey(ex.name); names[k] = ex.name;
+        if (!ex.legacy) sets += ex.sets.length;
+        if (ex.kind === 'weight') {
+          var top = null, e1 = null, sv = null, tot = 0;
+          ex.sets.forEach(function (s) {
+            if (!has(s.weight) || !(s.weight > 0)) return;
+            var wl = convW(s.weight, u, 'lb'), reps = has(s.reps) ? s.reps : null;
+            if (!top || wl > top.v || (wl === top.v && (reps || 0) > (top.reps || 0))) top = { v: wl, reps: reps, disp: s.weight };
+            if (reps >= 1 && reps <= 12) { var est = reps === 1 ? wl : wl * (1 + reps / 30); if (!e1 || est > e1.v) e1 = { v: est, reps: reps, disp: s.weight }; }
+            if (reps) { tot += reps * wl; if (!sv || reps * wl > sv.v) sv = { v: reps * wl, reps: reps, disp: s.weight }; }
+          });
+          volLb += tot;
+          if (top) offer(k + '|heaviest', 'heaviest', 'strength', k, top.v, Object.assign({ reps: top.reps }, ctx0), i);
+          if (e1) offer(k + '|e1rm', 'e1rm', 'strength', k, e1.v, Object.assign({ from: e1.reps + ' \u00d7 ' + fmtG(e1.disp) + ' ' + u }, ctx0), i);
+          if (sv) offer(k + '|setvol', 'setvol', 'strength', k, sv.v, Object.assign({ from: sv.reps + ' \u00d7 ' + fmtG(sv.disp) + ' ' + u }, ctx0), i);
+          if (tot) offer(k + '|sessvol', 'sessvol', 'strength', k, tot, Object.assign({ from: plural(ex.sets.length, 'set', 'sets') }, ctx0), i);
+        } else if (ex.kind === 'bodyweight') {
+          var mr = 0, tr = 0;
+          ex.sets.forEach(function (s) { if (has(s.reps)) { mr = Math.max(mr, s.reps); tr += s.reps; } });
+          offer(k + '|reps', 'reps', 'strength', k, mr, ctx0, i);
+          if (ex.sets.length > 1) offer(k + '|sessreps', 'sessreps', 'strength', k, tr, Object.assign({ from: plural(ex.sets.length, 'set', 'sets') }, ctx0), i);
+        } else {
+          ex.sets.forEach(function (s) {
+            var mi = has(s.dist) ? convD(s.dist, u, 'lb') : 0, min = has(s.min) ? s.min : 0;
+            var mark = ex.legacy ? undefined : i;
+            if (mi) offer(k + '|dist', 'dist', 'cardio', k, mi, ctx0, mark);
+            if (min) offer(k + '|dur', 'dur', 'cardio', k, min, ctx0, mark);
+            if (mi >= 0.1 && min) {
+              var pace = min / mi; // minutes per mile
+              offer(k + '|pace', 'pace', 'cardio', k, pace, Object.assign({ from: fmtClock(min) + ' for ' + Math.round(s.dist * 100) / 100 + ' ' + distUnit(u) }, ctx0), mark);
+              if (isRunLike(ex.name)) {
+                var km = mi * KM_PER_MI;
+                RACES.forEach(function (r) {
+                  if (Math.abs(km - r[2]) / r[2] <= 0.05) {
+                    offer(k + '|race:' + r[0], 'race:' + r[0], 'cardio', k, (min / km) * r[2],
+                      Object.assign({ from: Math.round(s.dist * 100) / 100 + ' ' + distUnit(u) + ' in ' + fmtClock(min) }, ctx0), mark);
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+      offer('all|wovol', 'wovol', 'overall', 'all', volLb, Object.assign({ from: woTitle(w) }, ctx0));
+      if (has(w.minutes)) offer('all|wolen', 'wolen', 'overall', 'all', w.minutes, Object.assign({ from: woTitle(w) }, ctx0));
+      offer('all|wosets', 'wosets', 'overall', 'all', sets, Object.assign({ from: woTitle(w) }, ctx0));
+    });
+
+    // Day/week based bests.
+    var days = {};
+    db.workouts.forEach(function (w) { days[w.date] = (days[w.date] || 0) + 1; });
+    var dk = Object.keys(days).sort(), weeks = {};
+    dk.forEach(function (d) {
+      var dt = parseKey(d), mon = addDays(d, -((dt.getDay() + 6) % 7));
+      weeks[mon] = (weeks[mon] || 0) + days[d];
+    });
+    Object.keys(weeks).sort().forEach(function (wk) { offer('all|week', 'week', 'overall', 'all', weeks[wk], { date: wk, week: true }); });
+    var run = 0, start = null, prev = null;
+    dk.forEach(function (d) {
+      if (prev && addDays(prev, 1) === d) run++; else { run = 1; start = d; }
+      offer('all|streak', 'streak', 'overall', 'all', run, { date: d, from: start }); prev = d;
+    });
+    var water = {}; db.water.forEach(function (x) { water[x.date] = (water[x.date] || 0) + (Number(x.oz) || 0); });
+    Object.keys(water).sort().forEach(function (d) { offer('all|water', 'water', 'overall', 'all', water[d], { date: d, tab: 'water' }); });
+    db.sleep.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (s) { offer('all|sleep', 'sleep', 'overall', 'all', Number(s.minutes) || 0, { date: s.date, tab: 'sleep' }); });
+    var prot = {}; db.food.forEach(function (f) { if (has(f.protein)) prot[f.date] = (prot[f.date] || 0) + Number(f.protein); });
+    Object.keys(prot).sort().forEach(function (d) { offer('all|protein', 'protein', 'overall', 'all', Math.round(prot[d] * 10) / 10, { date: d, tab: 'food' }); });
+
+    var list = Object.keys(best).map(function (k) { var r = best[k]; r.name = r.group === 'all' ? 'Overall' : names[r.group] || r.group; return r; });
+    // A cardio exercise that also logs weight sets stays under strength; group category = first record's.
+    return { list: list, marks: marks };
+  }
+  function recordsByKey() { var o = {}; recordSweep().list.forEach(function (r) { o[r.key] = r; }); return o; }
+  function markShort(m, name) {
+    var r = { value: m.value, fmt: REC_META[m.type].fmt };
+    var v = recPlain(r);
+    if (m.type === 'heaviest') return name + ' ' + v;
+    if (m.type === 'e1rm') return name + ' est. 1RM ' + v;
+    if (m.type.indexOf('race:') === 0) return name + ' ' + REC_META[m.type].label.replace('Best ', '') + ' in ' + v;
+    return name + ' ' + REC_META[m.type].label.toLowerCase() + ' ' + v;
+  }
+  function bestMark(list) { return list.slice().sort(function (a, b) { return REC_META[a.type].pri - REC_META[b.type].pri; })[0]; }
+
+  /* ---------- Records screen ---------- */
+  var recCat = 'all', recCache = null;
+  var CAT_LABEL = { strength: 'Strength', cardio: 'Cardio', overall: 'Overall' };
+  function openRecords() {
+    $('recSearch').value = '';
+    renderRecords();
+    openOverlay($('recOverlay'));
+    $('recOverlay').querySelector('.sheet').scrollTop = 0;
+  }
+  function closeRecords() { closeOverlay($('recOverlay')); blurActive(); }
+  function recSub(r) {
+    var parts = [];
+    if (r.week) parts.push('Week of ' + fmtDate(r.week === true ? r.date : r.date));
+    else if (r.type === 'streak' && r.from && r.from !== r.date) parts.push(fmtDate(r.from, { month: 'short', day: 'numeric' }) + ' \u2013 ' + relDate(r.date));
+    else parts.push(relDate(r.date));
+    if (r.type === 'heaviest' && has(r.reps)) parts.push(plural(r.reps, 'rep', 'reps'));
+    if (r.from && r.type !== 'streak') parts.push(r.from);
+    return parts.join(' \u00b7 ');
+  }
+  function recRow(r) {
+    return '<li><button type="button" class="rec-row" data-rk="' + esc(r.key) + '"><span class="rl"><b>' + esc(r.label) +
+      (r.manual ? ' <span class="tag man">Manual</span>' : '') + (r.est ? ' <span class="tag est">Est.</span>' : '') + '</b>' +
+      '<span>' + esc(recSub(r)) + '</span></span><span class="rv">' + recValue(r) + '</span></button></li>';
+  }
+  function renderRecords() {
+    recCache = recordSweep();
+    var all = recCache.list, q = $('recSearch').value.trim().toLowerCase();
+    $('recTabs').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-selected', String(b.dataset.cat === recCat)); });
+    // Recent PRs strip: newest records from the last 30 days (computed, not overall day stats).
+    var cutoff = addDays(todayKey(), -30);
+    var recent = all.filter(function (r) { return r.group !== 'all' && r.date >= cutoff && r.type !== 'other' && !r.est && r.type !== 'setvol' && r.type !== 'sessreps'; })
+      .sort(function (a, b) { return b.date.localeCompare(a.date) || a.pri - b.pri; });
+    var seen = {}; recent = recent.filter(function (r) { if (seen[r.group]) return false; seen[r.group] = 1; return true; }).slice(0, 6);
+    $('recRecent').innerHTML = !q && recent.length ? '<p class="res-head" style="margin-top:4px">Recent PRs</p><div class="rec-recent">' + recent.map(function (r) {
+      return '<button type="button" class="rec-chip" data-rk="' + esc(r.key) + '"><span class="k">' + IC_TROPHY + esc(r.label) + '</span><span class="n">' + esc(r.name) + '</span>' +
+        '<span class="v">' + recValue(r) + '</span><span class="d">' + esc(relDate(r.date)) + '</span></button>';
+    }).join('') + '</div>' : '';
+    var html = '';
+    ['strength', 'cardio', 'overall'].forEach(function (cat) {
+      if (recCat !== 'all' && recCat !== cat) return;
+      var recs = all.filter(function (r) { return r.cat === cat; });
+      var groups = {}, order = [];
+      recs.forEach(function (r) { if (!groups[r.group]) { groups[r.group] = []; order.push(r.group); } groups[r.group].push(r); });
+      order = order.filter(function (g) {
+        if (!q) return true;
+        var name = groups[g][0].name.toLowerCase();
+        return name.indexOf(q) >= 0 || groups[g].some(function (r) { return r.label.toLowerCase().indexOf(q) >= 0; });
+      }).sort(function (a, b) { return a === 'all' ? -1 : b === 'all' ? 1 : groups[a][0].name.localeCompare(groups[b][0].name); });
+      if (!order.length) return;
+      html += '<p class="res-head">' + CAT_LABEL[cat] + '</p>' + order.map(function (g) {
+        var rs = groups[g].sort(function (a, b) { return a.pri - b.pri; });
+        var title = g === 'all' ? 'Best ever' : rs[0].name;
+        return '<div class="rec-card"><div class="rec-name"><span>' + esc(title) + '</span></div><ul class="rec-rows">' + rs.map(recRow).join('') + '</ul></div>';
+      }).join('');
+    });
+    $('recList').innerHTML = html || '<div class="rec-empty">' + IC_TROPHY + (q ? 'No records match \u201c' + esc($('recSearch').value.trim()) + '\u201d.' :
+      'No records yet. Log workouts with sets, weights, times, or distances and your bests show up here automatically. You can also add an old PR with Add.') + '</div>';
+  }
+  $('recSearch').addEventListener('input', renderRecords);
+  $('recTabs').addEventListener('click', function (e) { var b = e.target.closest('[data-cat]'); if (!b) return; recCat = b.dataset.cat; renderRecords(); });
+  $('openRecords').addEventListener('click', openRecords);
+  $('recClose').addEventListener('click', closeRecords);
+  $('recOverlay').addEventListener('click', function (e) {
+    if (e.target === $('recOverlay')) { closeRecords(); return; }
+    var b = e.target.closest('[data-rk]'); if (!b || !recCache) return;
+    var r = recCache.list.filter(function (x) { return x.key === b.dataset.rk; })[0]; if (!r) return;
+    showRecord(r);
+  });
+  function showRecord(r) {
+    var head = (r.group === 'all' ? '' : r.name + ': ') + r.label;
+    var when = r.week ? 'week of ' + fmtDate(r.date, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+      : fmtDate(r.date, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    var w = r.wid ? db.workouts.filter(function (x) { return x.id === r.wid; })[0] : null;
+    var msg = recPlain(r) + ', ' + (r.type === 'streak' && r.from !== r.date ? 'ending ' : '') + when + '.' +
+      (w ? ' From \u201c' + woTitle(w) + '\u201d.' : '') + (r.from && !w && r.type !== 'streak' ? ' ' + r.from + '.' : '') +
+      (r.est ? ' Estimated with the Epley formula from ' + r.from + '.' : '') + (r.manual ? ' Added manually.' + (r.note ? ' Note: ' + r.note : '') : '');
+    var choices = [];
+    if (r.manual) choices.push({ label: 'Edit record', value: 'edit', cls: 'btn-primary' });
+    else if (w) choices.push({ label: 'Go to workout', value: 'go', cls: 'btn-primary' });
+    else if (r.tab || r.week || r.type === 'streak') choices.push({ label: 'Go to that day', value: 'go', cls: 'btn-primary' });
+    choices.push({ label: 'Close', value: null, cls: 'btn-ghost' });
+    choiceBox(head, msg, choices).then(function (v) {
+      if (v === 'edit') { var m = db.records.filter(function (x) { return x.id === r.rid; })[0]; if (m) openRecordForm(m); }
+      if (v === 'go') {
+        closeRecords();
+        viewDate = r.date > todayKey() ? todayKey() : r.date;
+        show(r.tab || 'workouts');
+        if (w) setTimeout(function () {
+          var li = document.querySelector('#woList [data-edit="' + w.id + '"]');
+          if (li) { li.scrollIntoView({ block: 'center', behavior: reducedMotion() ? 'auto' : 'smooth' }); li.classList.add('flash'); setTimeout(function () { li.classList.remove('flash'); }, 1700); }
+        }, 120);
+      }
+    });
+  }
+
+  /* ---------- Manual records ---------- */
+  var rfEditing = null;
+  RACES.forEach(function (r) { var o = document.createElement('option'); o.value = r[0]; o.textContent = r[1]; $('rfRace').appendChild(o); });
+  function rfLayout() {
+    var m = $('rfMetric').value, u = units();
+    var unitOpts = m === 'weight' ? ['lb', 'kg'] : m === 'dist' ? ['mi', 'km'] : [];
+    var keep = $('rfUnit').value;
+    $('rfUnit').innerHTML = unitOpts.map(function (x) { return '<option value="' + x + '">' + x + '</option>'; }).join('');
+    $('rfUnit').value = unitOpts.indexOf(keep) >= 0 ? keep : (m === 'weight' ? u : distUnit(u));
+    $('rfUnitWrap').hidden = !unitOpts.length;
+    $('rfUnitTextWrap').hidden = m !== 'other';
+    $('rfRepsWrap').hidden = m !== 'weight';
+    $('rfRaceWrap').hidden = m !== 'race';
+    var lab = { weight: 'Weight', reps: 'Reps', dist: 'Distance', time: 'Time (h:mm:ss or minutes)', race: 'Time (h:mm:ss)', other: 'Value' }[m];
+    $('rfValueLabel').textContent = lab;
+    $('rfValue').setAttribute('inputmode', m === 'reps' ? 'numeric' : m === 'other' || m === 'time' || m === 'race' ? 'text' : 'decimal');
+    $('rfValue').placeholder = { weight: 'e.g. 315', reps: 'e.g. 20', dist: 'e.g. 13.1', time: 'e.g. 1:30:00', race: 'e.g. 22:45', other: 'e.g. 2:10' }[m];
+  }
+  $('rfMetric').addEventListener('change', rfLayout);
+  function openRecordForm(rec) {
+    rfEditing = rec || null;
+    var names = {};
+    db.workouts.forEach(function (w) { w.exercises.forEach(function (x) { names[x.name] = 1; }); });
+    EX_LIB.forEach(function (g) { g[1].forEach(function (e) { names[e[0]] = 1; }); });
+    $('rfNames').innerHTML = Object.keys(names).sort().map(function (n) { return '<option value="' + esc(n) + '">'; }).join('');
+    $('rfName').value = rec ? rec.exercise : '';
+    $('rfMetric').value = rec ? rec.metric : 'weight';
+    $('rfUnit').value = rec && rec.unit ? rec.unit : '';
+    rfLayout();
+    if (rec && rec.unit) $('rfUnit').value = rec.unit;
+    if (rec && rec.race) $('rfRace').value = rec.race;
+    $('rfValue').value = !rec ? '' : rec.metric === 'other' ? rec.text : (rec.metric === 'time' || rec.metric === 'race') ? fmtClock(rec.value) : rec.value;
+    $('rfUnitText').value = rec && rec.unitText ? rec.unitText : '';
+    $('rfReps').value = rec && has(rec.reps) ? rec.reps : '';
+    $('rfDate').value = rec ? rec.date : todayKey(); $('rfDate').max = todayKey();
+    $('rfNote').value = rec ? rec.note || '' : '';
+    $('rfTitle').textContent = rec ? 'Edit record' : 'Add a record';
+    $('rfDelete').hidden = !rec; err('rfErr');
+    openOverlay($('recFormOverlay'));
+  }
+  function closeRecordForm() { closeOverlay($('recFormOverlay')); rfEditing = null; blurActive(); }
+  $('recAdd').addEventListener('click', function () { openRecordForm(null); });
+  $('rfClose').addEventListener('click', closeRecordForm);
+  $('recFormOverlay').addEventListener('click', function (e) { if (e.target === $('recFormOverlay')) closeRecordForm(); });
+  $('rfForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = $('rfName').value.trim(), m = $('rfMetric').value, raw = $('rfValue').value.trim(), date = $('rfDate').value;
+    if (!name) { err('rfErr', 'Enter the exercise or activity.'); $('rfName').focus(); return; }
+    if (!raw) { err('rfErr', 'Enter the value.'); $('rfValue').focus(); return; }
+    if (!date || date > todayKey()) { err('rfErr', 'Choose a date that isn\u2019t in the future.'); return; }
+    var rec = { exercise: name, metric: m, date: date, note: $('rfNote').value.trim() };
+    if (m === 'other') { rec.text = raw.slice(0, 40); rec.unitText = $('rfUnitText').value.trim(); }
+    else {
+      var v = (m === 'time' || m === 'race') ? parseClock(raw) : Number(raw.replace(',', '.'));
+      var max = { weight: 5000, reps: 10000, dist: 1000, time: 100000, race: 10000 }[m];
+      if (v === null || !isFinite(v) || v <= 0 || v > max) { err('rfErr', m === 'time' || m === 'race' ? 'Enter a time like 22:45 or 1:30:00.' : 'Enter a number greater than 0.'); return; }
+      if (m === 'reps' && Math.round(v) !== v) { err('rfErr', 'Reps should be a whole number.'); return; }
+      rec.value = v;
+      if (m === 'weight' || m === 'dist') rec.unit = $('rfUnit').value;
+      if (m === 'weight') { var rp = numVal('rfReps'); if (rp !== null && (isNaN(rp) || rp < 1 || rp > 1000)) { err('rfErr', 'Reps should be 1 to 1000, or left blank.'); return; } rec.reps = rp === null ? null : Math.round(rp); }
+      if (m === 'race') rec.race = $('rfRace').value;
+    }
+    if (!normRecord(rec)) { err('rfErr', 'Check the values.'); return; }
+    err('rfErr');
+    var ok;
+    if (rfEditing) {
+      var i = db.records.indexOf(rfEditing), backup = rfEditing;
+      db.records[i] = Object.assign({ id: backup.id, created: backup.created }, rec);
+      ok = save(); if (!ok) db.records[i] = backup;
+    } else ok = add('records', rec);
+    if (!ok) return;
+    var wasEdit = !!rfEditing;
+    closeRecordForm(); toast(wasEdit ? 'Record updated' : 'Record added');
+    if ($('recOverlay').classList.contains('open')) renderRecords();
+  });
+  $('rfDelete').addEventListener('click', function () {
+    if (!rfEditing) return;
+    var target = rfEditing;
+    confirmBox('Delete this record?', 'Only this manual record is removed. Your logged workouts aren\u2019t affected.', 'Delete', true).then(function (ok) {
+      if (!ok) return;
+      var before = db.records;
+      db.records = db.records.filter(function (x) { return x !== target; });
+      if (save()) { closeRecordForm(); toast('Record deleted'); if ($('recOverlay').classList.contains('open')) renderRecords(); } else db.records = before;
+    });
+  });
+
+  /* ---------- PR celebration ---------- */
+  function prToast(msg) {
+    var t = $('toast');
+    t.innerHTML = IC_TROPHY + '<span>' + esc(msg) + '</span>';
+    t.classList.add('pr'); t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 3600);
+    if (navigator.vibrate && !reducedMotion()) navigator.vibrate(30);
+  }
+  function newPRsFor(wid, before) {
+    var after = recordSweep().marks[wid] || {}, w = db.workouts.filter(function (x) { return x.id === wid; })[0], out = [];
+    if (!w) return out;
+    Object.keys(after).forEach(function (i) {
+      after[i].forEach(function (m) {
+        var had = before && before[i] && before[i].some(function (b) { return b.key === m.key && b.value === m.value; });
+        if (!had) out.push(Object.assign({ name: w.exercises[i] ? w.exercises[i].name : '' }, m));
+      });
+    });
+    return out;
+  }
+  function celebrate(prs) {
+    if (!prs.length) return false;
+    var top = bestMark(prs), exNames = {};
+    prs.forEach(function (m) { exNames[m.name.toLowerCase()] = 1; });
+    var others = Object.keys(exNames).length - 1;
+    prToast('New PR: ' + markShort(top, top.name) + (others ? ' \u00b7 +' + others + ' more' : ''));
+    return true;
+  }
+  /* =====================================================================
+     Current stats: lift 1RMs, run times, other stats (set by the user)
+     ===================================================================== */
+  function raceInfo(k) { return RACES.filter(function (r) { return r[0] === k; })[0] || null; }
+  function statRunKm(s) { var r = raceInfo(s.race); return r ? r[2] : s.distUnit === 'km' ? s.dist : s.dist * KM_PER_MI; }
+  function statRunName(s) { var r = raceInfo(s.race); return r ? r[1] : fmtG(s.dist) + ' ' + s.distUnit; }
+  function normStat(s) {
+    if (!s || typeof s !== 'object' || typeof s.id !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s.date)) return null;
+    var kind = s.kind === 'run' || s.kind === 'other' ? s.kind : s.kind === '1rm' ? '1rm' : null;
+    if (!kind) return null;
+    s.kind = kind;
+    s.note = typeof s.note === 'string' ? s.note.slice(0, 200) : '';
+    function okVal(v, u) {
+      if (kind === 'other') return typeof v === 'string' ? v.trim().slice(0, 40) || null : (v != null && v !== '' ? String(v).slice(0, 40) : null);
+      var n = Number(v); return isFinite(n) && n > 0 && n <= (kind === 'run' ? 100000 : 5000) ? Math.round(n * 1000) / 1000 : null;
+    }
+    if (kind === '1rm') { if (typeof s.name !== 'string' || !s.name.trim()) return null; s.name = s.name.trim().slice(0, 80); s.unit = s.unit === 'kg' ? 'kg' : 'lb'; }
+    if (kind === 'other') { if (typeof s.name !== 'string' || !s.name.trim()) return null; s.name = s.name.trim().slice(0, 60); s.unit = typeof s.unit === 'string' ? s.unit.slice(0, 16) : ''; }
+    if (kind === 'run') {
+      s.unit = 'min';
+      if (!raceInfo(s.race)) {
+        s.race = 'custom'; s.distUnit = s.distUnit === 'km' ? 'km' : 'mi';
+        var d = Number(s.dist); if (!isFinite(d) || d <= 0 || d > 1000) return null; s.dist = Math.round(d * 1000) / 1000;
+      }
+      s.name = statRunName(s);
+    }
+    s.value = okVal(s.value, s.unit); if (s.value === null) return null;
+    var hist = (Array.isArray(s.history) ? s.history : []).map(function (h) {
+      if (!h || !/^\d{4}-\d{2}-\d{2}$/.test(h.date)) return null;
+      var v = okVal(h.value); if (v === null) return null;
+      return { value: v, unit: kind === '1rm' ? (h.unit === 'kg' ? 'kg' : 'lb') : kind === 'run' ? 'min' : (typeof h.unit === 'string' ? h.unit.slice(0, 16) : ''), date: h.date, note: typeof h.note === 'string' ? h.note.slice(0, 200) : '' };
+    }).filter(Boolean).sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; }).slice(-50);
+    if (!hist.length) hist = [{ value: s.value, unit: s.unit, date: s.date, note: s.note }];
+    s.history = hist;
+    return s;
+  }
+  function statKey(s) { return s.kind + '|' + (s.kind === 'run' ? (s.race === 'custom' ? 'custom:' + Math.round(statRunKm(s) * 1000) : s.race) : s.name.toLowerCase()); }
+  // Merge-safe: match by id, else by the same lift/distance/stat name; keep the newer current value and combine history.
+  function mergeStats(target, incoming) {
+    target.stats = target.stats || [];
+    (incoming.stats || []).forEach(function (inc) {
+      var ex = target.stats.filter(function (s) { return s.id === inc.id || statKey(s) === statKey(inc); })[0];
+      if (!ex) { target.stats.push(inc); return; }
+      var seen = {}, hist = ex.history.concat(inc.history).filter(function (h) { var k = h.date + '|' + h.value + '|' + h.unit; if (seen[k]) return false; seen[k] = 1; return true; });
+      hist.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+      if (inc.date > ex.date) { ex.value = inc.value; ex.unit = inc.unit; ex.date = inc.date; ex.note = inc.note; }
+      var last = hist[hist.length - 1];
+      if (!last || last.value !== ex.value || last.unit !== ex.unit) hist.push({ value: ex.value, unit: ex.unit, date: ex.date, note: ex.note });
+      ex.history = hist.slice(-50);
+    });
+  }
+
+  /* ---------- Current stats UI ---------- */
+  var IC_GAUGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.6 17.5a9 9 0 1 1 16.8 0"/><path d="M12 14l4.2-4.2"/><circle cx="12" cy="14" r="1.6"/><path d="M6.2 9.6l1 .7M12 5.8v1.2M17.8 9.6l-1 .7"/></svg>';
+  var stEditing = null, stNewKind = null, stNewName = '', stGuideTab = 'pct', pickCb = null;
+  function plate(v, u) { return u === 'kg' ? Math.round(v / 2.5) * 2.5 : Math.round(v / 5) * 5; }
+  function liftIn(s, u) { return convW(s.value, s.unit, u); }
+  function findLift(name) { var k = name.trim().toLowerCase(); return (db.stats || []).filter(function (s) { return s.kind === '1rm' && s.name.toLowerCase() === k; })[0] || null; }
+  function statShort(s) {
+    if (s.kind === '1rm') { var u = units(); return fmtG(liftIn(s, u)) + ' ' + u; }
+    if (s.kind === 'run') return fmtClock(s.value);
+    return s.value + (s.unit ? ' ' + s.unit : '');
+  }
+  function runPace(min, km) { var u = units(); var d = u === 'kg' ? km : km / KM_PER_MI; return fmtClock(min / d) + ' /' + distUnit(u); }
+  function riegel(t1, d1, d2) { return t1 * Math.pow(d2 / d1, 1.06); }
+  function statDelta(s) {
+    var h = s.history; if (h.length < 2 || s.kind === 'other') return '';
+    var prev = h[h.length - 2], cur = h[h.length - 1];
+    if (s.kind === '1rm') {
+      var u = units(), d = convW(cur.value, cur.unit, u) - convW(prev.value, prev.unit, u);
+      if (Math.abs(d) < 0.05) return '';
+      return '<span class="delta ' + (d > 0 ? 'up' : 'down') + '">' + (d > 0 ? '+' : '\u2212') + fmtG(Math.abs(d)) + ' ' + u + '</span>';
+    }
+    var dt = cur.value - prev.value; if (Math.abs(dt) < 1 / 120) return '';
+    return '<span class="delta ' + (dt < 0 ? 'up' : 'down') + '">' + (dt < 0 ? '\u2212' : '+') + fmtClock(Math.abs(dt)) + '</span>';
+  }
+  // Hints from logs (last 90 days). Shown only; never applied automatically.
+  function liftHint(s) {
+    var since = addDays(todayKey(), -90), key = s.name.toLowerCase(), best = null;
+    db.workouts.forEach(function (w) {
+      if (w.date < since) return;
+      w.exercises.forEach(function (ex) {
+        if (ex.kind !== 'weight' || ex.name.toLowerCase() !== key) return;
+        ex.sets.forEach(function (st) {
+          if (!has(st.weight) || !(st.reps >= 1 && st.reps <= 12)) return;
+          var lb = convW(st.weight, woUnit(w), 'lb'), est = st.reps === 1 ? lb : lb * (1 + st.reps / 30);
+          if (!best || est > best.lb) best = { lb: est, date: w.date, from: st.reps + ' \u00d7 ' + fmtG(st.weight) + ' ' + woUnit(w) };
+        });
+      });
+    });
+    if (!best) return null;
+    var u = units(), v = plate(convW(best.lb, 'lb', u), u), cur = liftIn(s, u);
+    if (Math.abs(v - cur) / cur < 0.02) return null;
+    return { value: v, unit: u, date: best.date, from: best.from };
+  }
+  function runHint(s) {
+    var since = addDays(todayKey(), -90), km = statRunKm(s), best = null;
+    db.workouts.forEach(function (w) {
+      if (w.date < since) return;
+      w.exercises.forEach(function (ex) {
+        if (ex.kind !== 'cardio' || !isRunLike(ex.name)) return;
+        ex.sets.forEach(function (st) {
+          if (!has(st.dist) || !has(st.min)) return;
+          var k = convD(st.dist, woUnit(w), 'lb') * KM_PER_MI;
+          if (Math.abs(k - km) / km > 0.05) return;
+          var t = st.min / k * km;
+          if (!best || t < best.t) best = { t: t, date: w.date };
+        });
+      });
+    });
+    if (!best || Math.abs(best.t - s.value) < 1 / 60) return null;
+    return { value: Math.round(best.t * 60) / 60, date: best.date };
+  }
+
+  function openStats() { renderStats(); openOverlay($('statsOverlay')); $('statsOverlay').querySelector('.sheet').scrollTop = 0; }
+  function closeStats() { closeOverlay($('statsOverlay')); blurActive(); }
+  function renderStats() {
+    var all = db.stats || [], html = '';
+    function sec(title, kind, empty, sortFn) {
+      var list = all.filter(function (s) { return s.kind === kind; }).sort(sortFn);
+      html += '<p class="res-head">' + title + '</p>';
+      html += list.length ? list.map(function (s) {
+        var sub = 'Updated ' + relDate(s.date);
+        if (s.kind === 'run') sub = runPace(s.value, statRunKm(s)) + ' \u00b7 ' + sub;
+        var val = s.kind === '1rm' ? fmtG(liftIn(s, units())) + '<small>' + units() + '</small>' : s.kind === 'run' ? fmtClock(s.value) : esc(s.value) + (s.unit ? '<small>' + esc(s.unit) + '</small>' : '');
+        return '<button type="button" class="st-row" data-sid="' + esc(s.id) + '"><span class="sl"><b>' + esc(s.name) + statDelta(s) + '</b><span>' + esc(sub) + '</span></span><span class="sv">' + val + '</span></button>';
+      }).join('') : '<p class="empty" style="margin:0 0 6px">' + empty + '</p>';
+    }
+    sec('Lifts \u00b7 current 1-rep max', '1rm', 'No lifts yet. Add your squat, bench, deadlift, and anything else you want a percentage guide for.', function (a, b) { return a.name.localeCompare(b.name); });
+    sec('Runs \u00b7 current times', 'run', 'No run times yet. Add your current mile, 5K, 10K, half, or marathon time.', function (a, b) { return statRunKm(a) - statRunKm(b); });
+    var others = all.filter(function (s) { return s.kind === 'other'; });
+    if (others.length) sec('Other', 'other', '', function (a, b) { return a.name.localeCompare(b.name); });
+    $('statsList').innerHTML = html;
+  }
+  $('statsList').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sid]'); if (!b) return;
+    var s = db.stats.filter(function (x) { return x.id === b.dataset.sid; })[0]; if (s) openStat(s);
+  });
+  $('openStats').addEventListener('click', openStats);
+  $('statsClose').addEventListener('click', closeStats);
+  $('statsOverlay').addEventListener('click', function (e) { if (e.target === $('statsOverlay')) closeStats(); });
+  $('statsAddLift').addEventListener('click', function () {
+    pickCb = function (name) {
+      var ex = findLift(name);
+      if (ex) openStat(ex); else openStat(null, '1rm', (LIB[name.toLowerCase()] || { name: name }).name);
+    };
+    openPicker();
+    $('woPickTitle').textContent = 'Choose a lift';
+  });
+  $('statsAddRun').addEventListener('click', function () { openStat(null, 'run', ''); });
+  $('statsAddOther').addEventListener('click', function () { openStat(null, 'other', ''); });
+
+  RACES.forEach(function (r) { var o = document.createElement('option'); o.value = r[0]; o.textContent = r[1]; $('stRace').appendChild(o); });
+  (function () { var o = document.createElement('option'); o.value = 'custom'; o.textContent = 'Custom distance'; $('stRace').appendChild(o); })();
+  $('stRace').addEventListener('change', function () { $('stCustomWrap').hidden = $('stRace').value !== 'custom'; });
+
+  function openStat(s, kind, name) {
+    stEditing = s || null; stNewKind = s ? s.kind : kind; stNewName = s ? s.name : name || '';
+    var k = stNewKind;
+    $('stTitle').textContent = s ? s.name : k === '1rm' ? stNewName : k === 'run' ? 'Add a run time' : 'Add a stat';
+    $('stNameWrap').hidden = k !== 'other';
+    $('stName').value = k === 'other' ? (s ? s.name : '') : '';
+    $('stRaceWrap').hidden = k !== 'run' || !!s;
+    $('stCustomWrap').hidden = true;
+    if (k === 'run' && !s) { $('stRace').value = '5k'; $('stDist').value = ''; $('stDistUnit').value = distUnit(units()); }
+    $('stUnitWrap').hidden = k !== '1rm';
+    $('stUnitTextWrap').hidden = k !== 'other';
+    $('stValueLabel').textContent = k === '1rm' ? 'Current 1-rep max' : k === 'run' ? 'Current time (h:mm:ss)' : 'Value';
+    $('stValue').setAttribute('inputmode', k === '1rm' ? 'decimal' : 'text');
+    $('stValue').placeholder = k === '1rm' ? 'e.g. 405' : k === 'run' ? 'e.g. 24:10' : 'e.g. 198';
+    $('stValue').value = s ? (k === 'run' ? fmtClock(s.value) : s.value) : '';
+    $('stUnit').value = s && k === '1rm' ? s.unit : units();
+    $('stUnitText').value = s && k === 'other' ? s.unit : '';
+    $('stDate').value = todayKey(); $('stDate').max = todayKey();
+    $('stNote').value = s ? s.note || '' : '';
+    $('stFormTitle').textContent = s ? 'Update' : 'Set current';
+    $('stSave').textContent = s ? 'Save update' : 'Save';
+    $('stDelete').hidden = !s; $('stHistCard').hidden = !s; $('stCurrent').hidden = !s; $('stGuide').hidden = !s || k === 'other';
+    err('stErr');
+    if (s) renderStatDetail();
+    openOverlay($('statOverlay'));
+    $('statOverlay').querySelector('.sheet').scrollTop = 0;
+  }
+  function closeStat() { closeOverlay($('statOverlay')); stEditing = null; blurActive(); }
+  function renderStatDetail() {
+    var s = stEditing; if (!s) return;
+    var u = units(), html;
+    if (s.kind === '1rm') {
+      html = '<div class="st-hero"><span class="big">' + fmtG(liftIn(s, u)) + '</span><span class="unit">' + u + ' \u00b7 current 1RM</span></div>';
+    } else if (s.kind === 'run') {
+      html = '<div class="st-hero"><span class="big">' + fmtClock(s.value) + '</span><span class="unit">' + esc(runPace(s.value, statRunKm(s))) + '</span></div>';
+    } else {
+      html = '<div class="st-hero"><span class="big">' + esc(s.value) + '</span><span class="unit">' + esc(s.unit) + '</span></div>';
+    }
+    html += '<div class="muted small">As of ' + esc(fmtDate(s.date, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })) + (s.note ? ' \u00b7 ' + esc(s.note) : '') + '</div>';
+    var hint = s.kind === '1rm' ? liftHint(s) : s.kind === 'run' ? runHint(s) : null;
+    if (hint) {
+      html += s.kind === '1rm'
+        ? '<div class="st-hint"><span>Your logs suggest <b>~' + fmtG(hint.value) + ' ' + hint.unit + '</b> (est. 1RM from ' + esc(relDate(hint.date)) + ', ' + esc(hint.from) + ')</span><button type="button" class="btn btn-secondary" id="stUseHint">Update to this</button></div>'
+        : '<div class="st-hint"><span>Best recent ' + esc(s.name) + ' effort <b>' + fmtClock(hint.value) + '</b> on ' + esc(relDate(hint.date)) + '</span><button type="button" class="btn btn-secondary" id="stUseHint">Update to this</button></div>';
+    }
+    $('stCurrent').innerHTML = html;
+    var hb = $('stUseHint');
+    if (hb) hb.onclick = function () {
+      applyStatUpdate(s, s.kind === '1rm' ? { value: hint.value, unit: hint.unit } : { value: hint.value, unit: 'min' }, todayKey(), s.kind === '1rm' ? 'From logs (est. 1RM)' : 'From logged run');
+    };
+    renderGuide();
+    $('stHist').innerHTML = s.history.slice().reverse().map(function (h) {
+      var v = s.kind === '1rm' ? fmtG(h.value) + ' ' + h.unit : s.kind === 'run' ? fmtClock(h.value) : h.value + (h.unit ? ' ' + h.unit : '');
+      return '<li><span><span class="hv">' + esc(v) + '</span>' + (h.note ? '<span class="hd"> \u00b7 ' + esc(h.note) + '</span>' : '') + '</span><span class="hd">' + esc(fmtDate(h.date, { month: 'short', day: 'numeric', year: 'numeric' })) + '</span></li>';
+    }).join('');
+  }
+  function renderGuide() {
+    var s = stEditing; if (!s || s.kind === 'other') return;
+    var u = units(), rows = '', html;
+    if (s.kind === '1rm') {
+      var one = liftIn(s, u);
+      html = '<div class="tabs-mini" role="tablist" style="margin:0 0 12px"><button type="button" role="tab" data-gt="pct" aria-selected="' + (stGuideTab === 'pct') + '">Percentages</button><button type="button" role="tab" data-gt="reps" aria-selected="' + (stGuideTab === 'reps') + '">Rep maxes</button></div>';
+      if (stGuideTab === 'pct') {
+        var pcts = [50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 102.5, 105];
+        rows = pcts.map(function (p) { return '<tr' + (p === 100 ? ' class="hl"' : '') + '><td>' + p + '%</td><td>' + fmtG(p === 100 ? one : plate(one * p / 100, u)) + '<small>' + u + '</small></td></tr>'; }).join('');
+        html += '<table class="pct-table" id="stPctTable"><thead><tr><th>% of 1RM</th><th>Weight</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+          '<p class="muted small" style="margin:10px 0 0">Rounded to the nearest ' + (u === 'kg' ? '2.5 kg' : '5 lb') + '.</p>';
+      } else {
+        for (var r = 1; r <= 12; r++) rows += '<tr' + (r === 1 ? ' class="hl"' : '') + '><td>' + plural(r, 'rep', 'reps') + '</td><td>' + fmtG(r === 1 ? one : plate(one / (1 + r / 30), u)) + '<small>' + u + '</small></td></tr>';
+        html += '<table class="pct-table"><thead><tr><th>Reps</th><th>Estimated max</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+          '<p class="muted small" style="margin:10px 0 0">Estimates from the Epley formula, rounded to the nearest ' + (u === 'kg' ? '2.5 kg' : '5 lb') + '.</p>';
+      }
+    } else {
+      var km = statRunKm(s);
+      html = '<h2>Equivalent times</h2><table class="pct-table"><thead><tr><th>Distance</th><th>Pace</th><th>Time</th></tr></thead><tbody>' +
+        RACES.map(function (r) {
+          var t = Math.abs(r[2] - km) / km < 0.001 ? s.value : riegel(s.value, km, r[2]);
+          return '<tr' + (Math.abs(r[2] - km) / km < 0.001 ? ' class="hl"' : '') + '><td style="font-family:var(--font);font-weight:600">' + r[1] + '</td><td>' + esc(runPace(t, r[2])) + '</td><td>' + fmtClock(t) + '</td></tr>';
+        }).join('') + '</tbody></table>';
+      var mp = riegel(s.value, km, 42.195) / 42.195, hp = riegel(s.value, km, 21.0975) / 21.0975, fp = riegel(s.value, km, 5) / 5; // min per km
+      var perU = u === 'kg' ? 1 : KM_PER_MI, du = distUnit(u), addLo = (u === 'kg' ? 37 : 60) / 60, addHi = (u === 'kg' ? 56 : 90) / 60;
+      html += '<h2 style="margin-top:18px">Training paces</h2><table class="pct-table"><tbody>' +
+        '<tr><td style="font-family:var(--font);font-weight:600">Easy</td><td>' + fmtClock(mp * perU + addLo) + '\u2013' + fmtClock(mp * perU + addHi) + '<small>/' + du + '</small></td></tr>' +
+        '<tr><td style="font-family:var(--font);font-weight:600">Tempo</td><td>' + fmtClock(hp * perU) + '<small>/' + du + '</small></td></tr>' +
+        '<tr><td style="font-family:var(--font);font-weight:600">Intervals</td><td>' + fmtClock(fp * perU) + '<small>/' + du + '</small></td></tr></tbody></table>' +
+        '<p class="muted small" style="margin:10px 0 0">Estimates using the Riegel formula; real results vary with training and terrain. Easy is about 60\u201390 seconds per mile slower than marathon pace, tempo about half-marathon pace, intervals about 5K pace.</p>';
+    }
+    $('stGuide').innerHTML = html;
+  }
+  $('stGuide').addEventListener('click', function (e) { var b = e.target.closest('[data-gt]'); if (!b) return; stGuideTab = b.dataset.gt; renderGuide(); });
+
+  function applyStatUpdate(s, nv, date, note) {
+    var backup = JSON.stringify(s);
+    var cur = s.history[s.history.length - 1];
+    if (cur && cur.value === nv.value && cur.unit === nv.unit) { cur.date = date > cur.date ? date : cur.date; cur.note = note; }
+    else s.history.push({ value: nv.value, unit: nv.unit, date: date, note: note });
+    s.history.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    s.history = s.history.slice(-50);
+    var latest = s.history[s.history.length - 1];
+    if (date >= s.date || latest.date === date) { s.value = nv.value; s.unit = nv.unit; s.date = date; s.note = note; }
+    if (!save()) { Object.assign(s, JSON.parse(backup)); return false; }
+    toast(s.name + ' set to ' + statShort(s)); renderStatDetail(); renderStats();
+    $('stValue').value = s.kind === 'run' ? fmtClock(s.value) : s.value; $('stNote').value = s.note || '';
+    return true;
+  }
+  $('stForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var k = stNewKind, raw = $('stValue').value.trim(), date = $('stDate').value, note = $('stNote').value.trim();
+    if (!date || date > todayKey()) { err('stErr', 'Choose a date that isn\u2019t in the future.'); return; }
+    var v, unit;
+    if (k === '1rm') { v = Number(raw.replace(',', '.')); unit = $('stUnit').value; if (!raw || !isFinite(v) || v <= 0 || v > 5000) { err('stErr', 'Enter your current 1-rep max, e.g. 405.'); $('stValue').focus(); return; } v = Math.round(v * 100) / 100; }
+    else if (k === 'run') { v = parseClock(raw); unit = 'min'; if (!raw || v === null || !isFinite(v) || v <= 0 || v > 100000 || raw.indexOf(':') < 0) { err('stErr', 'Enter a time like 24:10 or 3:45:00.'); $('stValue').focus(); return; } v = Math.round(v * 60) / 60; }
+    else { v = raw.slice(0, 40); unit = $('stUnitText').value.trim(); if (!v) { err('stErr', 'Enter a value.'); return; } }
+    err('stErr');
+    if (stEditing) { applyStatUpdate(stEditing, { value: v, unit: unit }, date, note); blurActive(); return; }
+    var rec = { id: uid(), created: Date.now(), kind: k, value: v, unit: unit, date: date, note: note, history: [] };
+    if (k === '1rm') rec.name = stNewName;
+    if (k === 'other') { rec.name = $('stName').value.trim(); if (!rec.name) { err('stErr', 'Name this stat, e.g. Bodyweight.'); $('stName').focus(); return; } }
+    if (k === 'run') {
+      rec.race = $('stRace').value;
+      if (rec.race === 'custom') { rec.dist = Number($('stDist').value); rec.distUnit = $('stDistUnit').value; if (!(rec.dist > 0 && rec.dist <= 1000)) { err('stErr', 'Enter the custom distance.'); $('stDist').focus(); return; } }
+    }
+    if (!normStat(rec)) { err('stErr', 'Check the values.'); return; }
+    var dup = (db.stats || []).filter(function (s) { return statKey(s) === statKey(rec); })[0];
+    if (dup) { stEditing = dup; applyStatUpdate(dup, { value: rec.value, unit: rec.unit }, date, note); openStat(dup); return; }
+    db.stats = db.stats || []; db.stats.push(rec);
+    if (!save()) { db.stats.pop(); return; }
+    toast(rec.name + ' saved'); renderStats(); blurActive();
+    openStat(rec);
+  });
+  $('stDelete').addEventListener('click', function () {
+    var s = stEditing; if (!s) return;
+    confirmBox('Remove ' + s.name + '?', 'Its current value and history are removed from Current stats. Your workouts and records aren\u2019t affected.', 'Remove', true).then(function (ok) {
+      if (!ok) return;
+      var before = db.stats; db.stats = db.stats.filter(function (x) { return x !== s; });
+      if (save()) { closeStat(); renderStats(); toast('Removed'); } else db.stats = before;
+    });
+  });
+  $('stClose').addEventListener('click', closeStat);
+  $('statOverlay').addEventListener('click', function (e) { if (e.target === $('statOverlay')) closeStat(); });
   // Exposed for automated tests only (no effect on normal use).
-  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout };
+  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout, recordSweep: recordSweep, fmtClock: fmtClock, parseClock: parseClock, riegel: riegel, normStat: normStat };
 
   /* ---------- Init ---------- */
   checkRadio('mealType', defaultMeal());
