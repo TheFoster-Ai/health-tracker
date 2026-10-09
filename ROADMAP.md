@@ -8,6 +8,7 @@
 - [x] Current stats (1RM reference)
 
 ## Up next
+- [ ] Smart reminders that learn your habits (e.g. if breakfast is usually logged by 8:30, remind you when it isn't) - needs push notifications
 - [ ] Weight tracking with trends
 - [ ] Charts and weekly insights (blood pressure trends, average sleep, calories vs. goal)
 - [ ] Goals and personalized targets (calorie and macro budget from weight, height, activity, and goal)
