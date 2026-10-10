@@ -10,10 +10,10 @@
 - [x] Per-exercise notes with up/down tags
 - [x] Workout autosave / crash-proof drafts
 - [x] Edit any logged entry (food, water, BP, sleep) + auto calories from macros
+- [x] Weight tracking with trends (7-day average chart, goal + estimate)
 
 ## Up next
 - [ ] Smart reminders that learn your habits (e.g. if breakfast is usually logged by 8:30, remind you when it isn't) - needs push notifications
-- [ ] Weight tracking with trends
 - [ ] Charts and weekly insights (blood pressure trends, average sleep, calories vs. goal)
 - [ ] Goals and personalized targets (calorie and macro budget from weight, height, activity, and goal)
 - [ ] Reminders (water, meals, blood pressure readings)
