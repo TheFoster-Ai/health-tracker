@@ -1,5 +1,5 @@
 /* Health Tracker service worker: caches the app shell for offline use. */
-const CACHE = 'health-tracker-v10';
+const CACHE = 'health-tracker-v11';
 const ASSETS = [
   './',
   './index.html',

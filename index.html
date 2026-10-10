@@ -398,6 +398,21 @@ select{padding-right:42px;
 .ex-last b{color:var(--accent);font-weight:750;margin-right:4px}
 .ex-last .link-btn{min-height:36px;padding:4px 6px;font-size:14px;flex:none}
 
+
+/* ---------- Edit entries + auto calories ---------- */
+.auto-cal{min-height:0;margin-top:6px;font-size:13px}
+.auto-cal:empty{display:none}
+.auto-cal .ac-on{color:var(--accent);font-weight:700}
+.auto-cal .ac-on::before{content:"\2728 ";}
+.ac-btn{border:1px solid var(--line2);background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px;border-radius:999px;padding:6px 12px;min-height:34px}
+.item[data-ee]{cursor:pointer;border-radius:12px;transition:background .15s}
+.item[data-ee]:active{background:rgba(255,255,255,.04)}
+.miss{display:inline-block;margin-top:5px;font-size:12px;font-weight:750;padding:3px 9px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.est{color:var(--faint);font-style:italic}
+.edited-tag{display:inline-block;font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--muted);margin-left:6px;vertical-align:2px;letter-spacing:.03em;text-transform:uppercase}
+#fsNut.dim{opacity:.45}
+.fs-ov{margin-top:0}
+.fs-ov .link-btn{padding:6px 0}
 /* ---------- Workout drafts ---------- */
 .wip-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;padding:8px 8px 8px 14px;border-radius:14px;background:rgba(200,242,90,.12);border:1px solid rgba(200,242,90,.3);color:var(--ink);font-size:14px;font-weight:600}
 .wip-banner .link-btn{min-height:36px;padding:4px 8px;font-size:14px;color:#FF9D6E}
@@ -1246,6 +1261,17 @@ select{padding-right:42px;
     </form>
   </div>
 </div>
+<div class="overlay" id="eeOverlay" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="eeTitle">
+    <div class="sheet-head"><h2 id="eeTitle">Edit entry</h2><button type="button" class="icon-btn" id="eeClose" aria-label="Close without saving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <form id="eeForm" novalidate>
+      <div class="card" id="eeFields"></div>
+      <p class="err" id="eeErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit" id="eeSave" style="width:100%">Save changes</button>
+      <button type="button" class="btn btn-danger-ghost" id="eeDelete" style="width:100%;margin-top:10px">Delete entry</button>
+    </form>
+  </div>
+</div>
 <div class="overlay" id="foodSheetOverlay" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fsName">
     <div class="sheet-head">
@@ -1274,6 +1300,17 @@ select{padding-right:42px;
         <p class="fs-note" id="fsNote"></p>
       </div>
       <div class="card" id="fsNut" aria-live="polite"></div>
+      <div class="card fs-ov" id="fsOverride" hidden>
+        <div class="list-head" style="margin-bottom:4px"><span class="label" style="margin:0">Logged values <span class="edited-tag" id="fsEditedTag" hidden>Edited</span></span><button type="button" class="link-btn" id="fsOvOn" aria-expanded="false" aria-controls="fsOvFields">Edit calories &amp; macros</button></div>
+        <div id="fsOvFields" hidden>
+          <div class="field"><label for="fsoCal">Calories</label><input type="number" id="fsoCal" inputmode="numeric" min="0" step="1"></div>
+          <div class="row" style="margin-bottom:0">
+            <div class="field" style="margin-bottom:0"><label for="fsoP">Protein</label><input type="number" id="fsoP" inputmode="decimal" min="0" step="any" placeholder="g"></div>
+            <div class="field" style="margin-bottom:0"><label for="fsoC">Carbs</label><input type="number" id="fsoC" inputmode="decimal" min="0" step="any" placeholder="g"></div>
+            <div class="field" style="margin-bottom:0"><label for="fsoF">Fat</label><input type="number" id="fsoF" inputmode="decimal" min="0" step="any" placeholder="g"></div>
+          </div>
+        </div>
+      </div>
       <div class="card" id="fsWhen">
         <div class="field">
           <span class="label" id="fsMealLabel">Meal</span>
@@ -1284,13 +1321,20 @@ select{padding-right:42px;
             <label><input type="radio" name="fsMeal" value="snack"><span>Snack</span></label>
           </div>
         </div>
-        <div class="field" style="margin-bottom:0">
-          <label for="fsTime">Time</label>
-          <input type="time" id="fsTime">
+        <div class="row" style="margin-bottom:0">
+          <div class="field" style="margin-bottom:0" id="fsDateWrap" hidden>
+            <label for="fsDate">Date</label>
+            <input type="date" id="fsDate">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label for="fsTime">Time</label>
+            <input type="time" id="fsTime">
+          </div>
         </div>
       </div>
       <p class="err" id="fsErr" role="alert"></p>
       <button class="btn btn-primary" type="submit" id="fsSave">Add to food log</button>
+      <button type="button" class="btn btn-danger-ghost" id="fsDelete" style="width:100%;margin-top:10px" hidden>Delete entry</button>
     </form>
   </div>
 </div>
@@ -1722,11 +1766,14 @@ select{padding-right:42px;
       if (has(e.calories)) nut.push(Math.round(Number(e.calories)).toLocaleString() + ' cal');
       MACROS.forEach(function (m) { if (has(e[m[0]])) nut.push(m[2] + ' ' + fmtG(e[m[0]]) + 'g'); });
       var sel = selMode ? '<button type="button" class="sel-chk" data-sel="' + esc(e.id) + '" aria-pressed="' + !!selIds[e.id] + '" aria-label="Select ' + esc(e.name) + '">' + (selIds[e.id] ? CHECK_SVG : '') + '</button>' : '';
-      return '<li class="item' + (selMode ? ' selectable" data-sel="' + esc(e.id) : '') + '">' + sel + '<div class="main"><div class="title">' + esc(e.name) + '</div>' +
+      var est = !has(e.calories) ? macroKcal(has(e.protein) ? e.protein : null, has(e.carbs) ? e.carbs : null, has(e.fat) ? e.fat : null) : null;
+      var miss = !has(e.calories) ? '<span class="miss">Add calories</span>' + (est != null ? ' <span class="small est">\u2248' + est.toLocaleString() + ' cal from macros</span>' : '')
+        : (!has(e.protein) && !has(e.carbs) && !has(e.fat) ? '<span class="miss">Missing macros</span>' : '');
+      return '<li class="item' + (selMode ? ' selectable" data-sel="' + esc(e.id) : '" data-ee="food:' + esc(e.id) + '" role="button" tabindex="0" aria-label="Edit ' + esc(e.name)) + '">' + sel + '<div class="main"><div class="title">' + esc(e.name) + (e.edited ? '<span class="edited-tag">Edited</span>' : '') + '</div>' +
         '<div class="meta">' + esc(cap(e.meal)) + ' · ' + fmtTime(e.time) + '</div>' +
         ((e.brand || e.serving || e.source === 'recipe') ? '<div class="meta">' + esc([e.source === 'recipe' ? 'Recipe' : '', e.brand, e.serving].filter(Boolean).join(' · ')) + '</div>' : '') +
         (nut.length ? '<div class="meta">' + nut.join(' · ') + '</div>' : '') +
-        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' + (selMode ? '' : delBtn('food', e.id, e.name)) + '</li>';
+        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + (miss && !selMode ? '<div>' + miss + '</div>' : '') + '</div>' + (selMode ? '' : delBtn('food', e.id, e.name)) + '</li>';
     }).join('') : '<li class="empty">No meals logged ' + emptyWhen(viewDate) + '. Use the form above to add one.</li>';
   }
 
@@ -1771,7 +1818,7 @@ select{padding-right:42px;
     $('waterListTitle').textContent = listTitle(viewDate);
     $('waterCount').textContent = items.length ? plural(items.length, 'entry', 'entries') : '';
     $('waterList').innerHTML = items.length ? items.map(function (e) {
-      return '<li class="item"><div class="main"><div class="title">' + fmtOz(Number(e.oz) || 0) + '</div><div class="meta">' + fmtTime(e.time) + '</div></div>' +
+      return '<li class="item" data-ee="water:' + esc(e.id) + '" role="button" tabindex="0" aria-label="Edit ' + fmtOz(Number(e.oz) || 0) + ' of water"><div class="main"><div class="title">' + fmtOz(Number(e.oz) || 0) + '</div><div class="meta">' + fmtTime(e.time) + '</div></div>' +
         delBtn('water', e.id, fmtOz(Number(e.oz) || 0) + ' of water') + '</li>';
     }).join('') : '<li class="empty">No water logged ' + emptyWhen(viewDate) + '. Tap a button above to add a glass.</li>';
   }
@@ -1804,7 +1851,7 @@ select{padding-right:42px;
     $('bpCount').textContent = items.length ? plural(items.length, 'reading', 'readings') : '';
     $('bpList').innerHTML = items.length ? items.map(function (e) {
       var c = bpCategory(e.systolic, e.diastolic);
-      return '<li class="item"><div class="main"><div class="title">' + e.systolic + '/' + e.diastolic + ' <span class="chip ' + c.cls + '">' + c.label + '</span></div>' +
+      return '<li class="item" data-ee="bp:' + esc(e.id) + '" role="button" tabindex="0" aria-label="Edit reading ' + e.systolic + ' over ' + e.diastolic + '"><div class="main"><div class="title">' + e.systolic + '/' + e.diastolic + ' <span class="chip ' + c.cls + '">' + c.label + '</span></div>' +
         '<div class="meta">' + fmtTime(e.time) + (e.pulse ? ' · pulse ' + e.pulse : '') + '</div>' +
         (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
         delBtn('bp', e.id, 'reading ' + e.systolic + ' over ' + e.diastolic) + '</li>';
@@ -1818,7 +1865,7 @@ select{padding-right:42px;
     var recent = db.sleep.slice().sort(function (a, b) { return b.date.localeCompare(a.date); }).slice(0, 7);
     $('sleepAvg').textContent = recent.length ? 'Avg ' + fmtDur(sumOf(recent, 'minutes') / recent.length) : '';
     $('sleepList').innerHTML = recent.length ? recent.map(function (e) {
-      return '<li class="item"><div class="main"><div class="title">' + (e.date === todayKey() ? 'Last night' : 'Night before ' + esc(fmtDate(e.date))) + '</div>' +
+      return '<li class="item" data-ee="sleep:' + esc(e.id) + '" role="button" tabindex="0" aria-label="Edit sleep for ' + esc(fmtDate(e.date)) + '"><div class="main"><div class="title">' + (e.date === todayKey() ? 'Last night' : 'Night before ' + esc(fmtDate(e.date))) + '</div>' +
         '<div class="meta">' + fmtTime(e.bed) + ' to ' + fmtTime(e.wake) + (e.quality ? ' · quality ' + e.quality + '/5' : '') + '</div>' +
         '<span class="sbar" aria-hidden="true"><i style="width:' + Math.min(100, (Number(e.minutes) || 0) / 600 * 100).toFixed(1) + '%"></i></span>' +
         (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
@@ -1870,7 +1917,7 @@ select{padding-right:42px;
     if (add('food', { date: viewDate, time: time, name: name, meal: meal, calories: cal === null ? null : Math.round(cal),
         protein: mac.protein, carbs: mac.carbs, fat: mac.fat, notes: $('foodNotes').value.trim() })) {
       $('foodName').value = ''; $('foodCal').value = ''; $('foodNotes').value = '';
-      $('foodProtein').value = ''; $('foodCarbs').value = ''; $('foodFat').value = '';
+      $('foodProtein').value = ''; $('foodCarbs').value = ''; $('foodFat').value = ''; autoCals.foodCal.reset(true);
       touchRecent({ key: 'manual:' + name.toLowerCase(), src: 'manual', id: '', name: name, brand: '', unit: 'g', per100: null,
         fixed: { label: '1 serving', kcal: cal === null ? null : Math.round(cal), p: mac.protein, c: mac.carbs, f: mac.fat }, portions: [] }, '1 serving', 1);
       save();
@@ -1963,11 +2010,16 @@ select{padding-right:42px;
   });
 
   /* ---------- Delete + summary navigation ---------- */
+  $('main').addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('[data-ee]')) { e.preventDefault(); e.target.click(); }
+  });
   $('main').addEventListener('click', function (e) {
     var go = e.target.closest('[data-go]');
     if (go) { viewDate = todayKey(); show(go.dataset.go); return; }
     var b = e.target.closest('[data-del]');
     if (!b) {
+      var eeEl = e.target.closest('[data-ee]');
+      if (eeEl && !selMode) { var ps = eeEl.dataset.ee.split(':'); openEntryEdit(ps[0], ps.slice(1).join(':')); return; }
       var edEl = e.target.closest('[data-edit]');
       if (edEl) { var w = db.workouts.filter(function (x) { return x.id === edEl.dataset.edit; })[0]; if (w) openWorkout('edit', w); }
       return;
@@ -2102,6 +2154,7 @@ select{padding-right:42px;
     if ($('woHistOverlay').classList.contains('open')) { closeHistory(); return; }
     if ($('woOverlay').classList.contains('open')) { closeWorkout(); return; }
     if ($('foodSheetOverlay').classList.contains('open')) { closeFoodSheet(); return; }
+    if ($('eeOverlay').classList.contains('open')) { closeEntryEdit(); return; }
     if ($('rbOverlay').classList.contains('open')) { closeBuilder(); return; }
     if ($('settingsOverlay').classList.contains('open')) closeSettings();
   });
@@ -2636,6 +2689,8 @@ select{padding-right:42px;
     food = Object.assign({}, food, { portions: (food.portions || []).slice() });
     sheet.food = food; sheet.touched = false;
     sheet.ingEdit = ingIdx == null ? null : ingIdx;
+    sheet.editId = null; sheet.override = false;
+    $('fsDateWrap').hidden = true; $('fsDelete').hidden = true; $('fsOverride').hidden = true; $('fsOvFields').hidden = true; $('fsNut').classList.remove('dim');
     sheet.forRecipe = ingMode || sheet.ingEdit !== null;
     $('fsWhen').hidden = sheet.forRecipe;
     $('fsSave').textContent = sheet.ingEdit !== null ? 'Update ingredient' : sheet.forRecipe ? 'Add to recipe' : 'Add to food log';
@@ -2659,7 +2714,7 @@ select{padding-right:42px;
       });
     }
   }
-  function closeFoodSheet() { closeOverlay($('foodSheetOverlay')); sheet.food = null; sheet.ingEdit = null; sheet.forRecipe = false; }
+  function closeFoodSheet() { closeOverlay($('foodSheetOverlay')); sheet.food = null; sheet.ingEdit = null; sheet.forRecipe = false; sheet.editId = null; sheet.override = false; }
   $('fsServing').addEventListener('change', function () {
     if (!sheet.food) return;
     var prev = sheet.opts[sheet.idx], q = sheetQty();
@@ -2692,6 +2747,7 @@ select{padding-right:42px;
     if (!sheet.food) return;
     var opt = sheet.opts[sheet.idx], qty = sheetQty(), meal = radioVal('fsMeal'), time = $('fsTime').value;
     if (qty === null || qty <= 0) { err('fsErr', 'Enter an amount greater than zero.'); $('fsQty').focus(); return; }
+    if (sheet.editId) { saveFoodEdit(); return; }
     if (sheet.forRecipe) { var ie = sheet.ingEdit, ff = sheet.food; closeFoodSheet(); addIngredient(ff, opt, qty, ie); return; }
     if (!meal) { err('fsErr', 'Choose a meal.'); return; }
     if (!time) { err('fsErr', 'Add a time.'); return; }
@@ -2912,6 +2968,7 @@ select{padding-right:42px;
     }
     rb.ings.push(makeIng(food, opt, qty)); rb.dirty = true;
     ['rbmName', 'rbmGrams', 'rbmCal', 'rbmP', 'rbmC', 'rbmF'].forEach(function (id) { $(id).value = ''; });
+    autoCals.rbmCal.reset(true);
     renderBuilder(); toast('Added ' + name); $('rbmName').focus();
   });
   $('rbIngs').addEventListener('click', function (e) {
@@ -2999,6 +3056,266 @@ select{padding-right:42px;
     openBuilder(null, items.map(entryIng));
     $('rbName').focus();
   });
+
+  /* ---------- Auto calories from macros (4/4/9) ----------
+     Fills calories while macros are typed when calories are empty or still auto-filled.
+     Typing your own calories stops it; "Use macros" switches back. Stored data is never rewritten silently. */
+  function macroKcal(p, c, f) {
+    if (p == null && c == null && f == null) return null;
+    return Math.round(4 * (Number(p) || 0) + 4 * (Number(c) || 0) + 9 * (Number(f) || 0));
+  }
+  var autoCals = {};
+  function attachAutoCal(calId, pId, cId, fId) {
+    var cal = $(calId), hint = document.createElement('div');
+    hint.className = 'auto-cal'; hint.id = calId + 'Auto'; hint.setAttribute('aria-live', 'polite');
+    cal.parentNode.appendChild(hint);
+    function mval(id) { var v = numVal(id); return v === null || isNaN(v) ? null : v; }
+    function est() { return macroKcal(mval(pId), mval(cId), mval(fId)); }
+    var api = {
+      paint: function () {
+        var e = est(), auto = cal.dataset.auto === '1';
+        if (auto && cal.value !== '') hint.innerHTML = '<span class="ac-on">Auto from macros</span>';
+        else if (e != null && String(e) !== cal.value.trim()) hint.innerHTML = '<button type="button" class="ac-btn" data-ac="1">' + (cal.value.trim() === '' ? 'Fill calories from macros (' + e.toLocaleString() + ')' : 'Use macros (' + e.toLocaleString() + ')') + '</button>';
+        else hint.innerHTML = '';
+      },
+      fromMacros: function () {
+        var e = est();
+        if (cal.dataset.auto === '1' || cal.value.trim() === '') { cal.value = e == null ? '' : String(e); cal.dataset.auto = e == null ? '' : '1'; }
+        api.paint();
+      },
+      use: function () { var e = est(); if (e == null) return; cal.value = String(e); cal.dataset.auto = '1'; api.paint(); cal.dispatchEvent(new Event('change', { bubbles: true })); },
+      // auto: true = new form (fill as macros are typed); false = existing value, leave until asked.
+      reset: function (auto) { cal.dataset.auto = auto ? (cal.value.trim() === '' ? '' : '1') : ''; api.paint(); }
+    };
+    [pId, cId, fId].forEach(function (id) { $(id).addEventListener('input', api.fromMacros); });
+    cal.addEventListener('input', function () { cal.dataset.auto = ''; api.paint(); });
+    hint.addEventListener('click', function (e) { if (e.target.closest('[data-ac]')) api.use(); });
+    autoCals[calId] = api;
+    return api;
+  }
+
+  /* ---------- Edit any logged entry ---------- */
+  var ee = null; // { list, id }
+  var QUAL_BTNS = [1, 2, 3, 4, 5];
+  function eeField(f) {
+    var id = 'ee_' + f.k, v = f.v == null ? '' : f.v, opt = f.opt ? ' <span class="opt">(optional)</span>' : '';
+    if (f.type === 'meal') {
+      return '<div class="field"><span class="label" id="eeMealLabel">Meal</span><div class="seg" role="radiogroup" aria-labelledby="eeMealLabel" style="--cols:4">' +
+        ['breakfast', 'lunch', 'dinner', 'snack'].map(function (m) { return '<label><input type="radio" name="eeMeal" value="' + m + '"' + (v === m ? ' checked' : '') + '><span>' + cap(m) + '</span></label>'; }).join('') + '</div></div>';
+    }
+    if (f.type === 'qual') {
+      return '<div class="field"><span class="label" id="eeQualLabel">Quality <span class="opt">(optional)</span></span><div class="qual" role="group" aria-labelledby="eeQualLabel" id="eeQual">' +
+        QUAL_BTNS.map(function (q) { return '<button type="button" data-q="' + q + '" aria-pressed="' + (Number(v) === q) + '" aria-label="Quality ' + q + ' of 5">' + q + '</button>'; }).join('') + '</div></div>';
+    }
+    if (f.type === 'textarea') return '<div class="field"><label for="' + id + '">' + f.label + opt + '</label><textarea id="' + id + '" rows="2" autocapitalize="sentences">' + esc(v) + '</textarea></div>';
+    var attrs = f.type === 'number' ? ' inputmode="' + (f.dec ? 'decimal' : 'numeric') + '" min="0" step="' + (f.dec ? 'any' : '1') + '"' : '';
+    if (f.type === 'date') attrs = ' max="' + todayKey() + '"';
+    return '<div class="field"><label for="' + id + '">' + f.label + opt + '</label><input type="' + (f.type === 'number' ? 'number' : f.type) + '" id="' + id + '"' + attrs +
+      (f.ph ? ' placeholder="' + f.ph + '"' : '') + ' value="' + esc(String(v)) + '"' + (f.type === 'text' ? ' autocomplete="off" autocapitalize="sentences"' : '') + '></div>';
+  }
+  function eeRow(fs) { return '<div class="row">' + fs.map(eeField).join('') + '</div>'; }
+  function findEntry(list, id) { return (db[list] || []).filter(function (x) { return x.id === id; })[0] || null; }
+  function isDbFood(e) {
+    return (e.source === 'usda' || e.source === 'off' || e.source === 'recipe') && typeof e.serving === 'string' && e.serving &&
+      (Number(e.grams) > 0 || Number(e.quantity) > 0);
+  }
+  function openEntryEdit(list, id) {
+    var e = findEntry(list, id); if (!e) return;
+    if (list === 'food' && isDbFood(e)) { openFoodEdit(e); return; }
+    ee = { list: list, id: id };
+    var h = '', title = '';
+    if (list === 'food') {
+      title = 'Edit food';
+      h = eeField({ k: 'name', label: 'Food', type: 'text', v: e.name }) + eeField({ k: 'meal', type: 'meal', v: e.meal }) +
+        eeRow([{ k: 'date', label: 'Date', type: 'date', v: e.date }, { k: 'time', label: 'Time', type: 'time', v: e.time }]) +
+        eeField({ k: 'cal', label: 'Calories', type: 'number', v: e.calories, opt: 1 }) +
+        '<span class="macro-label">Macros in grams <span class="opt">(optional)</span></span>' +
+        eeRow([{ k: 'p', label: 'Protein', type: 'number', dec: 1, v: e.protein, ph: 'g' }, { k: 'c', label: 'Carbs', type: 'number', dec: 1, v: e.carbs, ph: 'g' }, { k: 'f', label: 'Fat', type: 'number', dec: 1, v: e.fat, ph: 'g' }]) +
+        eeField({ k: 'notes', label: 'Notes', type: 'textarea', v: e.notes, opt: 1 });
+    } else if (list === 'water') {
+      title = 'Edit water';
+      h = eeField({ k: 'oz', label: 'Amount (oz)', type: 'number', dec: 1, v: e.oz }) +
+        eeRow([{ k: 'date', label: 'Date', type: 'date', v: e.date }, { k: 'time', label: 'Time', type: 'time', v: e.time }]);
+    } else if (list === 'bp') {
+      title = 'Edit reading';
+      h = eeRow([{ k: 'sys', label: 'Systolic', type: 'number', v: e.systolic }, { k: 'dia', label: 'Diastolic', type: 'number', v: e.diastolic }, { k: 'pulse', label: 'Pulse', type: 'number', v: e.pulse, opt: 1 }]) +
+        eeRow([{ k: 'date', label: 'Date', type: 'date', v: e.date }, { k: 'time', label: 'Time', type: 'time', v: e.time }]) +
+        eeField({ k: 'notes', label: 'Notes', type: 'textarea', v: e.notes, opt: 1 });
+    } else if (list === 'sleep') {
+      title = 'Edit sleep';
+      h = eeField({ k: 'date', label: 'Date you woke up', type: 'date', v: e.date }) +
+        eeRow([{ k: 'bed', label: 'Bedtime', type: 'time', v: e.bed }, { k: 'wake', label: 'Wake time', type: 'time', v: e.wake }]) +
+        eeField({ k: 'qual', type: 'qual', v: e.quality }) +
+        eeField({ k: 'notes', label: 'Notes', type: 'textarea', v: e.notes, opt: 1 });
+    } else return;
+    $('eeTitle').textContent = title; $('eeFields').innerHTML = h; err('eeErr');
+    if (list === 'food') attachAutoCal('ee_cal', 'ee_p', 'ee_c', 'ee_f').reset(false);
+    openOverlay($('eeOverlay'));
+    $('eeOverlay').querySelector('.sheet').scrollTop = 0;
+  }
+  function closeEntryEdit() { closeOverlay($('eeOverlay')); ee = null; }
+  $('eeFields').addEventListener('click', function (e) {
+    var b = e.target.closest('#eeQual button[data-q]'); if (!b) return;
+    var on = b.getAttribute('aria-pressed') !== 'true';
+    $('eeQual').querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+    b.setAttribute('aria-pressed', String(on));
+  });
+  $('eeClose').addEventListener('click', closeEntryEdit);
+  $('eeOverlay').addEventListener('click', function (e) { if (e.target === $('eeOverlay')) closeEntryEdit(); });
+  function eeNum(k) { return numVal('ee_' + k); }
+  function bad(v, lo, hi) { return v !== null && (isNaN(v) || v < lo || v > hi); }
+  function updateEntry(list, id, patch) {
+    var i = db[list].findIndex(function (x) { return x.id === id; }); if (i < 0) { toast('That entry was deleted.'); return false; }
+    var backup = db[list][i];
+    db[list][i] = Object.assign({}, backup, patch, { updated: Date.now() });
+    if (!save()) { db[list][i] = backup; return false; }
+    return true;
+  }
+  $('eeForm').addEventListener('submit', function (ev) {
+    ev.preventDefault(); if (!ee) return;
+    var list = ee.list, id = ee.id, date = $('ee_date').value, patch;
+    if (!date || date > todayKey()) { err('eeErr', 'Choose a date that isn\u2019t in the future.'); return; }
+    if (list === 'food') {
+      var name = $('ee_name').value.trim(), meal = radioVal('eeMeal'), cal = eeNum('cal'), p = eeNum('p'), c = eeNum('c'), f = eeNum('f');
+      if (!name) { err('eeErr', 'Name the food.'); return; }
+      if (!meal) { err('eeErr', 'Choose a meal.'); return; }
+      if (!$('ee_time').value) { err('eeErr', 'Add a time.'); return; }
+      if (bad(cal, 0, 10000)) { err('eeErr', 'Calories should be 0 to 10,000, or left blank.'); return; }
+      if (bad(p, 0, 1000) || bad(c, 0, 1000) || bad(f, 0, 1000)) { err('eeErr', 'Macros should be 0 to 1,000 grams, or left blank.'); return; }
+      patch = { name: name, meal: meal, date: date, time: $('ee_time').value, calories: cal === null ? null : Math.round(cal),
+        protein: p === null ? null : r1(p), carbs: c === null ? null : r1(c), fat: f === null ? null : r1(f), notes: $('ee_notes').value.trim() };
+    } else if (list === 'water') {
+      var oz = eeNum('oz');
+      if (oz === null || isNaN(oz) || oz <= 0 || oz > 200) { err('eeErr', 'Enter an amount between 1 and 200 oz.'); return; }
+      if (!$('ee_time').value) { err('eeErr', 'Add a time.'); return; }
+      patch = { oz: r1(oz), date: date, time: $('ee_time').value };
+    } else if (list === 'bp') {
+      var s = eeNum('sys'), d = eeNum('dia'), pu = eeNum('pulse');
+      if (s === null || bad(s, 70, 250)) { err('eeErr', 'Systolic (top number) should be between 70 and 250.'); return; }
+      if (d === null || bad(d, 40, 150)) { err('eeErr', 'Diastolic (bottom number) should be between 40 and 150.'); return; }
+      if (s <= d) { err('eeErr', 'Systolic should be higher than diastolic. Check the numbers.'); return; }
+      if (bad(pu, 30, 220)) { err('eeErr', 'Pulse should be between 30 and 220, or left blank.'); return; }
+      if (!$('ee_time').value) { err('eeErr', 'Add a time.'); return; }
+      patch = { systolic: Math.round(s), diastolic: Math.round(d), pulse: pu === null ? null : Math.round(pu), date: date, time: $('ee_time').value, notes: $('ee_notes').value.trim() };
+    } else if (list === 'sleep') {
+      var bed = $('ee_bed').value, wake = $('ee_wake').value;
+      if (!bed || !wake) { err('eeErr', 'Enter both bedtime and wake time.'); return; }
+      var mins = sleepMinutes(bed, wake);
+      if (mins > 20 * 60) { err('eeErr', 'That works out to more than 20 hours. Check the times.'); return; }
+      var qb = $('eeQual').querySelector('[aria-pressed=true]');
+      patch = { date: date, bed: bed, wake: wake, minutes: mins, quality: qb ? Number(qb.dataset.q) : null, notes: $('ee_notes').value.trim() };
+      var clash = db.sleep.filter(function (x) { return x.date === date && x.id !== id; });
+      if (clash.length) {
+        confirmBox('Replace this night?', 'You already logged sleep for the night before ' + fmtDate(date) + '. Replace it with this one?', 'Replace', false).then(function (ok) {
+          if (!ok) return;
+          var before = db.sleep;
+          db.sleep = db.sleep.filter(function (x) { return !(x.date === date && x.id !== id); });
+          if (updateEntry('sleep', id, patch)) { closeEntryEdit(); toast('Sleep updated'); render(); } else db.sleep = before;
+        });
+        return;
+      }
+    }
+    err('eeErr');
+    if (updateEntry(list, id, patch)) { closeEntryEdit(); blurActive(); toast('Changes saved'); render(); }
+  });
+  $('eeDelete').addEventListener('click', function () {
+    if (!ee) return; var list = ee.list, id = ee.id;
+    confirmBox('Delete this entry?', 'It will be removed from this device. This can\u2019t be undone.', 'Delete', true).then(function (ok) {
+      if (!ok) return;
+      db[list] = db[list].filter(function (x) { return x.id !== id; });
+      if (save()) { closeEntryEdit(); toast('Deleted'); render(); }
+    });
+  });
+
+  /* Database / recipe entries: reopen the serving sheet with their amount. Nutrition per unit comes
+     from the logged values themselves, so rescaling is exact and recipes are never touched. */
+  function storedFoodFor(e) {
+    var key = e.source + ':' + e.sourceId;
+    return db.recentFoods.concat(db.favorites).filter(function (f) { return f.key === key; })[0] || null;
+  }
+  function entryFood(e) {
+    var g = Number(e.grams), q = Number(e.quantity) > 0 ? Number(e.quantity) : 1, unit = e.unit === 'ml' ? 'ml' : 'g';
+    var vals = { kcal: has(e.calories) ? Number(e.calories) : null, p: has(e.protein) ? Number(e.protein) : null, c: has(e.carbs) ? Number(e.carbs) : null, f: has(e.fat) ? Number(e.fat) : null };
+    function sc(m) { var o = {}; Object.keys(vals).forEach(function (k) { o[k] = vals[k] == null ? null : vals[k] * m; }); return o; }
+    var food = { key: e.source + ':' + (e.sourceId || ''), src: e.source, id: e.sourceId || '', name: e.name, brand: e.brand || '', unit: unit,
+      per100: null, fixed: null, portions: [], upc: '', generic: false, needsPortions: false };
+    var gm = /^([\d.,]+)\s*(g|ml)$/.exec(e.serving.trim()), label = e.serving.replace(/^[\d.,]+ \u00d7 /, ''), pref;
+    if (g > 0) {
+      food.per100 = sc(100 / g);
+      var st = storedFoodFor(e);
+      food.portions = st && st.portions ? st.portions.slice() : [];
+      if (gm) pref = { opt: unit === 'ml' ? 'Milliliters (ml)' : 'Grams (g)', qty: g };
+      else {
+        if (!food.portions.some(function (p) { return p.label === label; })) food.portions.unshift({ label: label, g: g / q });
+        pref = { opt: label, qty: q };
+      }
+    } else {
+      food.fixed = Object.assign(sc(1 / q), { label: label });
+      pref = { opt: label, qty: q };
+    }
+    return { food: food, pref: pref };
+  }
+  function openFoodEdit(e) {
+    var ef = entryFood(e);
+    openFoodSheet(ef.food, ef.pref);
+    sheet.editId = e.id; sheet.forRecipe = false; sheet.ingEdit = null;
+    $('fsWhen').hidden = false; $('fsDateWrap').hidden = false; $('fsDate').value = e.date; $('fsDate').max = todayKey();
+    checkRadio('fsMeal', e.meal || defaultMeal()); $('fsTime').value = e.time || nowTime();
+    $('fsSave').textContent = 'Save changes'; $('fsDelete').hidden = false;
+    $('fsOverride').hidden = false; $('fsOvOn').hidden = false;
+    $('fsEditedTag').hidden = !e.edited;
+    setOverride(false);
+    if (!has(e.calories)) {
+      // Missing calories: open the values so they can be filled in (macro estimate offered, not applied).
+      setOverride(true);
+    }
+  }
+  function setOverride(on) {
+    sheet.override = on;
+    $('fsOvFields').hidden = !on;
+    $('fsOvOn').setAttribute('aria-expanded', String(on));
+    $('fsOvOn').textContent = on ? 'Use calculated values' : 'Edit calories & macros';
+    if (on) {
+      var n = sheetNutNow();
+      $('fsoCal').value = n.kcal == null ? '' : n.kcal; $('fsoP').value = n.p == null ? '' : n.p; $('fsoC').value = n.c == null ? '' : n.c; $('fsoF').value = n.f == null ? '' : n.f;
+      autoCals.fsoCal.reset(false);
+    }
+    $('fsNut').classList.toggle('dim', on);
+  }
+  function sheetNutNow() {
+    var opt = sheet.opts[sheet.idx], qty = sheetQty();
+    return qty && qty > 0 ? computeNut(sheet.food, opt, qty) : { kcal: null, p: null, c: null, f: null };
+  }
+  $('fsOvOn').addEventListener('click', function () { setOverride(!sheet.override); });
+  $('fsDelete').addEventListener('click', function () {
+    var id = sheet.editId; if (!id) return;
+    confirmBox('Delete this entry?', 'It will be removed from this device. This can\u2019t be undone.', 'Delete', true).then(function (ok) {
+      if (!ok) return;
+      db.food = db.food.filter(function (x) { return x.id !== id; });
+      if (save()) { closeFoodSheet(); toast('Deleted'); render(); }
+    });
+  });
+  function saveFoodEdit() {
+    var opt = sheet.opts[sheet.idx], qty = sheetQty(), meal = radioVal('fsMeal'), time = $('fsTime').value, date = $('fsDate').value;
+    if (qty === null || qty <= 0) { err('fsErr', 'Enter an amount greater than zero.'); return; }
+    if (!meal) { err('fsErr', 'Choose a meal.'); return; }
+    if (!time) { err('fsErr', 'Add a time.'); return; }
+    if (!date || date > todayKey()) { err('fsErr', 'Choose a date that isn\u2019t in the future.'); return; }
+    var n = computeNut(sheet.food, opt, qty), edited = false;
+    if (sheet.override) {
+      var vc = numVal('fsoCal'), vp = numVal('fsoP'), vcb = numVal('fsoC'), vf = numVal('fsoF');
+      if (bad(vc, 0, 10000)) { err('fsErr', 'Calories should be 0 to 10,000, or left blank.'); return; }
+      if (bad(vp, 0, 1000) || bad(vcb, 0, 1000) || bad(vf, 0, 1000)) { err('fsErr', 'Macros should be 0 to 1,000 grams, or left blank.'); return; }
+      var o = { kcal: vc === null ? null : Math.round(vc), p: vp === null ? null : r1(vp), c: vcb === null ? null : r1(vcb), f: vf === null ? null : r1(vf) };
+      edited = ['kcal', 'p', 'c', 'f'].some(function (k) { return o[k] !== n[k]; });
+      n = o;
+    }
+    var g = gramsFor(opt, qty), old = findEntry('food', sheet.editId);
+    err('fsErr');
+    var patch = { date: date, time: time, meal: meal, calories: n.kcal, protein: n.p, carbs: n.c, fat: n.f,
+      serving: servingText(sheet.food, opt, qty), quantity: qty, grams: g == null ? null : r1(g), edited: sheet.override ? (edited || !!(old && old.edited)) : !!(old && old.edited) };
+    if (updateEntry('food', sheet.editId, patch)) { var nm = sheet.food.name; closeFoodSheet(); blurActive(); toast('Updated ' + nm); render(); }
+  }
 
   /* ---------- Barcode lookup ---------- */
   function digits(s) { return String(s || '').replace(/\D/g, ''); }
@@ -4567,7 +4884,12 @@ select{padding-right:42px;
   $('stClose').addEventListener('click', closeStat);
   $('statOverlay').addEventListener('click', function (e) { if (e.target === $('statOverlay')) closeStat(); });
   // Exposed for automated tests only (no effect on normal use).
-  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout, recordSweep: recordSweep, fmtClock: fmtClock, parseClock: parseClock, riegel: riegel, normStat: normStat, suggestSets: suggestSets, cleanExercise: cleanExercise, recipeFood: recipeFood, recipeTotals: recipeTotals, normRecipe: normRecipe };
+  window.__htTest = { usdaToFood: usdaToFood, offToFood: offToFood, servingOptions: servingOptions, computeNut: computeNut, servingText: servingText, mergeResults: mergeResults, validGtin: validGtin, upcEtoA: upcEtoA, setsText: setsText, woVolume: woVolume, normWorkout: normWorkout, recordSweep: recordSweep, fmtClock: fmtClock, parseClock: parseClock, riegel: riegel, normStat: normStat, macroKcal: macroKcal, entryFood: entryFood, suggestSets: suggestSets, cleanExercise: cleanExercise, recipeFood: recipeFood, recipeTotals: recipeTotals, normRecipe: normRecipe };
+
+  /* Auto calories on every manual nutrition form. */
+  attachAutoCal('foodCal', 'foodProtein', 'foodCarbs', 'foodFat');
+  attachAutoCal('rbmCal', 'rbmP', 'rbmC', 'rbmF');
+  attachAutoCal('fsoCal', 'fsoP', 'fsoC', 'fsoF');
 
   /* ---------- Init ---------- */
   checkRadio('mealType', defaultMeal());

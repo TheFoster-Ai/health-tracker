@@ -9,6 +9,7 @@
 - [x] Saved recipes (build from search/scan/manual, log by serving or gram, save from log)
 - [x] Per-exercise notes with up/down tags
 - [x] Workout autosave / crash-proof drafts
+- [x] Edit any logged entry (food, water, BP, sleep) + auto calories from macros
 
 ## Up next
 - [ ] Smart reminders that learn your habits (e.g. if breakfast is usually logged by 8:30, remind you when it isn't) - needs push notifications
