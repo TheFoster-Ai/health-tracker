@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Health Tracker</title>
-<meta name="description" content="Track food, workouts, water, blood pressure, and sleep. Data stays on your device.">
+<meta name="description" content="Track food, workouts, water, sleep, and weight. Data stays on your device.">
 <meta name="theme-color" content="#08090B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -38,7 +38,6 @@
 body[data-tab=food]{--accent:var(--c-cal);--accent-soft:rgba(255,125,74,.14);--glow:rgba(255,125,74,.10)}
 body[data-tab=workouts]{--accent:var(--c-work);--accent-soft:rgba(200,242,90,.13);--glow:rgba(200,242,90,.09)}
 body[data-tab=water]{--accent:var(--c-water);--accent-soft:rgba(77,184,255,.14);--glow:rgba(77,184,255,.11)}
-body[data-tab=bp]{--accent:var(--c-bp);--accent-soft:rgba(255,92,106,.14);--glow:rgba(255,92,106,.10)}
 body[data-tab=sleep]{--accent:var(--c-sleep);--accent-soft:rgba(160,145,255,.15);--glow:rgba(160,145,255,.11)}
 
 *{box-sizing:border-box}
@@ -86,7 +85,7 @@ main{position:relative;z-index:1;flex:1;overflow-y:auto;-webkit-overflow-scrolli
 .greet{font-size:15px;font-weight:600;margin:0 0 2px;color:var(--muted)}
 
 /* numerals */
-.v,.big,.mv,.val,.fr-num b,.num,.nut-sum .big,.bp-hero .big,.water-total .big{font-family:var(--num);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.v,.big,.mv,.val,.fr-num b,.num,.nut-sum .big,.water-total .big{font-family:var(--num);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 
 /* ===== Forms ===== */
 .field{margin-bottom:16px}
@@ -165,7 +164,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);
 .sum>.chip{align-self:flex-start;margin-top:10px}
 .sum .d{font-size:14px;color:var(--muted);margin-top:auto;padding-top:8px;overflow-wrap:anywhere}
 .sum .d.cta{color:var(--mc);font-weight:650}
-.m-water{--mc:var(--c-water)}.m-food{--mc:var(--c-cal)}.m-workouts{--mc:var(--c-work)}.m-sleep{--mc:var(--c-sleep)}.m-bp{--mc:var(--c-bp)}.m-weight{--mc:var(--c-weight)}
+.m-water{--mc:var(--c-water)}.m-food{--mc:var(--c-cal)}.m-workouts{--mc:var(--c-work)}.m-sleep{--mc:var(--c-sleep)}.m-weight{--mc:var(--c-weight)}
 .sum-top{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:6px}
 .sum-top .v{margin-top:0}
 .hero-body{display:flex;align-items:center;gap:18px;margin-top:14px}
@@ -222,14 +221,6 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);
 .inline-form input{flex:1}
 .inline-form .btn{flex:none}
 
-/* ===== Blood pressure ===== */
-.bp-hero{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.bp-hero .big{font-size:56px;font-weight:800;letter-spacing:-.05em;line-height:1}
-.bp-hero .unit{color:var(--muted);font-weight:650}
-.bp-scale{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:18px 0 6px}
-.bp-scale span{height:6px;border-radius:999px;background:rgba(255,255,255,.1)}
-.bp-scale span.on{background:var(--sc)}
-.bp-scale-l{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);font-weight:650;text-transform:uppercase;letter-spacing:.06em}
 .alert{background:var(--danger-soft);color:#FFB3B3;border:1px solid rgba(255,107,107,.3);border-radius:14px;padding:12px 14px;font-size:14px;margin-top:12px;font-weight:550}
 
 /* ===== Sleep ===== */
@@ -240,7 +231,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);
 .sbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,rgba(160,145,255,.55),var(--c-sleep))}
 
 /* ===== Tab bar (glass) ===== */
-nav.tabs{position:fixed;left:10px;right:10px;bottom:calc(8px + var(--sab));z-index:10;display:grid;grid-template-columns:repeat(6,1fr);
+nav.tabs{position:fixed;left:10px;right:10px;bottom:calc(8px + var(--sab));z-index:10;display:grid;grid-template-columns:repeat(5,1fr);
   background:rgba(22,24,29,.72);-webkit-backdrop-filter:saturate(1.6) blur(22px);backdrop-filter:saturate(1.6) blur(22px);
   border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:0 4px;box-shadow:0 18px 40px -12px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.06) inset}
 nav.tabs button{height:var(--tabh);border:0;background:transparent;color:#8E97A1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
@@ -249,7 +240,7 @@ nav.tabs button:active{transform:scale(.9)}
 nav.tabs svg{width:24px;height:24px;transition:transform .3s var(--ease-out)}
 nav.tabs button[data-tab=today]{--tc:var(--brand)} nav.tabs button[data-tab=food]{--tc:var(--c-cal)}
 nav.tabs button[data-tab=workouts]{--tc:var(--c-work)} nav.tabs button[data-tab=water]{--tc:var(--c-water)}
-nav.tabs button[data-tab=bp]{--tc:var(--c-bp)} nav.tabs button[data-tab=sleep]{--tc:var(--c-sleep)}
+nav.tabs button[data-tab=sleep]{--tc:var(--c-sleep)}
 nav.tabs button[aria-current=page]{color:var(--tc)}
 nav.tabs button[aria-current=page] svg{transform:translateY(-1px) scale(1.06);filter:drop-shadow(0 0 10px var(--tc))}
 
@@ -828,43 +819,6 @@ select{padding-right:42px;
     </div>
   </section>
 
-  <section class="view" id="view-bp">
-    <div class="card" id="bpLatest"></div>
-    <form class="card" id="bpForm" novalidate>
-      <h2>Log a reading</h2>
-      <div class="row">
-        <div class="field">
-          <label for="bpSys">Systolic <span class="opt">(top)</span></label>
-          <input type="number" id="bpSys" inputmode="numeric" min="70" max="250" step="1">
-        </div>
-        <div class="field">
-          <label for="bpDia">Diastolic <span class="opt">(bottom)</span></label>
-          <input type="number" id="bpDia" inputmode="numeric" min="40" max="150" step="1">
-        </div>
-      </div>
-      <div class="row">
-        <div class="field">
-          <label for="bpPulse">Pulse <span class="opt">(optional)</span></label>
-          <input type="number" id="bpPulse" inputmode="numeric" min="30" max="220" step="1">
-        </div>
-        <div class="field">
-          <label for="bpTime">Time</label>
-          <input type="time" id="bpTime">
-        </div>
-      </div>
-      <div class="field">
-        <label for="bpNotes">Notes <span class="opt">(optional)</span></label>
-        <textarea id="bpNotes" rows="2" autocapitalize="sentences" placeholder="e.g. Left arm, seated, after coffee"></textarea>
-      </div>
-      <p class="err" id="bpErr" role="alert"></p>
-      <button class="btn btn-primary" type="submit">Save reading</button>
-    </form>
-    <div class="card">
-      <div class="list-head"><h2 id="bpListTitle">Today</h2><span class="muted small" id="bpCount"></span></div>
-      <ul class="list" id="bpList"></ul>
-    </div>
-    <p class="footer-note">Categories follow American Heart Association ranges for adults. They are not a diagnosis; talk with your doctor about your numbers.</p>
-  </section>
 
   <section class="view" id="view-sleep">
     <form class="card" id="sleepForm" novalidate>
@@ -913,7 +867,6 @@ select{padding-right:42px;
   <button data-tab="food"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7.5S15 14 17 14"/></svg>Food</button>
   <button data-tab="workouts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>Workouts</button>
   <button data-tab="water"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7S5.5 9.6 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.6 12 2.7 12 2.7z"/></svg>Water</button>
-  <button data-tab="bp" aria-label="Blood pressure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12h5l1.5-3 3 6 1.5-3h6"/></svg>BP</button>
   <button data-tab="sleep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>Sleep</button>
 </nav>
 
@@ -1445,6 +1398,7 @@ select{padding-right:42px;
 
   /* ---------- Storage ---------- */
   var KEY = 'healthTracker.v1';
+  // 'bp' has no UI anymore; old readings are kept untouched and still pass through export/import.
   var LISTS = ['food', 'workouts', 'water', 'bp', 'sleep', 'records', 'weights'];
   var DEFAULT_GOAL = 64;
   var ingMode = false, selMode = false, selIds = {}; // recipe ingredient picking + food-log selection
@@ -1594,14 +1548,6 @@ select{padding-right:42px;
     if (diff <= 0) diff += 1440;
     return diff;
   }
-  // American Heart Association adult categories.
-  function bpCategory(s, d) {
-    if (s > 180 || d > 120) return { label: 'Very high', cls: 'danger', crisis: true };
-    if (s >= 140 || d >= 90) return { label: 'High, stage 2', cls: 'danger' };
-    if (s >= 130 || d >= 80) return { label: 'High, stage 1', cls: 'warn' };
-    if (s >= 120) return { label: 'Elevated', cls: 'warn' };
-    return { label: 'Normal', cls: '' };
-  }
   var TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
   function delBtn(list, id, what) {
     return '<button class="del" type="button" data-del="' + list + '" data-id="' + esc(id) + '" aria-label="Delete ' + esc(what) + '">' + TRASH + '</button>';
@@ -1643,7 +1589,7 @@ select{padding-right:42px;
   }
 
   /* ---------- Navigation ---------- */
-  var TABS = { today: 'Today', food: 'Food', workouts: 'Workouts', water: 'Water', bp: 'Blood pressure', sleep: 'Sleep' };
+  var TABS = { today: 'Today', food: 'Food', workouts: 'Workouts', water: 'Water', sleep: 'Sleep' };
   var current = 'today';
   var viewDate = todayKey();
 
@@ -1682,7 +1628,7 @@ select{padding-right:42px;
 
   // Time fields default to "now" unless the user has set them.
   function resetTimes() {
-    ['foodTime', 'bpTime'].forEach(function (id) { if (!$(id).dataset.touched) $(id).value = nowTime(); });
+    ['foodTime'].forEach(function (id) { if (!$(id).dataset.touched) $(id).value = nowTime(); });
   }
 
   /* ---------- Render ---------- */
@@ -1693,7 +1639,6 @@ select{padding-right:42px;
     if (current === 'food') renderFood();
     if (current === 'workouts') renderWorkouts();
     if (current === 'water') renderWater();
-    if (current === 'bp') renderBP();
     if (current === 'sleep') renderSleep();
   }
   function listTitle(k) { return relDate(k); }
@@ -1704,7 +1649,6 @@ select{padding-right:42px;
     water: SVG_OPEN + '<path d="M12 2.7S5.5 9.6 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.6 12 2.7 12 2.7z"/></svg>',
     food: SVG_OPEN + '<path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7.5S15 14 17 14"/></svg>',
     workouts: SVG_OPEN + '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>',
-    bp: SVG_OPEN + '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></svg>',
     sleep: SVG_OPEN + '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
     weight: SVG_OPEN + '<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8.5 9.5a5 5 0 0 1 7 0L13.4 12"/></svg>'
   };
@@ -1778,14 +1722,14 @@ select{padding-right:42px;
   function renderToday() {
     var t = todayKey(), h = new Date().getHours();
     $('greet').textContent = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ', Jacob';
-    var water = forDate('water', t), food = forDate('food', t), wo = forDate('workouts', t), bpToday = forDate('bp', t);
+    var water = forDate('water', t), food = forDate('food', t), wo = forDate('workouts', t);
     var sleep = db.sleep.filter(function (e) { return e.date === t; })[0];
-    var logged = [water.length, food.length, wo.length, bpToday.length, sleep ? 1 : 0].filter(Boolean).length;
+    var logged = [water.length, food.length, wo.length, sleep ? 1 : 0].filter(Boolean).length;
     $('todayDate').textContent = fmtDate(t, { weekday: 'long', month: 'long', day: 'numeric' }) + ' · ' +
-      (logged === 0 ? 'Nothing logged yet. Tap any card to start.' : logged === 5 ? 'All five areas logged today. Nice work.' : logged + ' of 5 areas logged so far.');
+      (logged === 0 ? 'Nothing logged yet. Tap any card to start.' : logged === 4 ? 'All four areas logged today. Nice work.' : logged + ' of 4 areas logged so far.');
 
-    var dotOn = [food.length, water.length, wo.length, sleep ? 1 : 0, bpToday.length];
-    $('todayDots').innerHTML = ['m-food', 'm-water', 'm-workouts', 'm-sleep', 'm-bp'].map(function (c, i) {
+    var dotOn = [food.length, water.length, wo.length, sleep ? 1 : 0];
+    $('todayDots').innerHTML = ['m-food', 'm-water', 'm-workouts', 'm-sleep'].map(function (c, i) {
       return '<i class="' + c + (dotOn[i] ? ' on' : '') + '"></i>';
     }).join('');
 
@@ -1815,11 +1759,6 @@ select{padding-right:42px;
     cards.push(sumCard('sleep', 'Sleep', sleep ? fmtDur(sleep.minutes) : '--',
       sleep ? 'Last night' + (sleep.quality ? ', quality ' + sleep.quality + '/5' : '') : 'Log last night.', !sleep, false, qd));
 
-    var lb = db.bp.slice().sort(byDateTimeDesc)[0];
-    var lbc = lb ? bpCategory(lb.systolic, lb.diastolic) : null;
-    cards.push(sumCard('bp', 'BP', lb ? lb.systolic + '/' + lb.diastolic + '<small> mmHg</small>' : '--',
-      lb ? (lb.date === t ? 'Today, ' + fmtTime(lb.time) : 'Last: ' + relDate(lb.date)) : 'Add a reading.', !lb, false,
-      lb ? '<span class="chip ' + lbc.cls + '">' + lbc.label + '</span>' : ''));
 
     $('summary').innerHTML = cards.join('');
     animateRings($('summary'));
@@ -1904,40 +1843,6 @@ select{padding-right:42px;
     }).join('') : '<li class="empty">No water logged ' + emptyWhen(viewDate) + '. Tap a button above to add a glass.</li>';
   }
 
-  var BP_SCALE = ['Normal', 'Elevated', 'High, stage 1', 'High, stage 2', 'Very high'];
-  var BP_SCALE_C = ['var(--brand)', 'var(--c-carb)', 'var(--c-cal)', 'var(--c-bp)', '#FF2D55'];
-  function bpScale(s, d) {
-    var idx = BP_SCALE.indexOf(bpCategory(s, d).label);
-    return '<div class="bp-scale" aria-hidden="true">' + BP_SCALE.map(function (l, i) {
-      return '<span' + (i <= idx ? ' class="on" style="--sc:' + BP_SCALE_C[idx] + '"' : '') + '></span>';
-    }).join('') + '</div><div class="bp-scale-l" aria-hidden="true"><span>Normal</span><span>Very high</span></div>';
-  }
-  function renderBP() {
-    var items = forDate('bp', viewDate), isToday = viewDate === todayKey();
-    var latest = isToday ? db.bp.slice().sort(byDateTimeDesc)[0] : items[0];
-    var el = $('bpLatest');
-    if (latest) {
-      var c = bpCategory(latest.systolic, latest.diastolic);
-      el.innerHTML = '<h2>' + (isToday ? 'Latest reading' : 'Latest on ' + esc(relDate(viewDate))) + '</h2>' +
-        '<div class="bp-hero"><span class="big">' + latest.systolic + '/' + latest.diastolic + '</span><span class="unit">mmHg</span>' +
-        (latest.pulse ? '<span class="unit">· ' + latest.pulse + ' bpm</span>' : '') + '</div>' +
-        bpScale(latest.systolic, latest.diastolic) +
-        '<div class="muted small" style="margin-top:6px">' + esc(relDate(latest.date)) + ', ' + fmtTime(latest.time) + ' &nbsp;<span class="chip ' + c.cls + '">' + c.label + '</span></div>' +
-        (c.crisis ? '<div class="alert">This reading is very high. Rest a few minutes and measure again. If it stays this high, or you have chest pain, shortness of breath, weakness, or vision changes, call 911.</div>' : '');
-    } else {
-      el.innerHTML = '<h2>Latest reading</h2><p class="empty" style="margin:0">' +
-        (isToday ? 'No readings yet. Sit quietly for 5 minutes, then log your first one below.' : 'No readings on this day.') + '</p>';
-    }
-    $('bpListTitle').textContent = listTitle(viewDate);
-    $('bpCount').textContent = items.length ? plural(items.length, 'reading', 'readings') : '';
-    $('bpList').innerHTML = items.length ? items.map(function (e) {
-      var c = bpCategory(e.systolic, e.diastolic);
-      return '<li class="item" data-ee="bp:' + esc(e.id) + '" role="button" tabindex="0" aria-label="Edit reading ' + e.systolic + ' over ' + e.diastolic + '"><div class="main"><div class="title">' + e.systolic + '/' + e.diastolic + ' <span class="chip ' + c.cls + '">' + c.label + '</span></div>' +
-        '<div class="meta">' + fmtTime(e.time) + (e.pulse ? ' · pulse ' + e.pulse : '') + '</div>' +
-        (e.notes ? '<div class="note">' + esc(e.notes) + '</div>' : '') + '</div>' +
-        delBtn('bp', e.id, 'reading ' + e.systolic + ' over ' + e.diastolic) + '</li>';
-    }).join('') : '<li class="empty">No readings logged ' + emptyWhen(viewDate) + '.</li>';
-  }
 
   function renderSleep() {
     if (!$('sleepDate').value) $('sleepDate').value = todayKey();
@@ -1977,7 +1882,7 @@ select{padding-right:42px;
   function radioVal(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : null; }
   function blurActive() { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); }
   function resetTime(id) { delete $(id).dataset.touched; $(id).value = nowTime(); }
-  ['foodTime', 'bpTime'].forEach(function (id) {
+  ['foodTime'].forEach(function (id) {
     $(id).addEventListener('change', function () { $(id).dataset.touched = '1'; });
   });
 
@@ -2034,21 +1939,6 @@ select{padding-right:42px;
   $('goalForm').addEventListener('submit', function (e) { e.preventDefault(); setGoal($('goalInput').value); });
   $('settingsGoalForm').addEventListener('submit', function (e) { e.preventDefault(); setGoal($('settingsGoal').value); });
 
-  $('bpForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var s = numVal('bpSys'), d = numVal('bpDia'), p = numVal('bpPulse'), time = $('bpTime').value;
-    if (s === null || isNaN(s) || s < 70 || s > 250) { err('bpErr', 'Systolic (top number) should be between 70 and 250.'); $('bpSys').focus(); return; }
-    if (d === null || isNaN(d) || d < 40 || d > 150) { err('bpErr', 'Diastolic (bottom number) should be between 40 and 150.'); $('bpDia').focus(); return; }
-    if (s <= d) { err('bpErr', 'Systolic should be higher than diastolic. Check the numbers.'); return; }
-    if (p !== null && (isNaN(p) || p < 30 || p > 220)) { err('bpErr', 'Pulse should be between 30 and 220, or left blank.'); return; }
-    if (!time) { err('bpErr', 'Add a time.'); return; }
-    err('bpErr');
-    if (add('bp', { date: viewDate, time: time, systolic: Math.round(s), diastolic: Math.round(d), pulse: p === null ? null : Math.round(p), notes: $('bpNotes').value.trim() })) {
-      $('bpSys').value = ''; $('bpDia').value = ''; $('bpPulse').value = ''; $('bpNotes').value = '';
-      resetTime('bpTime'); blurActive();
-      toast('Reading saved'); render();
-    }
-  });
 
   var sleepQuality = null;
   function paintQuality() {
@@ -3225,11 +3115,6 @@ select{padding-right:42px;
       title = 'Edit water';
       h = eeField({ k: 'oz', label: 'Amount (oz)', type: 'number', dec: 1, v: e.oz }) +
         eeRow([{ k: 'date', label: 'Date', type: 'date', v: e.date }, { k: 'time', label: 'Time', type: 'time', v: e.time }]);
-    } else if (list === 'bp') {
-      title = 'Edit reading';
-      h = eeRow([{ k: 'sys', label: 'Systolic', type: 'number', v: e.systolic }, { k: 'dia', label: 'Diastolic', type: 'number', v: e.diastolic }, { k: 'pulse', label: 'Pulse', type: 'number', v: e.pulse, opt: 1 }]) +
-        eeRow([{ k: 'date', label: 'Date', type: 'date', v: e.date }, { k: 'time', label: 'Time', type: 'time', v: e.time }]) +
-        eeField({ k: 'notes', label: 'Notes', type: 'textarea', v: e.notes, opt: 1 });
     } else if (list === 'sleep') {
       title = 'Edit sleep';
       h = eeField({ k: 'date', label: 'Date you woke up', type: 'date', v: e.date }) +
@@ -3284,14 +3169,6 @@ select{padding-right:42px;
       if (oz === null || isNaN(oz) || oz <= 0 || oz > 200) { err('eeErr', 'Enter an amount between 1 and 200 oz.'); return; }
       if (!$('ee_time').value) { err('eeErr', 'Add a time.'); return; }
       patch = { oz: r1(oz), date: date, time: $('ee_time').value };
-    } else if (list === 'bp') {
-      var s = eeNum('sys'), d = eeNum('dia'), pu = eeNum('pulse');
-      if (s === null || bad(s, 70, 250)) { err('eeErr', 'Systolic (top number) should be between 70 and 250.'); return; }
-      if (d === null || bad(d, 40, 150)) { err('eeErr', 'Diastolic (bottom number) should be between 40 and 150.'); return; }
-      if (s <= d) { err('eeErr', 'Systolic should be higher than diastolic. Check the numbers.'); return; }
-      if (bad(pu, 30, 220)) { err('eeErr', 'Pulse should be between 30 and 220, or left blank.'); return; }
-      if (!$('ee_time').value) { err('eeErr', 'Add a time.'); return; }
-      patch = { systolic: Math.round(s), diastolic: Math.round(d), pulse: pu === null ? null : Math.round(pu), date: date, time: $('ee_time').value, notes: $('ee_notes').value.trim() };
     } else if (list === 'sleep') {
       var bed = $('ee_bed').value, wake = $('ee_wake').value;
       if (!bed || !wake) { err('eeErr', 'Enter both bedtime and wake time.'); return; }

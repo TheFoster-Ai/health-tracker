@@ -1,7 +1,7 @@
 {
   "name": "Health Tracker",
   "short_name": "Health",
-  "description": "Track food, workouts, water, blood pressure, and sleep. Data stays on your device.",
+  "description": "Track food, workouts, water, sleep, and weight. Data stays on your device.",
   "id": "./",
   "start_url": "./",
   "scope": "./",

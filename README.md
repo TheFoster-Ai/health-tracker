@@ -1,6 +1,6 @@
 # Health Tracker (iPhone web app)
 
-A private, offline-capable health tracker for food (calories and protein/carbs/fat), workouts, water, blood pressure, and sleep.
+A private, offline-capable health tracker for food (calories and protein/carbs/fat), workouts, water, sleep, and weight.
 No App Store, no Mac, no account. Everything is stored on the phone (localStorage).
 
 ## Files
@@ -50,4 +50,3 @@ Easiest options:
 - No sync between devices; use Export/Import to move data.
 - Deleting the home-screen app deletes its data.
 - Food data comes from public databases and can have gaps or errors (especially crowd-sourced Open Food Facts entries); check the label when it matters.
-- Blood pressure categories follow AHA adult ranges and are not medical advice.
