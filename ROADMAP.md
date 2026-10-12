@@ -13,6 +13,7 @@
 - [x] Weight tracking with trends (7-day average chart, goal + estimate)
 
 ## Up next
+- [ ] Meal ordering: turn recipes into a grocery list and a saved standard order you can send to a store like Walmart for pickup
 - [ ] Smart reminders that learn your habits (e.g. if breakfast is usually logged by 8:30, remind you when it isn't) - needs push notifications
 - [ ] Charts and weekly insights (blood pressure trends, average sleep, calories vs. goal)
 - [ ] Goals and personalized targets (calorie and macro budget from weight, height, activity, and goal)
